@@ -3,13 +3,6 @@ import { z } from "zod";
 import { router, publicProcedure } from "../trpc";
 
 export const recordRouter = router({
-  // hello: publicProcedure
-  //   .input(z.object({ text: z.string().nullish() }).nullish())
-  //   .query(({ input }) => {
-  //     return {
-  //       greeting: `Hello ${input?.text ?? "world"}`,
-  //     };
-  //   }),
   getAll: publicProcedure
     .input(z.string().nullish())
     .query(({ input: userId }) => {
@@ -21,6 +14,35 @@ export const recordRouter = router({
           userId: userId,
         },
       });
+    }),
+  totalExpense: publicProcedure
+    .input(z.string().nullish())
+    .query(async ({ input: userId }) => {
+      if (!userId) {
+        return {};
+      }
+      const records = await prisma?.record.findMany({
+        where: {
+          userId: userId,
+          type: "EXPENSE",
+        },
+      });
+      if (!records) {
+        return {};
+      }
+
+      const totalExpenseByCurrency = records.reduce(
+        (acc: { [key: string]: number }, record) => {
+          const key = record.currency;
+          if (acc[key] === undefined) {
+            acc[key] = 0;
+          }
+          acc[key] += +record.amount;
+          return acc;
+        },
+        {}
+      );
+      return totalExpenseByCurrency;
     }),
   setRecord: publicProcedure
     .input(
