@@ -11,15 +11,32 @@ export const recordRouter = router({
   //     };
   //   }),
   getAll: publicProcedure
-    .input(z.string().nullish().nullish())
-    .query(({ ctx, input: userId }) => {
+    .input(z.string().nullish())
+    .query(({ input: userId }) => {
       if (!userId) {
         return [];
       }
-      return ctx.prisma.record.findMany({
+      return prisma?.record.findMany({
         where: {
           userId: userId,
         },
       });
+    }),
+  setRecord: publicProcedure
+    .input(
+      z.object({
+        type: z.enum(["INCOME", "EXPENSE"]),
+        name: z.string(),
+        message: z.string().nullish(),
+        amount: z.string(),
+        currency: z.string(),
+        userId: z.string(),
+      })
+    )
+    .mutation(async ({ input: recordData }) => {
+      const newRecord = await prisma?.record.create({
+        data: recordData,
+      });
+      return newRecord;
     }),
 });
