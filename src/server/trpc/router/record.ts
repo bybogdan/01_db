@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { createRecordSchema } from "../../schema/post.schema";
+
 import { router, publicProcedure } from "../trpc";
 
 export const recordRouter = router({
@@ -45,20 +47,44 @@ export const recordRouter = router({
       return totalExpenseByCurrency;
     }),
   setRecord: publicProcedure
-    .input(
-      z.object({
-        type: z.enum(["INCOME", "EXPENSE"]),
-        name: z.string(),
-        message: z.string().nullish(),
-        amount: z.string(),
-        currency: z.string(),
-        userId: z.string(),
-      })
-    )
+    .input(createRecordSchema)
     .mutation(async ({ input: recordData }) => {
       const newRecord = await prisma?.record.create({
         data: recordData,
       });
       return newRecord;
+    }),
+  updateRecord: publicProcedure
+    .input(
+      z.object({
+        record: createRecordSchema,
+        id: z.string(),
+      })
+    )
+    .mutation(async ({ input: recordData }) => {
+      const { id } = recordData;
+      if (!id) {
+        throw new Error("don't have id");
+      }
+      const updatedRecord = await prisma?.record.update({
+        where: {
+          id,
+        },
+        data: recordData,
+      });
+      return updatedRecord;
+    }),
+  deleteRecord: publicProcedure
+    .input(z.string())
+    .mutation(async ({ input: id }) => {
+      if (!id) {
+        throw new Error("don't have id");
+      }
+      const updatedRecord = await prisma?.record.delete({
+        where: {
+          id,
+        },
+      });
+      return updatedRecord;
     }),
 });

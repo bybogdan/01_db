@@ -20,17 +20,15 @@ const Home: NextPage = () => {
   const { register, handleSubmit, reset } = useForm<FormInputs>({
     shouldUseNativeValidation: true,
   });
-  const onSubmit = async (data: FormInputs) => {
-    if (!sessionData?.user?.id) {
-      throw new Error("You are unauthorized");
-    }
-    setRecordMutation({ ...data, userId: sessionData?.user?.id });
-    reset();
-  };
 
   const { data: sessionData } = useSession();
   const { mutate: setRecordMutation, isSuccess: isSetRecordSuccess } =
     trpc.record.setRecord.useMutation();
+  const { mutate: setUpdateRecord, isSuccess: isUpdateRecordSuccess } =
+    trpc.record.updateRecord.useMutation();
+
+  const { mutate: setDeleteRecord, isSuccess: isDeleteRecordSuccess } =
+    trpc.record.deleteRecord.useMutation();
 
   const { data: allRecords, refetch: refetchAllRecords } =
     trpc.record.getAll.useQuery(sessionData?.user?.id, {
@@ -46,12 +44,25 @@ const Home: NextPage = () => {
       refetchOnWindowFocus: false,
     });
 
+  const onSubmit = async (data: FormInputs) => {
+    if (!sessionData?.user?.id) {
+      throw new Error("You are unauthorized");
+    }
+    setRecordMutation({ ...data, userId: sessionData?.user?.id });
+    reset();
+  };
+
   useEffect(() => {
-    if (isSetRecordSuccess) {
+    if (isSetRecordSuccess || isDeleteRecordSuccess) {
       refetchAllRecords();
       refetchTotalExpense();
     }
-  }, [isSetRecordSuccess, refetchAllRecords, refetchTotalExpense]);
+  }, [
+    isSetRecordSuccess,
+    isDeleteRecordSuccess,
+    refetchAllRecords,
+    refetchTotalExpense,
+  ]);
 
   return (
     <>
@@ -150,7 +161,15 @@ const Home: NextPage = () => {
                     <p>{record.amount}</p>
                     <p>{record.type}</p>
                     <p>{record.currency}</p>
-                    <p>{record.timestamp.toString()}</p>
+                    <p>
+                      {record.timestamp.getDate()}.{record.timestamp.getMonth()}
+                    </p>
+                    <button
+                      className="rounded bg-blue-500 py-2 px-4 font-bold text-white hover:bg-blue-700"
+                      onClick={() => setDeleteRecord(record.id)}
+                    >
+                      delete
+                    </button>
                   </div>
                 ))
               : null}
