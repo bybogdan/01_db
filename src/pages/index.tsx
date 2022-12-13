@@ -45,6 +45,7 @@ const Home: NextPage = () => {
       throw new Error("You are unauthorized");
     }
     setRecordMutation({ ...data, userId: sessionData?.user?.id });
+    reset();
   };
 
   useEffect(() => {
