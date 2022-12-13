@@ -8,13 +8,9 @@ import { trpc } from "../utils/trpc";
 import { useCallback, useEffect } from "react";
 import Image from "next/image";
 
-type FormInputs = {
-  name: string;
-  message?: string;
-  amount: string;
-  type: "INCOME" | "EXPENSE";
-  currency: string;
-};
+import { UserInfo } from "../components/UserInfo";
+import { RecordForm } from "../components/RecordForm";
+import type { FormInputs } from "../types";
 
 const Home: NextPage = () => {
   const { register, handleSubmit, reset } = useForm<FormInputs>({
@@ -49,7 +45,6 @@ const Home: NextPage = () => {
       throw new Error("You are unauthorized");
     }
     setRecordMutation({ ...data, userId: sessionData?.user?.id });
-    reset();
   };
 
   useEffect(() => {
@@ -74,84 +69,13 @@ const Home: NextPage = () => {
       <main className="flex min-h-screen flex-col items-center justify-center bg-slate-400">
         {sessionData?.user ? (
           <>
-            <div className="flex items-center gap-2">
-              <span>{sessionData.user.name}</span>
-              {/* {sessionData.user.image ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={sessionData.user.image}
-                  width="50"
-                  height="50"
-                  alt="userpic"
-                />
-              ) : null} */}
-              <div>
-                <p>Total expense</p>
-                {totalExpenseByCurrency &&
-                Object.entries(totalExpenseByCurrency).length ? (
-                  Object.entries(totalExpenseByCurrency).map(
-                    ([currency, amount], index) => (
-                      <div
-                        key={currency + index}
-                      >{`${currency} - ${amount}`}</div>
-                    )
-                  )
-                ) : (
-                  <div>0</div>
-                )}
-              </div>
-              <button
-                className="rounded-full bg-black/10 px-10 py-3 font-semibold text-black no-underline transition hover:bg-black/20"
-                onClick={() => signOut()}
-              >
-                sign out
-              </button>
-            </div>
+            <UserInfo totalExpenseByCurrency={totalExpenseByCurrency} />
             <div className="pt-4" />
-            <form
-              className="flex flex-col gap-y-2"
-              onSubmit={handleSubmit(onSubmit)}
-            >
-              <input
-                placeholder="name"
-                {...register("name", {
-                  required: "Please enter your first name.",
-                })} // custom message
-              />
-              <input placeholder="message" {...register("message")} />
-              <input
-                placeholder="amount"
-                type="number"
-                {...register("amount", {
-                  required: "Please enter your first name.",
-                })}
-              />
-              <select
-                placeholder="type"
-                defaultValue="EXPENSE"
-                {...register("type", {
-                  required: "Please enter your first name.",
-                })}
-              >
-                <option>EXPENSE</option>
-                <option>INCOME</option>
-              </select>
-              <select
-                placeholder="currency"
-                defaultValue="USD"
-                {...register("currency", {
-                  required: "Please enter your first name.",
-                })}
-              >
-                <option>USD</option>
-                <option>GLE</option>
-                <option>EUR</option>
-                <option>RUB</option>
-              </select>
-              <button className="bg-slate-100" type="submit">
-                save new record
-              </button>
-            </form>
+            <RecordForm
+              register={register}
+              handleSubmit={handleSubmit}
+              onSubmit={onSubmit}
+            />
 
             {allRecords
               ? allRecords.map((record) => (
