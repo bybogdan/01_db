@@ -1,14 +1,26 @@
+import { useSession } from "next-auth/react";
 import { memo } from "react";
-import type { UseFormHandleSubmit, UseFormRegister } from "react-hook-form";
+import { useForm } from "react-hook-form";
+import { useAppContext } from "../../hooks";
 import type { FormInputs } from "../../types";
 
-interface IComp {
-  onSubmit: (data: FormInputs) => Promise<void>;
-  register: UseFormRegister<FormInputs>;
-  handleSubmit: UseFormHandleSubmit<FormInputs>;
-}
+const Comp: React.FC = () => {
+  const { setRecord } = useAppContext();
 
-const Comp: React.FC<IComp> = ({ onSubmit, register, handleSubmit }) => {
+  const { data: sessionData } = useSession();
+
+  const { register, handleSubmit, reset } = useForm<FormInputs>({
+    shouldUseNativeValidation: true,
+  });
+
+  const onSubmit = async (data: FormInputs) => {
+    if (!sessionData?.user?.id) {
+      throw new Error("You are unauthorized");
+    }
+    setRecord({ ...data, userId: sessionData?.user?.id });
+    reset();
+  };
+
   return (
     <form className="flex flex-col gap-y-2" onSubmit={handleSubmit(onSubmit)}>
       <input

@@ -2,7 +2,6 @@ import { type NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
 import { signIn, signOut, useSession } from "next-auth/react";
-import { useForm } from "react-hook-form";
 
 import { trpc } from "../utils/trpc";
 import { useCallback, useEffect } from "react";
@@ -10,43 +9,19 @@ import Image from "next/image";
 
 import { UserInfo } from "../components/UserInfo";
 import { RecordForm } from "../components/RecordForm";
-import type { FormInputs } from "../types";
+import { RecordsList } from "../components/RecordsList";
+import { useAppContext } from "../hooks";
 
 const Home: NextPage = () => {
-  const { register, handleSubmit, reset } = useForm<FormInputs>({
-    shouldUseNativeValidation: true,
-  });
+  const {
+    // setRecord,
+    refetchAllRecords,
+    refetchTotalExpense,
+    isSetRecordSuccess,
+    isDeleteRecordSuccess,
+  } = useAppContext();
 
   const { data: sessionData } = useSession();
-  const { mutate: setRecordMutation, isSuccess: isSetRecordSuccess } =
-    trpc.record.setRecord.useMutation();
-  const { mutate: setUpdateRecord, isSuccess: isUpdateRecordSuccess } =
-    trpc.record.updateRecord.useMutation();
-
-  const { mutate: setDeleteRecord, isSuccess: isDeleteRecordSuccess } =
-    trpc.record.deleteRecord.useMutation();
-
-  const { data: allRecords, refetch: refetchAllRecords } =
-    trpc.record.getAll.useQuery(sessionData?.user?.id, {
-      refetchInterval: false,
-      refetchOnReconnect: false,
-      refetchOnWindowFocus: false,
-    });
-
-  const { data: totalExpenseByCurrency, refetch: refetchTotalExpense } =
-    trpc.record.totalExpense.useQuery(sessionData?.user?.id, {
-      refetchInterval: false,
-      refetchOnReconnect: false,
-      refetchOnWindowFocus: false,
-    });
-
-  const onSubmit = async (data: FormInputs) => {
-    if (!sessionData?.user?.id) {
-      throw new Error("You are unauthorized");
-    }
-    setRecordMutation({ ...data, userId: sessionData?.user?.id });
-    reset();
-  };
 
   useEffect(() => {
     if (isSetRecordSuccess || isDeleteRecordSuccess) {
@@ -70,34 +45,10 @@ const Home: NextPage = () => {
       <main className="flex min-h-screen flex-col items-center justify-center bg-slate-400">
         {sessionData?.user ? (
           <>
-            <UserInfo totalExpenseByCurrency={totalExpenseByCurrency} />
+            <UserInfo />
             <div className="pt-4" />
-            <RecordForm
-              register={register}
-              handleSubmit={handleSubmit}
-              onSubmit={onSubmit}
-            />
-
-            {allRecords
-              ? allRecords.map((record) => (
-                  <div key={record.id}>
-                    <p>{record.name}</p>
-                    <p>{record.message}</p>
-                    <p>{record.amount}</p>
-                    <p>{record.type}</p>
-                    <p>{record.currency}</p>
-                    <p>
-                      {record.timestamp.getDate()}.{record.timestamp.getMonth()}
-                    </p>
-                    <button
-                      className="rounded bg-blue-500 py-2 px-4 font-bold text-white hover:bg-blue-700"
-                      onClick={() => setDeleteRecord(record.id)}
-                    >
-                      delete
-                    </button>
-                  </div>
-                ))
-              : null}
+            <RecordForm />
+            <RecordsList />
           </>
         ) : (
           <button

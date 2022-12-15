@@ -1,12 +1,11 @@
 import { signOut, useSession } from "next-auth/react";
 import { memo } from "react";
+import { useAppContext } from "../../hooks";
 
-interface IUserInfo {
-  totalExpenseByCurrency: { [key: string]: number } | undefined;
-}
-
-const Comp: React.FC<IUserInfo> = ({ totalExpenseByCurrency }) => {
+const Comp: React.FC = ({}) => {
   const { data: sessionData } = useSession();
+
+  const { totalExpenseByCurrency } = useAppContext();
 
   if (!sessionData?.user) {
     return null;
