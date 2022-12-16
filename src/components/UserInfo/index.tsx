@@ -1,11 +1,11 @@
 import { signOut, useSession } from "next-auth/react";
 import { memo } from "react";
-import { useAppContext } from "../../hooks";
+import { useTrpcContext } from "../../hooks";
 
 const Comp: React.FC = ({}) => {
   const { data: sessionData } = useSession();
 
-  const { totalExpenseByCurrency } = useAppContext();
+  const { totalExpenseByCurrency } = useTrpcContext();
 
   if (!sessionData?.user) {
     return null;

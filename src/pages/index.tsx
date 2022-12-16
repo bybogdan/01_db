@@ -10,25 +10,26 @@ import Image from "next/image";
 import { UserInfo } from "../components/UserInfo";
 import { RecordForm } from "../components/RecordForm";
 import { RecordsList } from "../components/RecordsList";
-import { useAppContext } from "../hooks";
+import { useTrpcContext } from "../hooks";
 
 const Home: NextPage = () => {
   const {
-    // setRecord,
     refetchAllRecords,
     refetchTotalExpense,
+    isUpdateRecordMutate,
     isSetRecordSuccess,
     isDeleteRecordSuccess,
-  } = useAppContext();
+  } = useTrpcContext();
 
   const { data: sessionData } = useSession();
 
   useEffect(() => {
-    if (isSetRecordSuccess || isDeleteRecordSuccess) {
+    if (isSetRecordSuccess || isDeleteRecordSuccess || isUpdateRecordMutate) {
       refetchAllRecords();
       refetchTotalExpense();
     }
   }, [
+    isUpdateRecordMutate,
     isSetRecordSuccess,
     isDeleteRecordSuccess,
     refetchAllRecords,

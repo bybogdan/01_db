@@ -3,11 +3,13 @@ import type { ReactNode } from "react";
 import { trpc } from "../utils/trpc";
 import { useSession } from "next-auth/react";
 import type { Record } from "@prisma/client";
-import type { SetRecordType } from "../types";
+import type { RecordSchema } from "../server/schema/post.schema";
 
 interface IContext {
   deleteRecord: (id: string) => void;
   isDeleteRecordSuccess: boolean;
+  updateRecord: (id: string, record: RecordSchema) => void;
+  isUpdateRecordMutate: boolean;
   allRecords: Record[] | undefined;
   refetchAllRecords: () => void;
   totalExpenseByCurrency:
@@ -16,7 +18,7 @@ interface IContext {
       }
     | undefined;
   refetchTotalExpense: () => void;
-  setRecord: (data: SetRecordType) => void;
+  setRecord: (data: RecordSchema) => void;
   isSetRecordSuccess: boolean;
 }
 
@@ -28,7 +30,11 @@ const defaultContextValue = {
   deleteRecord: () => {
     return;
   },
+  updateRecord: () => {
+    return;
+  },
   isDeleteRecordSuccess: false,
+  isUpdateRecordMutate: false,
   allRecords: undefined,
   refetchAllRecords: () => {
     return;
@@ -37,7 +43,7 @@ const defaultContextValue = {
   refetchTotalExpense: () => {
     return;
   },
-  setRecord: (data: SetRecordType) => {
+  setRecord: () => {
     return;
   },
   isSetRecordSuccess: false,
@@ -72,6 +78,8 @@ export const TrpcContextProvider: React.FC<IContextProvider> = ({
 
   const deleteRecordMutate = trpc.record.deleteRecord.useMutation();
 
+  const updateRecordMutate = trpc.record.updateRecord.useMutation();
+
   const refetchAllRecords = useCallback(() => {
     getAllRecordsQuery.refetch();
   }, []);
@@ -80,7 +88,11 @@ export const TrpcContextProvider: React.FC<IContextProvider> = ({
     deleteRecordMutate.mutate(id);
   }, []);
 
-  const setRecord = useCallback((data: SetRecordType) => {
+  const updateRecord = useCallback((id: string, record: RecordSchema) => {
+    updateRecordMutate.mutate({ id, updRecordData: record });
+  }, []);
+
+  const setRecord = useCallback((data: RecordSchema) => {
     setRecordMutate.mutate(data);
   }, []);
 
@@ -91,6 +103,8 @@ export const TrpcContextProvider: React.FC<IContextProvider> = ({
   const value = {
     deleteRecord,
     isDeleteRecordSuccess: deleteRecordMutate.isSuccess,
+    updateRecord,
+    isUpdateRecordMutate: updateRecordMutate.isSuccess,
     allRecords: getAllRecordsQuery.data,
     refetchAllRecords,
     totalExpenseByCurrency: totalExpenseQuery.data,

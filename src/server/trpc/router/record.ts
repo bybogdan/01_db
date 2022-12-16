@@ -57,12 +57,13 @@ export const recordRouter = router({
   updateRecord: publicProcedure
     .input(
       z.object({
-        record: createRecordSchema,
+        updRecordData: createRecordSchema,
         id: z.string(),
       })
     )
-    .mutation(async ({ input: recordData }) => {
-      const { id } = recordData;
+    .mutation(async ({ input }) => {
+      const { id, updRecordData } = input;
+
       if (!id) {
         throw new Error("don't have id");
       }
@@ -70,7 +71,7 @@ export const recordRouter = router({
         where: {
           id,
         },
-        data: recordData,
+        data: updRecordData,
       });
       return updatedRecord;
     }),

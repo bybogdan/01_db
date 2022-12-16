@@ -1,24 +1,48 @@
+import type { Record } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import { memo } from "react";
 import { useForm } from "react-hook-form";
-import { useAppContext } from "../../hooks";
-import type { FormInputs } from "../../types";
+import { useTrpcContext } from "../../hooks";
+import type { RecordSchema } from "../../server/schema/post.schema";
 
-const Comp: React.FC = () => {
-  const { setRecord } = useAppContext();
+interface IComp {
+  currentRecord?: Record;
+  callbackAfterSubmit?: () => void;
+}
+
+const Comp: React.FC<IComp> = ({ currentRecord, callbackAfterSubmit }) => {
+  const defaultValues: RecordSchema | object = currentRecord
+    ? {
+        name: currentRecord.name,
+        message: currentRecord.message as string | undefined,
+        amount: currentRecord.amount,
+        type: currentRecord.type,
+        currency: currentRecord.currency,
+      }
+    : {};
+
+  const { setRecord, updateRecord } = useTrpcContext();
 
   const { data: sessionData } = useSession();
 
-  const { register, handleSubmit, reset } = useForm<FormInputs>({
+  const { register, handleSubmit, reset } = useForm<RecordSchema>({
     shouldUseNativeValidation: true,
+    defaultValues,
   });
 
-  const onSubmit = async (data: FormInputs) => {
+  const onSubmit = async (data: RecordSchema) => {
     if (!sessionData?.user?.id) {
       throw new Error("You are unauthorized");
     }
-    setRecord({ ...data, userId: sessionData?.user?.id });
+    if (currentRecord) {
+      updateRecord(currentRecord.id, { ...data, userId: currentRecord.userId });
+    } else {
+      setRecord({ ...data, userId: sessionData?.user?.id });
+    }
     reset();
+    if (callbackAfterSubmit) {
+      callbackAfterSubmit();
+    }
   };
 
   return (

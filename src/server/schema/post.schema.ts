@@ -52,4 +52,4 @@ export const createRecordSchema = z.object({
 // export type UpdatePostInput = TypeOf<typeof updatePostSchema>['body'];
 // export type FilterQueryInput = TypeOf<typeof filterQuery>;
 
-export type CreateRecordSchema = TypeOf<typeof createRecordSchema>;
+export type RecordSchema = TypeOf<typeof createRecordSchema>;
