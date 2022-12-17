@@ -14,16 +14,32 @@ export const RecordCard: React.FC<IRecordCard> = ({ record }) => {
   const [btnText, setBtnText] = useState("update");
 
   return (
-    <div key={record.id}>
-      <p>{record.name}</p>
-      <p>{record.message}</p>
-      <p>{record.amount}</p>
-      <p>{record.type}</p>
-      <p>{record.currency}</p>
-      <p>
-        {record.timestamp.getDate()}.{record.timestamp.getMonth()}
+    <li
+      className="flex flex-col	 justify-center gap-1 text-slate-900 dark:text-white"
+      key={record.id}
+    >
+      <p className="text-base text-gray-700 dark:text-slate-200">
+        {record.timestamp.getDate()}.{record.timestamp.getMonth()}.
+        {record.timestamp.getFullYear()}
       </p>
-      <button
+      <div className="flex justify-between">
+        <h5 className="mb-2 text-xl font-medium leading-tight text-gray-900 dark:text-white">
+          {record.name}
+        </h5>
+        <div
+          className={`flex gap-2 ${
+            record.type === "INCOME" ? "text-green-500" : ""
+          }`}
+        >
+          <p>
+            {record.type === "EXPENSE" ? "- " : "+ "}
+            {record.amount}.00
+          </p>
+          <p>{record.currency}</p>
+        </div>
+      </div>
+
+      {/* <button
         className="rounded bg-blue-500 py-2 px-4 font-bold text-white hover:bg-blue-700"
         onClick={() => deleteRecord(record.id)}
       >
@@ -35,13 +51,13 @@ export const RecordCard: React.FC<IRecordCard> = ({ record }) => {
         disabled={showEditForm}
       >
         {btnText}
-      </button>
+      </button> */}
       {showEditForm && (
         <RecordForm
           currentRecord={record}
           callbackAfterSubmit={() => setShowEditForm((prev) => !prev)}
         />
       )}
-    </div>
+    </li>
   );
 };

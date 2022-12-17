@@ -9,6 +9,8 @@ export const createRecordSchema = z.object({
   userId: z.string(),
 });
 
+export const createUserIdSchema = z.string().nullish();
+
 // export const createPostSchema = z.object({
 //   title: z.string({
 //     required_error: 'Title is required',
@@ -53,3 +55,4 @@ export const createRecordSchema = z.object({
 // export type FilterQueryInput = TypeOf<typeof filterQuery>;
 
 export type RecordSchema = TypeOf<typeof createRecordSchema>;
+export type UserIdSchema = TypeOf<typeof createUserIdSchema>;

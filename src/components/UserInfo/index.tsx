@@ -5,7 +5,9 @@ import { useTrpcContext } from "../../hooks";
 const Comp: React.FC = ({}) => {
   const { data: sessionData } = useSession();
 
-  const { totalExpenseByCurrency } = useTrpcContext();
+  const { data } = useTrpcContext();
+
+  const { totalExpenseByCurrency } = data || {};
 
   if (!sessionData?.user) {
     return null;

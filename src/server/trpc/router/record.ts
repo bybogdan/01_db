@@ -1,56 +1,83 @@
 import { z } from "zod";
+import { capitalizeString } from "../../../utils/common";
 
-import { createRecordSchema } from "../../schema/post.schema";
+import type { UserIdSchema } from "../../schema/post.schema";
+import {
+  createRecordSchema,
+  createUserIdSchema,
+} from "../../schema/post.schema";
 
 import { router, publicProcedure } from "../trpc";
 
+const getAll = (userId: UserIdSchema) => {
+  if (!userId) {
+    return [];
+  }
+  return prisma?.record.findMany({
+    where: {
+      userId: userId,
+    },
+  });
+};
+
+const getTolatExpense = async (userId: UserIdSchema) => {
+  if (!userId) {
+    return {};
+  }
+  const records = await prisma?.record.findMany({
+    where: {
+      userId: userId,
+      type: "EXPENSE",
+    },
+  });
+  if (!records) {
+    return {};
+  }
+
+  const totalExpenseByCurrency = records.reduce(
+    (acc: { [key: string]: number }, record) => {
+      const key = record.currency;
+      if (acc[key] === undefined) {
+        acc[key] = 0;
+      }
+      acc[key] += +record.amount;
+      return acc;
+    },
+    {}
+  );
+  return totalExpenseByCurrency;
+};
+
 export const recordRouter = router({
   getAll: publicProcedure
-    .input(z.string().nullish())
+    .input(createUserIdSchema)
     .query(({ input: userId }) => {
       if (!userId) {
         return [];
       }
-      return prisma?.record.findMany({
-        where: {
-          userId: userId,
-        },
-      });
+      return getAll(userId);
     }),
   totalExpense: publicProcedure
-    .input(z.string().nullish())
+    .input(createUserIdSchema)
     .query(async ({ input: userId }) => {
-      if (!userId) {
-        return {};
-      }
-      const records = await prisma?.record.findMany({
-        where: {
-          userId: userId,
-          type: "EXPENSE",
-        },
-      });
-      if (!records) {
-        return {};
-      }
-
-      const totalExpenseByCurrency = records.reduce(
-        (acc: { [key: string]: number }, record) => {
-          const key = record.currency;
-          if (acc[key] === undefined) {
-            acc[key] = 0;
-          }
-          acc[key] += +record.amount;
-          return acc;
-        },
-        {}
-      );
-      return totalExpenseByCurrency;
+      return getTolatExpense(userId);
+    }),
+  getData: publicProcedure
+    .input(createUserIdSchema)
+    .query(async ({ input: userId }) => {
+      const records = await getAll(userId);
+      const totalExpenseByCurrency = await getTolatExpense(userId);
+      return { records, totalExpenseByCurrency };
     }),
   setRecord: publicProcedure
     .input(createRecordSchema)
     .mutation(async ({ input: recordData }) => {
       const newRecord = await prisma?.record.create({
-        data: recordData,
+        data: {
+          ...recordData,
+          name: capitalizeString(recordData.name),
+          message: capitalizeString(recordData.message || ""),
+        },
       });
       return newRecord;
     }),

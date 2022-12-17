@@ -4,22 +4,24 @@ import { trpc } from "../utils/trpc";
 import { useSession } from "next-auth/react";
 import type { Record } from "@prisma/client";
 import type { RecordSchema } from "../server/schema/post.schema";
+import { funcPlaceholder } from "../utils/common";
 
 interface IContext {
   deleteRecord: (id: string) => void;
   isDeleteRecordSuccess: boolean;
   updateRecord: (id: string, record: RecordSchema) => void;
-  isUpdateRecordMutate: boolean;
-  allRecords: Record[] | undefined;
-  refetchAllRecords: () => void;
-  totalExpenseByCurrency:
-    | {
-        [key: string]: number;
-      }
-    | undefined;
-  refetchTotalExpense: () => void;
+  isUpdateRecordSuccess: boolean;
   setRecord: (data: RecordSchema) => void;
   isSetRecordSuccess: boolean;
+  data:
+    | {
+        records: Record[] | never[] | undefined;
+        totalExpenseByCurrency: {
+          [key: string]: number;
+        };
+      }
+    | undefined;
+  refetchGetData: () => void;
 }
 
 interface IContextProvider {
@@ -27,26 +29,14 @@ interface IContextProvider {
 }
 
 const defaultContextValue = {
-  deleteRecord: () => {
-    return;
-  },
-  updateRecord: () => {
-    return;
-  },
+  deleteRecord: funcPlaceholder,
+  updateRecord: funcPlaceholder,
   isDeleteRecordSuccess: false,
-  isUpdateRecordMutate: false,
-  allRecords: undefined,
-  refetchAllRecords: () => {
-    return;
-  },
-  totalExpenseByCurrency: undefined,
-  refetchTotalExpense: () => {
-    return;
-  },
-  setRecord: () => {
-    return;
-  },
+  isUpdateRecordSuccess: false,
+  setRecord: funcPlaceholder,
   isSetRecordSuccess: false,
+  data: undefined,
+  refetchGetData: funcPlaceholder,
 };
 
 export const TrpcContext = createContext<IContext>(defaultContextValue);
@@ -56,33 +46,17 @@ export const TrpcContextProvider: React.FC<IContextProvider> = ({
 }) => {
   const { data: sessionData } = useSession();
 
-  const getAllRecordsQuery = trpc.record.getAll.useQuery(
-    sessionData?.user?.id,
-    {
-      refetchInterval: false,
-      refetchOnReconnect: false,
-      refetchOnWindowFocus: false,
-    }
-  );
-
-  const totalExpenseQuery = trpc.record.totalExpense.useQuery(
-    sessionData?.user?.id,
-    {
-      refetchInterval: false,
-      refetchOnReconnect: false,
-      refetchOnWindowFocus: false,
-    }
-  );
+  const getDataQuery = trpc.record.getData.useQuery(sessionData?.user?.id, {
+    refetchInterval: false,
+    refetchOnReconnect: false,
+    refetchOnWindowFocus: false,
+  });
 
   const setRecordMutate = trpc.record.setRecord.useMutation();
 
   const deleteRecordMutate = trpc.record.deleteRecord.useMutation();
 
   const updateRecordMutate = trpc.record.updateRecord.useMutation();
-
-  const refetchAllRecords = useCallback(() => {
-    getAllRecordsQuery.refetch();
-  }, []);
 
   const deleteRecord = useCallback((id: string) => {
     deleteRecordMutate.mutate(id);
@@ -96,19 +70,17 @@ export const TrpcContextProvider: React.FC<IContextProvider> = ({
     setRecordMutate.mutate(data);
   }, []);
 
-  const refetchTotalExpense = useCallback(() => {
-    totalExpenseQuery.refetch();
+  const refetchGetData = useCallback(() => {
+    getDataQuery.refetch();
   }, []);
 
   const value = {
+    data: getDataQuery.data,
+    refetchGetData,
     deleteRecord,
     isDeleteRecordSuccess: deleteRecordMutate.isSuccess,
     updateRecord,
-    isUpdateRecordMutate: updateRecordMutate.isSuccess,
-    allRecords: getAllRecordsQuery.data,
-    refetchAllRecords,
-    totalExpenseByCurrency: totalExpenseQuery.data,
-    refetchTotalExpense,
+    isUpdateRecordSuccess: updateRecordMutate.isSuccess,
     setRecord,
     isSetRecordSuccess: setRecordMutate.isSuccess,
   };
