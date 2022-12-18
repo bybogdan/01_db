@@ -2,8 +2,9 @@ import type { Record } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import { memo } from "react";
 import { useForm } from "react-hook-form";
-import { useTrpcContext } from "../../hooks";
+import { UseTrpcContext } from "../../hooks";
 import type { RecordSchema } from "../../server/schema/post.schema";
+import { twButton, twInput, twSelect } from "../../utils/twCommon";
 
 interface IComp {
   currentRecord?: Record;
@@ -21,7 +22,7 @@ const Comp: React.FC<IComp> = ({ currentRecord, callbackAfterSubmit }) => {
       }
     : {};
 
-  const { setRecord, updateRecord } = useTrpcContext();
+  const { setRecord, updateRecord } = UseTrpcContext();
 
   const { data: sessionData } = useSession();
 
@@ -46,22 +47,32 @@ const Comp: React.FC<IComp> = ({ currentRecord, callbackAfterSubmit }) => {
   };
 
   return (
-    <form className="flex flex-col gap-y-2" onSubmit={handleSubmit(onSubmit)}>
+    <form className="flex flex-col gap-y-2 " onSubmit={handleSubmit(onSubmit)}>
       <input
+        autoComplete="off"
+        className={`${twInput}`}
         placeholder="name"
         {...register("name", {
           required: "Please enter your first name.",
         })} // custom message
       />
-      <input placeholder="message" {...register("message")} />
       <input
+        autoComplete="off"
+        className={`${twInput}`}
+        placeholder="message"
+        {...register("message")}
+      />
+      <input
+        autoComplete="off"
+        className={`${twInput}`}
         placeholder="amount"
-        type="number"
+        type="float"
         {...register("amount", {
           required: "Please enter your first name.",
         })}
       />
       <select
+        className={`${twSelect}`}
         placeholder="type"
         defaultValue="EXPENSE"
         {...register("type", {
@@ -72,6 +83,7 @@ const Comp: React.FC<IComp> = ({ currentRecord, callbackAfterSubmit }) => {
         <option>INCOME</option>
       </select>
       <select
+        className={`${twSelect}`}
         placeholder="currency"
         defaultValue="USD"
         {...register("currency", {
@@ -83,7 +95,7 @@ const Comp: React.FC<IComp> = ({ currentRecord, callbackAfterSubmit }) => {
         <option>EUR</option>
         <option>RUB</option>
       </select>
-      <button className="bg-slate-100" type="submit">
+      <button type="submit" className={`${twButton}`}>
         save new record
       </button>
     </form>

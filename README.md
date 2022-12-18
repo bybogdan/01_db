@@ -43,3 +43,5 @@ Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/ver
 
 - FIND API WHICH RETURN CURRENCY NAMES
 - Add useform
+
+- Try to add ssr, to get page with data immediately

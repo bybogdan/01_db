@@ -1,11 +1,13 @@
 import { signOut, useSession } from "next-auth/react";
 import { memo } from "react";
-import { useTrpcContext } from "../../hooks";
+import { UseTrpcContext } from "../../hooks";
+import { getCurrencySymbol, numToFloat } from "../../utils/common";
+import { twButton } from "../../utils/twCommon";
 
 const Comp: React.FC = ({}) => {
   const { data: sessionData } = useSession();
 
-  const { data } = useTrpcContext();
+  const { data } = UseTrpcContext();
 
   const { totalExpenseByCurrency } = data || {};
 
@@ -31,17 +33,16 @@ const Comp: React.FC = ({}) => {
         Object.entries(totalExpenseByCurrency).length ? (
           Object.entries(totalExpenseByCurrency).map(
             ([currency, amount], index) => (
-              <div key={currency + index}>{`${currency} - ${amount}`}</div>
+              <div key={currency + index}>{`${numToFloat(
+                amount
+              )} - ${getCurrencySymbol(currency)}`}</div>
             )
           )
         ) : (
-          <div>0</div>
+          <div>0.00</div>
         )}
       </div>
-      <button
-        className="rounded-full bg-black/10 px-10 py-3 font-semibold text-black no-underline transition hover:bg-black/20"
-        onClick={() => signOut()}
-      >
+      <button className={`${twButton}`} onClick={() => signOut()}>
         sign out
       </button>
     </div>

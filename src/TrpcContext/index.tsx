@@ -22,6 +22,7 @@ interface IContext {
       }
     | undefined;
   refetchGetData: () => void;
+  isReady: boolean;
 }
 
 interface IContextProvider {
@@ -37,6 +38,7 @@ const defaultContextValue = {
   isSetRecordSuccess: false,
   data: undefined,
   refetchGetData: funcPlaceholder,
+  isReady: false,
 };
 
 export const TrpcContext = createContext<IContext>(defaultContextValue);
@@ -83,6 +85,7 @@ export const TrpcContextProvider: React.FC<IContextProvider> = ({
     isUpdateRecordSuccess: updateRecordMutate.isSuccess,
     setRecord,
     isSetRecordSuccess: setRecordMutate.isSuccess,
+    isReady: getDataQuery.isSuccess,
   };
 
   return <TrpcContext.Provider value={value}>{children}</TrpcContext.Provider>;

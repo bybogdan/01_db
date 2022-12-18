@@ -1,6 +1,7 @@
 import type { Record } from "@prisma/client";
 import { useEffect, useState } from "react";
-import { useTrpcContext } from "../../hooks";
+import { UseTrpcContext } from "../../hooks";
+import { getCurrencySymbol, numToFloat } from "../../utils/common";
 import { RecordForm } from "../RecordForm";
 
 interface IRecordCard {
@@ -8,7 +9,7 @@ interface IRecordCard {
 }
 
 export const RecordCard: React.FC<IRecordCard> = ({ record }) => {
-  const { deleteRecord } = useTrpcContext();
+  const { deleteRecord } = UseTrpcContext();
 
   const [showEditForm, setShowEditForm] = useState(false);
   const [btnText, setBtnText] = useState("update");
@@ -33,9 +34,9 @@ export const RecordCard: React.FC<IRecordCard> = ({ record }) => {
         >
           <p>
             {record.type === "EXPENSE" ? "- " : "+ "}
-            {record.amount}.00
+            {numToFloat(+record.amount)}
           </p>
-          <p>{record.currency}</p>
+          <p>{getCurrencySymbol(record.currency)}</p>
         </div>
       </div>
 

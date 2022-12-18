@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { TrpcContext } from "../TrpcContext";
 
-export const useTrpcContext = () => {
+export const UseTrpcContext = () => {
   return useContext(TrpcContext);
 };

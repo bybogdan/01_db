@@ -1,8 +1,8 @@
-import { useTrpcContext } from "../../hooks";
+import { UseTrpcContext } from "../../hooks";
 import { RecordCard } from "../RecordCard";
 
 export const RecordsList: React.FC = () => {
-  const { data } = useTrpcContext();
+  const { data } = UseTrpcContext();
 
   const { records } = data || {};
 

@@ -17,6 +17,11 @@ const getAll = (userId: UserIdSchema) => {
     where: {
       userId: userId,
     },
+    orderBy: [
+      {
+        timestamp: "desc",
+      },
+    ],
   });
 };
 
