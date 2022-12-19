@@ -14,7 +14,9 @@ const MyApp: AppType<{ session: Session | null }> = ({
   return (
     <SessionProvider session={session}>
       <TrpcContextProvider>
-        <Component {...pageProps} />
+        <div className="flex min-h-screen flex-col items-center justify-center p-6 ">
+          <Component {...pageProps} />
+        </div>
       </TrpcContextProvider>
     </SessionProvider>
   );

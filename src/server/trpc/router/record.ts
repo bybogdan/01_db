@@ -74,6 +74,13 @@ export const recordRouter = router({
       const totalExpenseByCurrency = await getTolatExpense(userId);
       return { records, totalExpenseByCurrency };
     }),
+  getRecord: publicProcedure.input(z.string()).query(async ({ input: id }) => {
+    return await prisma?.record.findFirst({
+      where: {
+        id,
+      },
+    });
+  }),
   setRecord: publicProcedure
     .input(createRecordSchema)
     .mutation(async ({ input: recordData }) => {

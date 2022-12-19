@@ -1,4 +1,5 @@
-import { TypeOf, z } from "zod";
+import type { TypeOf } from "zod";
+import { z } from "zod";
 
 export const createRecordSchema = z.object({
   type: z.enum(["INCOME", "EXPENSE"]),
