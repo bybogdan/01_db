@@ -9,7 +9,7 @@ export const capitalizeString = (string: string) => {
 
 export const getCurrencySymbol = (currency: string) => {
   return (
-    (currency === "GLE" && "₾") ||
+    (currency === "GEL" && "₾") ||
     (currency === "USD" && "$") ||
     (currency === "EUR" && "€") ||
     (currency === "RUB" && "₽")

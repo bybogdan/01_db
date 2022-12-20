@@ -91,7 +91,7 @@ const Comp: React.FC<IComp> = ({ currentRecord, callbackAfterSubmit }) => {
         })}
       >
         <option>USD</option>
-        <option>GLE</option>
+        <option>GEL</option>
         <option>EUR</option>
         <option>RUB</option>
       </select>

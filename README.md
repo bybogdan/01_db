@@ -41,7 +41,8 @@ Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/ver
 
 # TODO
 
-- FIND API WHICH RETURN CURRENCY NAMES
-- Add useform
+- FIND API WHICH RETURN CURRENCY NAMES (DONE)
+- Add useform (DONE)
 
-- Try to add ssr, to get page with data immediately
+* Add types of transactions food, rent, etc.
+* Try to add ssr, to get page with data immediately

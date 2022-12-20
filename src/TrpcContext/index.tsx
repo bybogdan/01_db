@@ -16,9 +16,7 @@ interface IContext {
   data:
     | {
         records: Record[] | never[] | undefined;
-        totalExpenseByCurrency: {
-          [key: string]: number;
-        };
+        expense: [string, string];
       }
     | undefined;
   refetchGetData: () => void;

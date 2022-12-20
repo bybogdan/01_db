@@ -6,6 +6,10 @@ import { signIn, useSession } from "next-auth/react";
 import { useEffect } from "react";
 import Image from "next/image";
 
+import CurrencyAPI from "@everapi/currencyapi-js";
+
+import { env } from "../env/client.mjs";
+
 import { UserInfo } from "../components/UserInfo";
 import { RecordForm } from "../components/RecordForm";
 import { RecordsList } from "../components/RecordsList";

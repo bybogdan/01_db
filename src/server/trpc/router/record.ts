@@ -1,11 +1,19 @@
 import { z } from "zod";
-import { capitalizeString } from "../../../utils/common";
+import { capitalizeString, numToFloat } from "../../../utils/common";
+import {
+  currencyResponse,
+  currencyResponseType,
+} from "../../../utils/mocks/currency";
+
+import CurrencyAPI from "@everapi/currencyapi-js";
 
 import type { UserIdSchema } from "../../schema/post.schema";
 import {
   createRecordSchema,
   createUserIdSchema,
 } from "../../schema/post.schema";
+
+import { env } from "../../../env/server.mjs";
 
 import { router, publicProcedure } from "../trpc";
 
@@ -53,6 +61,35 @@ const getTolatExpense = async (userId: UserIdSchema) => {
   return totalExpenseByCurrency;
 };
 
+const getExpensesSortedByCurrency = async (
+  userId?: UserIdSchema,
+  from?: string,
+  to?: string
+) => {
+  if (!userId) {
+    return {};
+  }
+  const records = await prisma?.record.findMany({
+    where: {
+      userId: userId,
+      type: "EXPENSE",
+    },
+  });
+  if (!records) {
+    return {};
+  }
+
+  return records.reduce((acc: { [key: string]: number }, record) => {
+    const key = record.currency;
+    if (acc[key] === undefined) {
+      acc[key] = 0;
+    }
+
+    acc[key] += +record.amount;
+    return acc;
+  }, {});
+};
+
 export const recordRouter = router({
   getAll: publicProcedure
     .input(createUserIdSchema)
@@ -67,12 +104,46 @@ export const recordRouter = router({
     .query(async ({ input: userId }) => {
       return getTolatExpense(userId);
     }),
+  getExpensesSortedByCurrency: publicProcedure
+    .input(createUserIdSchema)
+    .query(async ({ input: userId }) => getExpensesSortedByCurrency(userId)),
   getData: publicProcedure
     .input(createUserIdSchema)
     .query(async ({ input: userId }) => {
       const records = await getAll(userId);
-      const totalExpenseByCurrency = await getTolatExpense(userId);
-      return { records, totalExpenseByCurrency };
+      const totalExpensesSortedByCurrency = await getExpensesSortedByCurrency(
+        userId
+      );
+
+      const isDevMode = process.env.NODE_ENV === "development";
+
+      let currenciesResponse: currencyResponseType = currencyResponse;
+
+      if (!isDevMode) {
+        currenciesResponse =
+          (await new CurrencyAPI(env.CURRENCYAPI_KEY)?.latest({
+            currencies: ["EUR", "GEL", "RUB"],
+          })) || currencyResponse;
+      }
+
+      const expenseValue = Object.keys(totalExpensesSortedByCurrency).reduce(
+        (acc, key: string) => {
+          if (key === "USD") {
+            acc += +(totalExpensesSortedByCurrency[key] as number);
+          } else {
+            const currency = currenciesResponse.data[key]?.value;
+            if (currency) {
+              acc += +(totalExpensesSortedByCurrency[key] as number) / currency;
+            }
+          }
+          return acc;
+        },
+        0
+      );
+
+      const expense: [string, string] = [numToFloat(expenseValue), "USD"];
+
+      return { records, expense };
     }),
   getRecord: publicProcedure.input(z.string()).query(async ({ input: id }) => {
     return await prisma?.record.findFirst({

@@ -7,19 +7,19 @@ async function main() {
       {
         name: "Bread",
         amount: "10",
-        currency: "GLE",
+        currency: "GEL",
         userId,
       },
       {
         name: "Milk",
         amount: "3",
-        currency: "GLE",
+        currency: "GEL",
         userId,
       },
       {
         name: "Water",
         amount: "0.5",
-        currency: "GLE",
+        currency: "GEL",
         userId,
       },
     ],

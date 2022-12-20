@@ -1,5 +1,6 @@
 import type { GetServerSideProps } from "next";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { Loader } from "../../components/Loader";
 import { RecordForm } from "../../components/RecordForm";
@@ -42,16 +43,21 @@ const RecordPage: React.FC<IRecordPage> = ({ id }) => {
     refetchOnWindowFocus: false,
   });
 
+  const router = useRouter();
+
   const { deleteRecord, isUpdateRecordSuccess, isDeleteRecordSuccess } =
     UseTrpcContext();
 
   const [showEditForm, setShowEditForm] = useState(false);
 
   useEffect(() => {
-    if (isDeleteRecordSuccess || isUpdateRecordSuccess) {
+    if (isUpdateRecordSuccess) {
       refetchGetRecord();
     }
-  }, [isUpdateRecordSuccess, isDeleteRecordSuccess, refetchGetRecord]);
+    if (isDeleteRecordSuccess) {
+      router.push("/");
+    }
+  }, [isUpdateRecordSuccess, isDeleteRecordSuccess, refetchGetRecord, router]);
 
   if (isLoading) {
     return <Loader />;
@@ -90,12 +96,9 @@ const RecordPage: React.FC<IRecordPage> = ({ id }) => {
         </h5>
       </div>
 
-      {/* <button
-          className={twButton}
-          onClick={() => deleteRecord(record.id)}
-        >
-          delete
-        </button> */}
+      <button className={twButton} onClick={() => deleteRecord(record.id)}>
+        delete
+      </button>
       <button
         className={twButton}
         onClick={() => setShowEditForm((prev) => !prev)}

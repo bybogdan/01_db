@@ -9,7 +9,8 @@ const Comp: React.FC = ({}) => {
 
   const { data } = UseTrpcContext();
 
-  const { totalExpenseByCurrency } = data || {};
+  const { expense = [] } = data || {};
+  const [value, currency] = expense;
 
   if (!sessionData?.user) {
     return null;
@@ -28,16 +29,10 @@ const Comp: React.FC = ({}) => {
       />
     ) : null} */}
       <div>
-        <p>Total expense</p>
-        {totalExpenseByCurrency &&
-        Object.entries(totalExpenseByCurrency).length ? (
-          Object.entries(totalExpenseByCurrency).map(
-            ([currency, amount], index) => (
-              <div key={currency + index}>{`${numToFloat(
-                amount
-              )} - ${getCurrencySymbol(currency)}`}</div>
-            )
-          )
+        {value && currency ? (
+          <div>{`Expense: ${numToFloat(+value)} ${getCurrencySymbol(
+            currency
+          )}`}</div>
         ) : (
           <div>0.00</div>
         )}
