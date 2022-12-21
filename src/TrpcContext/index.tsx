@@ -11,8 +11,10 @@ interface IContext {
   isDeleteRecordSuccess: boolean;
   updateRecord: (id: string, record: RecordSchema) => void;
   isUpdateRecordSuccess: boolean;
+  isUpdateRecordLoading: boolean;
   setRecord: (data: RecordSchema) => void;
   isSetRecordSuccess: boolean;
+  isSetRecordLoading: boolean;
   data:
     | {
         records: Record[] | never[] | undefined;
@@ -32,8 +34,10 @@ const defaultContextValue = {
   updateRecord: funcPlaceholder,
   isDeleteRecordSuccess: false,
   isUpdateRecordSuccess: false,
+  isUpdateRecordLoading: false,
   setRecord: funcPlaceholder,
   isSetRecordSuccess: false,
+  isSetRecordLoading: false,
   data: undefined,
   refetchGetData: funcPlaceholder,
   isReady: false,
@@ -81,8 +85,10 @@ export const TrpcContextProvider: React.FC<IContextProvider> = ({
     isDeleteRecordSuccess: deleteRecordMutate.isSuccess,
     updateRecord,
     isUpdateRecordSuccess: updateRecordMutate.isSuccess,
+    isUpdateRecordLoading: updateRecordMutate.isLoading,
     setRecord,
     isSetRecordSuccess: setRecordMutate.isSuccess,
+    isSetRecordLoading: setRecordMutate.isLoading,
     isReady: getDataQuery.isSuccess,
   };
 

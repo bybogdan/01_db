@@ -22,7 +22,7 @@
     "**/*.tsx",
     "**/*.cjs",
     "**/*.mjs",
-    "decs.d.ts"
+    "currencyapi-js.d.ts"
   ],
   "exclude": ["node_modules"]
 }

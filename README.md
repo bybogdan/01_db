@@ -46,3 +46,6 @@ Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/ver
 
 * Add types of transactions food, rent, etc.
 * Try to add ssr, to get page with data immediately
+* prisma pagination
+* update view faster after api calls
+* add some loading state

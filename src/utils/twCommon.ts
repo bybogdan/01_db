@@ -11,3 +11,6 @@ export const twBigButton =
   "inline-block px-8 py-4 bg-blue-600 text-white font-medium text-sm leading-snug uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out";
 
 export const twHeading = "mt-0 mb-2 text-3xl font-medium leading-tight";
+
+export const twCenteringBlock =
+  "flex min-h-screen flex-col items-center justify-center p-6 ";

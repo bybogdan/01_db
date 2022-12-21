@@ -1,17 +1,24 @@
 import type { Record } from "@prisma/client";
 import { useSession } from "next-auth/react";
-import { memo } from "react";
+import { memo, ReactNode, useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { UseTrpcContext } from "../../hooks";
 import type { RecordSchema } from "../../server/schema/post.schema";
+import { LoaderSize } from "../../types/misc";
 import { twButton, twInput, twSelect } from "../../utils/twCommon";
+import { Loader } from "../Loader";
 
 interface IComp {
   currentRecord?: Record;
   callbackAfterSubmit?: () => void;
+  discardButton?: ReactNode;
 }
 
-const Comp: React.FC<IComp> = ({ currentRecord, callbackAfterSubmit }) => {
+const Comp: React.FC<IComp> = ({
+  currentRecord,
+  callbackAfterSubmit,
+  discardButton,
+}) => {
   const defaultValues: RecordSchema | object = currentRecord
     ? {
         name: currentRecord.name,
@@ -22,8 +29,13 @@ const Comp: React.FC<IComp> = ({ currentRecord, callbackAfterSubmit }) => {
       }
     : {};
 
-  const { setRecord, updateRecord } = UseTrpcContext();
-
+  const {
+    setRecord,
+    updateRecord,
+    isUpdateRecordSuccess,
+    isUpdateRecordLoading,
+    isSetRecordSuccess,
+  } = UseTrpcContext();
   const { data: sessionData } = useSession();
 
   const { register, handleSubmit, reset } = useForm<RecordSchema>({
@@ -41,36 +53,48 @@ const Comp: React.FC<IComp> = ({ currentRecord, callbackAfterSubmit }) => {
       setRecord({ ...data, userId: sessionData?.user?.id });
     }
     reset();
+  };
+
+  const closeForm = useCallback(() => {
+    reset();
     if (callbackAfterSubmit) {
       callbackAfterSubmit();
     }
-  };
+  }, [callbackAfterSubmit, reset]);
+
+  useEffect(() => {
+    if (isUpdateRecordSuccess) {
+      closeForm();
+    }
+  }, [isUpdateRecordSuccess, closeForm]);
 
   return (
     <form className="flex flex-col gap-y-2 " onSubmit={handleSubmit(onSubmit)}>
-      <input
-        autoComplete="off"
-        className={`${twInput}`}
-        placeholder="name"
-        {...register("name", {
-          required: "Please enter your first name.",
-        })} // custom message
-      />
-      <input
-        autoComplete="off"
-        className={`${twInput}`}
-        placeholder="message"
-        {...register("message")}
-      />
-      <input
-        autoComplete="off"
-        className={`${twInput}`}
-        placeholder="amount"
-        type="float"
-        {...register("amount", {
-          required: "Please enter your first name.",
-        })}
-      />
+      <div className="flex gap-2">
+        <input
+          autoComplete="off"
+          className={`${twInput}`}
+          placeholder="amount"
+          type="float"
+          {...register("amount", {
+            required: "Please enter your first name.",
+          })}
+        />
+        <select
+          className={`${twSelect}`}
+          placeholder="currency"
+          defaultValue="USD"
+          {...register("currency", {
+            required: "Please enter your first name.",
+          })}
+        >
+          <option>USD</option>
+          <option>GEL</option>
+          <option>EUR</option>
+          <option>RUB</option>
+        </select>
+      </div>
+
       <select
         className={`${twSelect}`}
         placeholder="type"
@@ -82,22 +106,32 @@ const Comp: React.FC<IComp> = ({ currentRecord, callbackAfterSubmit }) => {
         <option>EXPENSE</option>
         <option>INCOME</option>
       </select>
-      <select
-        className={`${twSelect}`}
-        placeholder="currency"
-        defaultValue="USD"
-        {...register("currency", {
+
+      <input
+        autoComplete="off"
+        className={`${twInput}`}
+        placeholder="label"
+        {...register("name", {
           required: "Please enter your first name.",
         })}
-      >
-        <option>USD</option>
-        <option>GEL</option>
-        <option>EUR</option>
-        <option>RUB</option>
-      </select>
-      <button type="submit" className={`${twButton}`}>
-        save new record
-      </button>
+      />
+
+      <input
+        autoComplete="off"
+        className={`${twInput}`}
+        placeholder="message"
+        {...register("message")}
+      />
+      <div className={`flex gap-2 ${discardButton ? "flex-row-reverse" : ""}`}>
+        <button
+          type="submit"
+          className={`grow ${twButton}`}
+          disabled={isUpdateRecordLoading}
+        >
+          {!isUpdateRecordLoading ? "save" : <Loader size={LoaderSize.SMALL} />}
+        </button>
+        {discardButton ? discardButton : null}
+      </div>
     </form>
   );
 };
