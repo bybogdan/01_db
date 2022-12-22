@@ -17,6 +17,14 @@ import { env } from "../../../env/server.mjs";
 
 import { router, publicProcedure } from "../trpc";
 
+const ONE_DAY = 1000 * 60 * 60 * 24;
+
+const getCurrrency = async () => {
+  return await new CurrencyAPI(env.CURRENCYAPI_KEY)?.latest({
+    currencies: ["EUR", "GEL", "RUB"],
+  });
+};
+
 const getAll = (userId: UserIdSchema) => {
   if (!userId) {
     return [];
@@ -116,14 +124,41 @@ export const recordRouter = router({
       );
 
       const isDevMode = process.env.NODE_ENV === "development";
-
       let currenciesResponse: currencyResponseType = currencyResponse;
+      const currencies = await prisma?.currencies.findMany();
 
-      if (!isDevMode) {
+      if (isDevMode) {
         currenciesResponse =
-          (await new CurrencyAPI(env.CURRENCYAPI_KEY)?.latest({
-            currencies: ["EUR", "GEL", "RUB"],
-          })) || currencyResponse;
+          currencies?.length && currencies[0]?.value
+            ? (currencies[0].value as currencyResponseType)
+            : currenciesResponse;
+      } else if (!currencies?.length) {
+        currenciesResponse = await getCurrrency();
+
+        await prisma?.currencies.create({
+          data: {
+            value: currenciesResponse,
+          },
+        });
+      } else if (currencies[0]?.timestamp) {
+        const timeNow = +new Date();
+        const isCurrencyStale = +currencies[0].timestamp + ONE_DAY < timeNow;
+
+        if (isCurrencyStale) {
+          await prisma?.currencies.delete({
+            where: {
+              id: currencies[0].id,
+            },
+          });
+          currenciesResponse = await getCurrrency();
+          await prisma?.currencies.create({
+            data: {
+              value: currenciesResponse,
+            },
+          });
+        } else {
+          currenciesResponse = currencies[0].value as currencyResponseType;
+        }
       }
 
       const expenseValue = Object.keys(totalExpensesSortedByCurrency).reduce(
@@ -181,7 +216,11 @@ export const recordRouter = router({
         where: {
           id,
         },
-        data: updRecordData,
+        data: {
+          ...updRecordData,
+          name: capitalizeString(updRecordData.name),
+          message: capitalizeString(updRecordData.message || ""),
+        },
       });
       return updatedRecord;
     }),

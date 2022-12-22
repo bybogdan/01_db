@@ -2,7 +2,8 @@ import type { GetServerSideProps } from "next";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { ReactNode, useCallback } from "react";
+import type { ReactNode } from "react";
+import { useCallback } from "react";
 import { useEffect, useState } from "react";
 import { Loader } from "../../components/Loader";
 import { RecordForm } from "../../components/RecordForm";
@@ -113,29 +114,52 @@ const RecordPage: React.FC<IRecordPage> = ({ id }) => {
       className="align-between flex min-h-screen flex-col justify-between gap-1 p-6 text-slate-900 dark:text-white"
       key={record.id}
     >
-      <div>
-        <div
-          className={`flex gap-2 ${
-            record.type === "INCOME" ? "text-green-500" : ""
-          }`}
-        >
-          <h3 className={twHeading}>
-            {record.type === "EXPENSE" ? "- " : "+ "}
-            {numToFloat(+record.amount)}
-          </h3>
-          <h3 className={twHeading}>{getCurrencySymbol(record.currency)}</h3>
+      <div className="flex flex-col gap-10">
+        <div className="flex justify-between">
+          <Link className="h-fit" href="/">
+            <svg
+              aria-hidden="true"
+              focusable="false"
+              data-prefix="far"
+              data-icon="arrow-alt-circle-left"
+              className="h-7 w-7"
+              role="img"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 512 512"
+            >
+              <path
+                fill="currentColor"
+                d="M8 256c0 137 111 248 248 248s248-111 248-248S393 8 256 8 8 119 8 256zm448 0c0 110.5-89.5 200-200 200S56 366.5 56 256 145.5 56 256 56s200 89.5 200 200zm-72-20v40c0 6.6-5.4 12-12 12H256v67c0 10.7-12.9 16-20.5 8.5l-99-99c-4.7-4.7-4.7-12.3 0-17l99-99c7.6-7.6 20.5-2.2 20.5 8.5v67h116c6.6 0 12 5.4 12 12z"
+              ></path>
+            </svg>
+          </Link>
+
+          <div>{sessionData.user.name}</div>
         </div>
-        <p className="text-base text-gray-700 dark:text-slate-200">
-          {record.timestamp.getDate()}.{record.timestamp.getMonth()}.
-          {record.timestamp.getFullYear()}
-        </p>
         <div>
-          <h5 className="mb-2 text-xl font-medium leading-tight text-gray-900 dark:text-white">
-            {record.name}
-          </h5>
-          <h5 className="mb-2 text-xl font-medium leading-tight text-gray-900 dark:text-white">
-            {record.message}
-          </h5>
+          <div
+            className={`flex gap-2 ${
+              record.type === "INCOME" ? "text-green-500" : ""
+            }`}
+          >
+            <h3 className={twHeading}>
+              {record.type === "EXPENSE" ? "- " : "+ "}
+              {numToFloat(+record.amount)}
+            </h3>
+            <h3 className={twHeading}>{getCurrencySymbol(record.currency)}</h3>
+          </div>
+          <p className="text-base text-gray-700 dark:text-slate-200">
+            {record.timestamp.getDate()}.{record.timestamp.getMonth()}.
+            {record.timestamp.getFullYear()}
+          </p>
+          <div>
+            <h5 className="mb-2 text-xl font-medium leading-tight text-gray-900 dark:text-white">
+              {record.name}
+            </h5>
+            <h5 className="mb-2 text-xl font-medium leading-tight text-gray-900 dark:text-white">
+              {record.message}
+            </h5>
+          </div>
         </div>
 
         {showEditForm ? (
@@ -147,7 +171,7 @@ const RecordPage: React.FC<IRecordPage> = ({ id }) => {
         ) : null}
       </div>
 
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-6">
         {!showEditForm ? (
           <button className={twButton} onClick={callbackAfterSubmit}>
             edit
@@ -159,9 +183,6 @@ const RecordPage: React.FC<IRecordPage> = ({ id }) => {
         >
           delete
         </button>
-        <Link className={twButton} href="/">
-          back
-        </Link>
       </div>
     </div>
   );

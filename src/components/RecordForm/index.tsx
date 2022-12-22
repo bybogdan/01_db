@@ -50,38 +50,47 @@ const Comp: React.FC<IComp> = ({
     if (currentRecord) {
       updateRecord(currentRecord.id, { ...data, userId: currentRecord.userId });
     } else {
-      setRecord({ ...data, userId: sessionData?.user?.id });
+      setRecord({
+        ...data,
+        userId: sessionData?.user?.id,
+      });
     }
-    reset();
-  };
-
-  const closeForm = useCallback(() => {
     reset();
     if (callbackAfterSubmit) {
       callbackAfterSubmit();
     }
-  }, [callbackAfterSubmit, reset]);
+  };
 
-  useEffect(() => {
-    if (isUpdateRecordSuccess) {
-      closeForm();
-    }
-  }, [isUpdateRecordSuccess, closeForm]);
+  // const closeForm = useCallback(() => {
+  //   reset();
+  //   if (callbackAfterSubmit) {
+  //     callbackAfterSubmit();
+  //   }
+  // }, [callbackAfterSubmit, reset]);
+
+  // useEffect(() => {
+  //   if (isUpdateRecordSuccess) {
+  //     closeForm();
+  //   }
+  // }, [isUpdateRecordSuccess, closeForm]);
 
   return (
-    <form className="flex flex-col gap-y-2 " onSubmit={handleSubmit(onSubmit)}>
-      <div className="flex gap-2">
+    <form className="flex flex-col gap-y-3 " onSubmit={handleSubmit(onSubmit)}>
+      <div className="relative flex gap-2">
         <input
           autoComplete="off"
           className={`${twInput}`}
           placeholder="amount"
-          type="float"
+          type="number"
+          min="0.00"
+          step="0.01"
           {...register("amount", {
             required: "Please enter your first name.",
           })}
         />
         <select
-          className={`${twSelect}`}
+          className={`absolute ${twSelect} right-0 w-fit bg-gray-100`}
+          style={{ top: "50%", transform: "translate(0, -50%)" }}
           placeholder="currency"
           defaultValue="USD"
           {...register("currency", {

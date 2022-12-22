@@ -3,3 +3,10 @@ export enum LoaderSize {
   BIG,
   SMALL,
 }
+
+export enum Currency {
+  USD,
+  GEL,
+  EUR,
+  RUB,
+}
