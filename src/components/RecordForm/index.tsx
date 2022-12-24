@@ -85,7 +85,7 @@ const Comp: React.FC<IComp> = ({
           min="0.00"
           step="0.01"
           {...register("amount", {
-            required: "Please enter your first name.",
+            required: "Please enter amount, formats: 100, 10.20, 0.99",
           })}
         />
         <select
@@ -94,7 +94,7 @@ const Comp: React.FC<IComp> = ({
           placeholder="currency"
           defaultValue="USD"
           {...register("currency", {
-            required: "Please enter your first name.",
+            required: "Please enter currency",
           })}
         >
           <option>USD</option>
@@ -109,7 +109,7 @@ const Comp: React.FC<IComp> = ({
         placeholder="type"
         defaultValue="EXPENSE"
         {...register("type", {
-          required: "Please enter your first name.",
+          required: "Please enter type of transaction",
         })}
       >
         <option>EXPENSE</option>
@@ -121,7 +121,7 @@ const Comp: React.FC<IComp> = ({
         className={`${twInput}`}
         placeholder="label"
         {...register("name", {
-          required: "Please enter your first name.",
+          required: "Please enter label for transaction",
         })}
       />
 
