@@ -37,8 +37,8 @@ const Home: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Komala</title>
-        <meta name="description" content="Komala" />
+        <title>Dialga</title>
+        <meta name="description" content="Dialga" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div>
