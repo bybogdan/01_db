@@ -51,3 +51,4 @@ Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/ver
 - Consider using of src/TrpcContext/index.tsx
 - Add ability to get records from selected period of time
 - Add page with many stats to see different info about financial profile
+- PWA?
