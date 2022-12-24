@@ -50,11 +50,14 @@ export const TrpcContextProvider: React.FC<IContextProvider> = ({
 }) => {
   const { data: sessionData } = useSession();
 
-  const getDataQuery = trpc.record.getData.useQuery(sessionData?.user?.id, {
-    refetchInterval: false,
-    refetchOnReconnect: false,
-    refetchOnWindowFocus: false,
-  });
+  const getDataQuery = trpc.record.getData.useQuery(
+    sessionData?.user?.id || "",
+    {
+      refetchInterval: false,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+    }
+  );
 
   const setRecordMutate = trpc.record.setRecord.useMutation();
 
@@ -77,6 +80,10 @@ export const TrpcContextProvider: React.FC<IContextProvider> = ({
   const refetchGetData = useCallback(() => {
     getDataQuery.refetch();
   }, []);
+
+  if (!getDataQuery?.data) {
+    return <>{children}</>;
+  }
 
   const value = {
     data: getDataQuery.data,

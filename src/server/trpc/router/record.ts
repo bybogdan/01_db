@@ -1,17 +1,11 @@
 import { z } from "zod";
 import { capitalizeString, numToFloat } from "../../../utils/common";
-import {
-  currencyResponse,
-  currencyResponseType,
-} from "../../../utils/mocks/currency";
+import type { currencyResponseType } from "../../../utils/mocks/currency";
+import { currencyResponse } from "../../../utils/mocks/currency";
 
 import CurrencyAPI from "@everapi/currencyapi-js";
 
-import type { UserIdSchema } from "../../schema/post.schema";
-import {
-  createRecordSchema,
-  createUserIdSchema,
-} from "../../schema/post.schema";
+import { createRecordSchema } from "../../schema/post.schema";
 
 import { env } from "../../../env/server.mjs";
 
@@ -25,107 +19,38 @@ const getCurrrency = async () => {
   });
 };
 
-const getAll = (userId: UserIdSchema) => {
-  if (!userId) {
-    return [];
-  }
-  return prisma?.record.findMany({
-    where: {
-      userId: userId,
-    },
-    orderBy: [
-      {
-        timestamp: "desc",
-      },
-    ],
-  });
-};
-
-const getTolatExpense = async (userId: UserIdSchema) => {
-  if (!userId) {
-    return {};
-  }
-  const records = await prisma?.record.findMany({
-    where: {
-      userId: userId,
-      type: "EXPENSE",
-    },
-  });
-  if (!records) {
-    return {};
-  }
-
-  const totalExpenseByCurrency = records.reduce(
-    (acc: { [key: string]: number }, record) => {
-      const key = record.currency;
-      if (acc[key] === undefined) {
-        acc[key] = 0;
-      }
-      acc[key] += +record.amount;
-      return acc;
-    },
-    {}
-  );
-  return totalExpenseByCurrency;
-};
-
-const getExpensesSortedByCurrency = async (
-  userId?: UserIdSchema,
-  from?: string,
-  to?: string
-) => {
-  if (!userId) {
-    return {};
-  }
-  const records = await prisma?.record.findMany({
-    where: {
-      userId: userId,
-      type: "EXPENSE",
-    },
-  });
-  if (!records) {
-    return {};
-  }
-
-  return records.reduce((acc: { [key: string]: number }, record) => {
-    const key = record.currency;
-    if (acc[key] === undefined) {
-      acc[key] = 0;
-    }
-
-    acc[key] += +record.amount;
-    return acc;
-  }, {});
-};
-
 export const recordRouter = router({
-  getAll: publicProcedure
-    .input(createUserIdSchema)
-    .query(({ input: userId }) => {
-      if (!userId) {
-        return [];
-      }
-      return getAll(userId);
-    }),
-  totalExpense: publicProcedure
-    .input(createUserIdSchema)
-    .query(async ({ input: userId }) => {
-      return getTolatExpense(userId);
-    }),
-  getExpensesSortedByCurrency: publicProcedure
-    .input(createUserIdSchema)
-    .query(async ({ input: userId }) => getExpensesSortedByCurrency(userId)),
   getData: publicProcedure
-    .input(createUserIdSchema)
-    .query(async ({ input: userId }) => {
-      const records = await getAll(userId);
-      const totalExpensesSortedByCurrency = await getExpensesSortedByCurrency(
-        userId
-      );
+    .input(z.string())
+    .query(async ({ input: userId, ctx }) => {
+      const records = await ctx.prisma.record.findMany({
+        where: {
+          userId: userId,
+        },
+        orderBy: [
+          {
+            timestamp: "desc",
+          },
+        ],
+      });
+
+      const totalExpensesSortedByCurrency = records.length
+        ? records
+            .filter((record) => record.type === "EXPENSE")
+            .reduce((acc: { [key: string]: number }, record) => {
+              const key = record.currency;
+              if (acc[key] === undefined) {
+                acc[key] = 0;
+              }
+
+              acc[key] += +record.amount;
+              return acc;
+            }, {})
+        : {};
 
       const isDevMode = process.env.NODE_ENV === "development";
       let currenciesResponse: currencyResponseType = currencyResponse;
-      const currencies = await prisma?.currencies.findMany();
+      const currencies = await ctx.prisma.currencies.findMany();
 
       if (isDevMode) {
         currenciesResponse =
@@ -135,7 +60,7 @@ export const recordRouter = router({
       } else if (!currencies?.length) {
         currenciesResponse = await getCurrrency();
 
-        await prisma?.currencies.create({
+        await ctx.prisma.currencies.create({
           data: {
             value: currenciesResponse,
           },
@@ -145,13 +70,13 @@ export const recordRouter = router({
         const isCurrencyStale = +currencies[0].timestamp + ONE_DAY < timeNow;
 
         if (isCurrencyStale) {
-          await prisma?.currencies.delete({
+          await ctx.prisma.currencies.delete({
             where: {
               id: currencies[0].id,
             },
           });
           currenciesResponse = await getCurrrency();
-          await prisma?.currencies.create({
+          await ctx.prisma.currencies.create({
             data: {
               value: currenciesResponse,
             },
@@ -180,17 +105,19 @@ export const recordRouter = router({
 
       return { records, expense };
     }),
-  getRecord: publicProcedure.input(z.string()).query(async ({ input: id }) => {
-    return await prisma?.record.findFirst({
-      where: {
-        id,
-      },
-    });
-  }),
+  getRecord: publicProcedure
+    .input(z.string())
+    .query(async ({ input: id, ctx }) => {
+      return await ctx.prisma.record.findFirst({
+        where: {
+          id,
+        },
+      });
+    }),
   setRecord: publicProcedure
     .input(createRecordSchema)
-    .mutation(async ({ input: recordData }) => {
-      const newRecord = await prisma?.record.create({
+    .mutation(async ({ input: recordData, ctx }) => {
+      const newRecord = await ctx.prisma.record.create({
         data: {
           ...recordData,
           name: capitalizeString(recordData.name),
@@ -206,13 +133,13 @@ export const recordRouter = router({
         id: z.string(),
       })
     )
-    .mutation(async ({ input }) => {
+    .mutation(async ({ input, ctx }) => {
       const { id, updRecordData } = input;
 
       if (!id) {
         throw new Error("don't have id");
       }
-      const updatedRecord = await prisma?.record.update({
+      const updatedRecord = await ctx.prisma.record.update({
         where: {
           id,
         },
@@ -226,11 +153,11 @@ export const recordRouter = router({
     }),
   deleteRecord: publicProcedure
     .input(z.string())
-    .mutation(async ({ input: id }) => {
+    .mutation(async ({ input: id, ctx }) => {
       if (!id) {
         throw new Error("don't have id");
       }
-      const updatedRecord = await prisma?.record.delete({
+      const updatedRecord = await ctx.prisma.record.delete({
         where: {
           id,
         },
