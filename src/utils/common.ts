@@ -19,3 +19,5 @@ export const getCurrencySymbol = (currency: string) => {
 export const numToFloat = (num: number) => {
   return num.toFixed(2);
 };
+
+export const BASE_CURRENCY = "USD";

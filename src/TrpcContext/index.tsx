@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import type { Record } from "@prisma/client";
 import type { RecordSchema } from "../server/schema/post.schema";
 import { funcPlaceholder } from "../utils/common";
+import { HeaderStatsType } from "../types/misc";
 
 interface IContext {
   deleteRecord: (id: string) => void;
@@ -18,7 +19,7 @@ interface IContext {
   data:
     | {
         records: Record[] | never[] | undefined;
-        expense: [string, string];
+        stats: HeaderStatsType;
       }
     | undefined;
   refetchGetData: () => void;

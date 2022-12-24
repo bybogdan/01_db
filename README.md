@@ -43,9 +43,8 @@ Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/ver
 
 - FIND API WHICH RETURN CURRENCY NAMES (DONE)
 - Add useform (DONE)
-
-* Add types of transactions food, rent, etc.
-* Try to add ssr, to get page with data immediately
-* prisma pagination
-* update view faster after api calls
-* add some loading state
+- Add types of transactions food, rent, etc.
+- Try to add ssr, to get page with data immediately
+- Prisma pagination
+- Update view faster after api calls (DONE)
+- Add datepicker field to form to get ability to user to set record not for today day

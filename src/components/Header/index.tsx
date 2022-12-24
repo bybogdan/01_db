@@ -2,6 +2,7 @@ import { signOut, useSession } from "next-auth/react";
 import { memo } from "react";
 import { UseTrpcContext } from "../../hooks";
 import {
+  BASE_CURRENCY,
   capitalizeString,
   getCurrencySymbol,
   numToFloat,
@@ -12,8 +13,7 @@ const Comp: React.FC = ({}) => {
 
   const { data } = UseTrpcContext();
 
-  const { expense = [] } = data || {};
-  const [value, currency] = expense;
+  const { stats } = data || {};
 
   if (!sessionData?.user) {
     return null;
@@ -23,13 +23,14 @@ const Comp: React.FC = ({}) => {
     <div className="sticky top-0 z-10 flex flex-row items-center justify-between gap-2 bg-white p-6 pb-8 text-slate-900 dark:bg-slate-800 dark:text-white">
       <div>
         <span>User: {capitalizeString(sessionData.user.name as string)}</span>
-        {value && currency ? (
-          <div>
-            Expense: {`${numToFloat(+value)} ${getCurrencySymbol(currency)}`}
-          </div>
-        ) : (
-          <div>Expense: 0.00</div>
-        )}
+        {stats &&
+          Object.entries(stats).map(([key, value], index) => (
+            <div key={`${key}-${index}`}>{`${capitalizeString(
+              key
+            )}: ${numToFloat(+value)} ${getCurrencySymbol(
+              BASE_CURRENCY
+            )}`}</div>
+          ))}
       </div>
       <div>
         <button className="h-fit" onClick={() => signOut()}>

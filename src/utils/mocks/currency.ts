@@ -1,16 +1,4 @@
-export type currencyResponseType = {
-  meta: {
-    last_updated_at: string;
-  };
-  data: {
-    [index: string]: {
-      code: string;
-      value: number;
-    };
-  };
-};
-
-export const currencyResponse = {
+export const currencyResponseMock = {
   meta: {
     last_updated_at: "2022-12-19T23:59:59Z",
   },

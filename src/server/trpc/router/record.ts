@@ -1,7 +1,11 @@
 import { z } from "zod";
-import { capitalizeString, numToFloat } from "../../../utils/common";
-import type { currencyResponseType } from "../../../utils/mocks/currency";
-import { currencyResponse } from "../../../utils/mocks/currency";
+import {
+  BASE_CURRENCY,
+  capitalizeString,
+  numToFloat,
+} from "../../../utils/common";
+
+import { currencyResponseMock } from "../../../utils/mocks/currency";
 
 import CurrencyAPI from "@everapi/currencyapi-js";
 
@@ -10,6 +14,11 @@ import { createRecordSchema } from "../../schema/post.schema";
 import { env } from "../../../env/server.mjs";
 
 import { router, publicProcedure } from "../trpc";
+import type { Record, RecordType } from "@prisma/client";
+import type {
+  currencyResponseType,
+  HeaderStatsType,
+} from "../../../types/misc";
 
 const ONE_DAY = 1000 * 60 * 60 * 24;
 
@@ -19,11 +28,47 @@ const getCurrrency = async () => {
   });
 };
 
+const getTotalRecordsTypeSortedByCurrency = (
+  records: Record[],
+  type: RecordType
+) => {
+  return records
+    .filter((record) => record.type === type)
+    .reduce((acc: { [key: string]: number }, record) => {
+      const key = record.currency;
+      if (acc[key] === undefined) {
+        acc[key] = 0;
+      }
+
+      acc[key] += +record.amount;
+      return acc;
+    }, {});
+};
+
+const getTotalRecordsTypeValue = (
+  totalRecordsTypeSortedByCurrency: {
+    [key: string]: number;
+  },
+  currenciesResponse: currencyResponseType
+) => {
+  return Object.keys(totalRecordsTypeSortedByCurrency).reduce((acc, key) => {
+    if (key === BASE_CURRENCY) {
+      acc += +(totalRecordsTypeSortedByCurrency[key] as number);
+    } else {
+      const currency = currenciesResponse.data[key]?.value;
+      if (currency) {
+        acc += +(totalRecordsTypeSortedByCurrency[key] as number) / currency;
+      }
+    }
+    return acc;
+  }, 0);
+};
+
 export const recordRouter = router({
   getData: publicProcedure
     .input(z.string())
     .query(async ({ input: userId, ctx }) => {
-      const records = await ctx.prisma.record.findMany({
+      const records: Record[] = await ctx.prisma.record.findMany({
         where: {
           userId: userId,
         },
@@ -35,21 +80,15 @@ export const recordRouter = router({
       });
 
       const totalExpensesSortedByCurrency = records.length
-        ? records
-            .filter((record) => record.type === "EXPENSE")
-            .reduce((acc: { [key: string]: number }, record) => {
-              const key = record.currency;
-              if (acc[key] === undefined) {
-                acc[key] = 0;
-              }
+        ? getTotalRecordsTypeSortedByCurrency(records, "EXPENSE")
+        : {};
 
-              acc[key] += +record.amount;
-              return acc;
-            }, {})
+      const totalIncomeSortedByCurrency = records.length
+        ? getTotalRecordsTypeSortedByCurrency(records, "INCOME")
         : {};
 
       const isDevMode = process.env.NODE_ENV === "development";
-      let currenciesResponse: currencyResponseType = currencyResponse;
+      let currenciesResponse: currencyResponseType = currencyResponseMock;
       const currencies = await ctx.prisma.currencies.findMany();
 
       if (isDevMode) {
@@ -86,24 +125,32 @@ export const recordRouter = router({
         }
       }
 
-      const expenseValue = Object.keys(totalExpensesSortedByCurrency).reduce(
-        (acc, key: string) => {
-          if (key === "USD") {
-            acc += +(totalExpensesSortedByCurrency[key] as number);
-          } else {
-            const currency = currenciesResponse.data[key]?.value;
-            if (currency) {
-              acc += +(totalExpensesSortedByCurrency[key] as number) / currency;
-            }
-          }
-          return acc;
-        },
-        0
+      const expense: string = numToFloat(
+        getTotalRecordsTypeValue(
+          totalExpensesSortedByCurrency,
+          currenciesResponse
+        )
       );
 
-      const expense: [string, string] = [numToFloat(expenseValue), "USD"];
+      const income: string = numToFloat(
+        getTotalRecordsTypeValue(
+          totalIncomeSortedByCurrency,
+          currenciesResponse
+        )
+      );
 
-      return { records, expense };
+      const balance: string = numToFloat(+income - +expense);
+
+      const stats: HeaderStatsType = {
+        balance,
+        expense,
+        income,
+      };
+
+      return {
+        records,
+        stats,
+      };
     }),
   getRecord: publicProcedure
     .input(z.string())
