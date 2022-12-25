@@ -52,3 +52,4 @@ Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/ver
 - Add ability to get records from selected period of time
 - Add page with many stats to see different info about financial profile
 - PWA?
+- Try to use answer from api, to save time to not to call refetch
