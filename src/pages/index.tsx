@@ -2,36 +2,12 @@ import { type NextPage } from "next";
 import Head from "next/head";
 import { signIn, useSession } from "next-auth/react";
 
-import { useEffect } from "react";
-import Image from "next/image";
-
-import { Header } from "../components/Header";
-import { RecordForm } from "../components/RecordForm";
-import { RecordsList } from "../components/RecordsList";
-import { UseTrpcContext } from "../hooks";
 import { twBigButton, twCenteringBlock } from "../utils/twCommon";
 import { Loader } from "../components/Loader";
+import { LoggedIn } from "../components/LoggedIn";
 
 const Home: NextPage = () => {
-  const {
-    isUpdateRecordSuccess,
-    isSetRecordSuccess,
-    isDeleteRecordSuccess,
-    refetchGetData,
-    isReady,
-  } = UseTrpcContext();
   const { data: sessionData, status } = useSession();
-
-  useEffect(() => {
-    if (isSetRecordSuccess || isDeleteRecordSuccess || isUpdateRecordSuccess) {
-      refetchGetData();
-    }
-  }, [
-    isUpdateRecordSuccess,
-    isSetRecordSuccess,
-    isDeleteRecordSuccess,
-    refetchGetData,
-  ]);
 
   return (
     <>
@@ -55,19 +31,12 @@ const Home: NextPage = () => {
           </div>
         ) : null}
 
-        {status === "authenticated" && sessionData?.user && isReady ? (
-          <div className="align-between flex  min-h-screen flex-col text-slate-900 dark:text-white">
-            <Header />
-            <div className="flex flex-col gap-12 p-6">
-              <RecordForm />
-              <RecordsList />
-            </div>
-          </div>
-        ) : (
-          <div className={`${twCenteringBlock}`}>
-            <Loader />
-          </div>
-        )}
+        {status === "authenticated" && sessionData?.user ? (
+          <LoggedIn
+            sessionUserName={sessionData.user.name as string}
+            sessionUserId={sessionData.user.id}
+          />
+        ) : null}
       </div>
     </>
   );

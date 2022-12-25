@@ -1,6 +1,6 @@
-import { signOut, useSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
 import { memo } from "react";
-import { UseTrpcContext } from "../../hooks";
+import type { HeaderStatsType } from "../../types/misc";
 import {
   BASE_CURRENCY,
   capitalizeString,
@@ -8,21 +8,16 @@ import {
   numToFloat,
 } from "../../utils/common";
 
-const Comp: React.FC = ({}) => {
-  const { data: sessionData } = useSession();
+interface IComp {
+  stats: HeaderStatsType;
+  sessionUserName: string;
+}
 
-  const { data } = UseTrpcContext();
-
-  const { stats } = data || {};
-
-  if (!sessionData?.user) {
-    return null;
-  }
-
+const Comp: React.FC<IComp> = ({ stats, sessionUserName }) => {
   return (
     <div className="sticky top-0 z-10 flex flex-row items-center justify-between gap-2 bg-white p-6 pb-8 text-slate-900 dark:bg-slate-800 dark:text-white">
       <div>
-        <span>User: {capitalizeString(sessionData.user.name as string)}</span>
+        <span>User: {capitalizeString(sessionUserName)}</span>
         {stats &&
           Object.entries(stats).map(([key, value], index) => (
             <div key={`${key}-${index}`}>{`${capitalizeString(

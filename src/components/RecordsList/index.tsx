@@ -1,12 +1,13 @@
+import type { Record } from "@prisma/client";
 import Link from "next/link";
-import { UseTrpcContext } from "../../hooks";
+import { memo } from "react";
 import { RecordCard } from "../RecordCard";
 
-export const RecordsList: React.FC = () => {
-  const { data } = UseTrpcContext();
+interface IComp {
+  records: Record[];
+}
 
-  const { records } = data || {};
-
+export const Comp: React.FC<IComp> = ({ records }) => {
   return (
     <>
       <ul className="flex w-full flex-col gap-2 px-5">
@@ -23,3 +24,5 @@ export const RecordsList: React.FC = () => {
     </>
   );
 };
+
+export const RecordsList = memo(Comp);

@@ -48,7 +48,7 @@ Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/ver
 - Prisma pagination with records, not load all
 - Update view faster after api calls (DONE)
 - Add datepicker field to form to get ability to user to set record not for today day
-- Consider using of src/TrpcContext/index.tsx
+- Consider using of src/TrpcContext/index.tsx (DONE (remove it))
 - Add ability to get records from selected period of time
 - Add page with many stats to see different info about financial profile
 - PWA?

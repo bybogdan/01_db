@@ -1,19 +1,13 @@
 import type { Record } from "@prisma/client";
-import { useEffect, useState } from "react";
-import { UseTrpcContext } from "../../hooks";
+import { memo, useEffect, useState } from "react";
 import { getCurrencySymbol, numToFloat } from "../../utils/common";
 import { RecordForm } from "../RecordForm";
 
-interface IRecordCard {
+interface IComp {
   record: Record;
 }
 
-export const RecordCard: React.FC<IRecordCard> = ({ record }) => {
-  const { deleteRecord } = UseTrpcContext();
-
-  const [showEditForm, setShowEditForm] = useState(false);
-  const [btnText, setBtnText] = useState("update");
-
+export const Comp: React.FC<IComp> = ({ record }) => {
   return (
     <li
       className="flex flex-col	 justify-center gap-1 text-slate-900 dark:text-white"
@@ -39,13 +33,8 @@ export const RecordCard: React.FC<IRecordCard> = ({ record }) => {
           <p>{getCurrencySymbol(record.currency)}</p>
         </div>
       </div>
-
-      {showEditForm && (
-        <RecordForm
-          currentRecord={record}
-          callbackAfterSubmit={() => setShowEditForm((prev) => !prev)}
-        />
-      )}
     </li>
   );
 };
+
+export const RecordCard = memo(Comp);

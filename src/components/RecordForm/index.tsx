@@ -1,22 +1,27 @@
 import type { Record } from "@prisma/client";
-import { useSession } from "next-auth/react";
+
 import { memo, ReactNode, useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { UseTrpcContext } from "../../hooks";
+
 import type { RecordSchema } from "../../server/schema/post.schema";
 import { LoaderSize } from "../../types/misc";
+import { trpc } from "../../utils/trpc";
 import { twButton, twInput, twSelect } from "../../utils/twCommon";
 import { Loader } from "../Loader";
 
 interface IComp {
+  sessionUserId: string;
+  handleRefetchData: (afterRefetchCallback: () => void) => void;
+  isFetchingInParentComp?: boolean;
   currentRecord?: Record;
-  callbackAfterSubmit?: () => void;
   discardButton?: ReactNode;
 }
 
 const Comp: React.FC<IComp> = ({
+  sessionUserId,
+  handleRefetchData,
+  isFetchingInParentComp,
   currentRecord,
-  callbackAfterSubmit,
   discardButton,
 }) => {
   const defaultValues: RecordSchema | object = currentRecord
@@ -30,13 +35,16 @@ const Comp: React.FC<IComp> = ({
     : {};
 
   const {
-    setRecord,
-    updateRecord,
-    isUpdateRecordSuccess,
-    isUpdateRecordLoading,
-    isSetRecordSuccess,
-  } = UseTrpcContext();
-  const { data: sessionData } = useSession();
+    mutate: setRecord,
+    isSuccess: isSetRecordSuccess,
+    isLoading: isSetRecordLoading,
+  } = trpc.record.setRecord.useMutation();
+
+  const {
+    mutate: updateRecord,
+    isSuccess: isUpdateRecordSuccess,
+    isLoading: isUpdateRecordLoading,
+  } = trpc.record.updateRecord.useMutation();
 
   const { register, handleSubmit, reset } = useForm<RecordSchema>({
     shouldUseNativeValidation: true,
@@ -44,35 +52,24 @@ const Comp: React.FC<IComp> = ({
   });
 
   const onSubmit = async (data: RecordSchema) => {
-    if (!sessionData?.user?.id) {
-      throw new Error("You are unauthorized");
-    }
     if (currentRecord) {
-      updateRecord(currentRecord.id, { ...data, userId: currentRecord.userId });
+      updateRecord({
+        id: currentRecord.id,
+        updRecordData: { ...data, userId: sessionUserId },
+      });
     } else {
       setRecord({
         ...data,
-        userId: sessionData?.user?.id,
+        userId: sessionUserId,
       });
-    }
-    reset();
-    if (callbackAfterSubmit) {
-      callbackAfterSubmit();
     }
   };
 
-  // const closeForm = useCallback(() => {
-  //   reset();
-  //   if (callbackAfterSubmit) {
-  //     callbackAfterSubmit();
-  //   }
-  // }, [callbackAfterSubmit, reset]);
-
-  // useEffect(() => {
-  //   if (isUpdateRecordSuccess) {
-  //     closeForm();
-  //   }
-  // }, [isUpdateRecordSuccess, closeForm]);
+  useEffect(() => {
+    if (isUpdateRecordSuccess || isSetRecordSuccess) {
+      handleRefetchData(reset);
+    }
+  }, [isUpdateRecordSuccess, isSetRecordSuccess, handleRefetchData, reset]);
 
   return (
     <form className="flex flex-col gap-y-3 " onSubmit={handleSubmit(onSubmit)}>
@@ -133,11 +130,17 @@ const Comp: React.FC<IComp> = ({
       />
       <div className={`flex gap-2 ${discardButton ? "flex-row-reverse" : ""}`}>
         <button
+          disabled={isSetRecordLoading || isUpdateRecordLoading}
           type="submit"
           className={`grow ${twButton}`}
-          disabled={isUpdateRecordLoading}
         >
-          {!isUpdateRecordLoading ? "save" : <Loader size={LoaderSize.SMALL} />}
+          {isSetRecordLoading ||
+          isUpdateRecordLoading ||
+          isFetchingInParentComp ? (
+            <Loader size={LoaderSize.SMALL} />
+          ) : (
+            "save"
+          )}
         </button>
         {discardButton ? discardButton : null}
       </div>

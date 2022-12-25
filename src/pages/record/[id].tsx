@@ -8,7 +8,6 @@ import { useCallback } from "react";
 import { useEffect, useState } from "react";
 import { Loader } from "../../components/Loader";
 import { RecordForm } from "../../components/RecordForm";
-import { UseTrpcContext } from "../../hooks";
 import { getCurrencySymbol, numToFloat } from "../../utils/common";
 import { trpc } from "../../utils/trpc";
 import { twHeading, twButton, twCenteringBlock } from "../../utils/twCommon";
@@ -40,7 +39,7 @@ const RecordPage: React.FC<IRecordPage> = ({ id }) => {
   const { data: sessionData, status } = useSession();
   const {
     data: record,
-    isLoading,
+    isLoading: isGetRecordLoading,
     refetch: refetchGetRecord,
   } = trpc.record.getRecord.useQuery(id as string, {
     refetchInterval: false,
@@ -50,40 +49,39 @@ const RecordPage: React.FC<IRecordPage> = ({ id }) => {
 
   const router = useRouter();
 
-  const { deleteRecord, isUpdateRecordSuccess, isDeleteRecordSuccess } =
-    UseTrpcContext();
+  const { mutate: deleteRecord, isSuccess: isDeleteRecordSuccess } =
+    trpc.record.deleteRecord.useMutation();
 
-  const [showEditForm, setShowEditForm] = useState(false);
+  const [isShowEditForm, setShowEditForm] = useState(false);
+  const [isDeletingRecord, setDeletingRecord] = useState(false);
+  const [isRefetchingAfterUpdatedRecord, setRefetchingAfterUpdatedRecord] =
+    useState(false);
 
-  const callbackAfterSubmit = useCallback(() => {
+  const toggleShowingForm = useCallback(() => {
     setShowEditForm((prev) => !prev);
   }, []);
 
   const handleDeleteRecord = useCallback(
     (id: string) => {
       deleteRecord(id);
-      router.push("/");
+      setDeletingRecord(true);
     },
-    [deleteRecord, router]
+    [deleteRecord]
   );
 
+  const handleRefetchData = useCallback(async () => {
+    setRefetchingAfterUpdatedRecord(true);
+    await refetchGetRecord();
+    toggleShowingForm();
+  }, [refetchGetRecord, toggleShowingForm]);
+
   useEffect(() => {
-    if (status === "unauthenticated") {
+    if (status === "unauthenticated" || isDeleteRecordSuccess) {
       router.push("/");
     }
+  }, [isDeleteRecordSuccess, router, status]);
 
-    if (isUpdateRecordSuccess) {
-      refetchGetRecord();
-    }
-  }, [
-    isUpdateRecordSuccess,
-    isDeleteRecordSuccess,
-    refetchGetRecord,
-    router,
-    status,
-  ]);
-
-  if (isLoading || !sessionData?.user) {
+  if (isGetRecordLoading || !sessionData?.user || isDeletingRecord) {
     return (
       <div className={`${twCenteringBlock}`}>
         <Loader />
@@ -171,18 +169,20 @@ const RecordPage: React.FC<IRecordPage> = ({ id }) => {
             </div>
           </div>
 
-          {showEditForm ? (
+          {isShowEditForm ? (
             <RecordForm
+              sessionUserId={sessionData.user.id}
+              handleRefetchData={handleRefetchData}
+              isFetchingInParentComp={isRefetchingAfterUpdatedRecord}
               currentRecord={record}
-              callbackAfterSubmit={callbackAfterSubmit}
               discardButton={DiscardButton}
             />
           ) : null}
         </div>
 
         <div className="flex flex-col gap-6">
-          {!showEditForm ? (
-            <button className={twButton} onClick={callbackAfterSubmit}>
+          {!isShowEditForm ? (
+            <button className={twButton} onClick={toggleShowingForm}>
               edit
             </button>
           ) : null}
