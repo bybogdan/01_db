@@ -1,5 +1,4 @@
-import type { GetServerSideProps } from "next";
-import { useSession } from "next-auth/react";
+import type { GetServerSideProps, NextApiRequest, NextApiResponse } from "next";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -11,32 +10,65 @@ import { RecordForm } from "../../components/RecordForm";
 import { getCurrencySymbol, numToFloat } from "../../utils/common";
 import { trpc } from "../../utils/trpc";
 import { twHeading, twButton, twCenteringBlock } from "../../utils/twCommon";
+import { appRouter } from "../../server/trpc/router/_app";
+import { createContext } from "../../server/trpc/context";
+import type { Record } from "@prisma/client";
+import superjson from "superjson";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const id = context.query.id;
+  const req = context.req as NextApiRequest;
+  const res = context.res as NextApiResponse;
+  const ctx = await createContext({ req, res });
+  const caller = appRouter.createCaller(ctx);
 
-  if (!id) {
+  const id = context.query.id;
+  try {
+    const session = await caller.auth.getSession();
+
+    if (!session?.user || !id) {
+      return {
+        redirect: {
+          destination: "/",
+          permanent: false,
+        },
+      };
+    }
+
+    const record = await caller.record.getRecord(id as string);
+
     return {
-      redirect: {
-        destination: "/",
-        permanent: false,
+      props: {
+        id,
+        sessionData: {
+          userName: session.user.name,
+          userId: session.user.id,
+        },
+        initialRecord: superjson.serialize(record).json,
+      },
+    };
+  } catch (err) {
+    return {
+      props: {
+        id,
       },
     };
   }
-
-  return {
-    props: {
-      id,
-    },
-  };
 };
 
 interface IRecordPage {
   id: string;
+  sessionData: {
+    userName: string;
+    userId: string;
+  };
+  initialRecord: Record;
 }
 
-const RecordPage: React.FC<IRecordPage> = ({ id }) => {
-  const { data: sessionData, status } = useSession();
+const RecordPage: React.FC<IRecordPage> = ({
+  id,
+  sessionData,
+  initialRecord,
+}) => {
   const {
     data: record,
     isLoading: isGetRecordLoading,
@@ -45,6 +77,7 @@ const RecordPage: React.FC<IRecordPage> = ({ id }) => {
     refetchInterval: false,
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
+    initialData: initialRecord,
   });
 
   const router = useRouter();
@@ -73,15 +106,16 @@ const RecordPage: React.FC<IRecordPage> = ({ id }) => {
     setRefetchingAfterUpdatedRecord(true);
     await refetchGetRecord();
     toggleShowingForm();
+    setRefetchingAfterUpdatedRecord(false);
   }, [refetchGetRecord, toggleShowingForm]);
 
   useEffect(() => {
-    if (status === "unauthenticated" || isDeleteRecordSuccess) {
+    if (isDeleteRecordSuccess) {
       router.push("/");
     }
-  }, [isDeleteRecordSuccess, router, status]);
+  }, [isDeleteRecordSuccess, router]);
 
-  if (isGetRecordLoading || !sessionData?.user || isDeletingRecord) {
+  if (isDeletingRecord) {
     return (
       <div className={`${twCenteringBlock}`}>
         <Loader />
@@ -107,6 +141,8 @@ const RecordPage: React.FC<IRecordPage> = ({ id }) => {
       discard
     </button>
   );
+
+  const date = new Date(record.timestamp);
 
   return (
     <>
@@ -139,7 +175,7 @@ const RecordPage: React.FC<IRecordPage> = ({ id }) => {
               </svg>
             </Link>
 
-            <div>{sessionData.user.name}</div>
+            <div>{sessionData.userName}</div>
           </div>
           <div>
             <div
@@ -156,8 +192,8 @@ const RecordPage: React.FC<IRecordPage> = ({ id }) => {
               </h3>
             </div>
             <p className="text-base text-gray-700 dark:text-slate-200">
-              {record.timestamp.getDate()}.{record.timestamp.getMonth()}.
-              {record.timestamp.getFullYear()}
+              {}
+              {date.getDate()}.{date.getMonth()}.{date.getFullYear()}
             </p>
             <div>
               <h5 className="mb-2 text-xl font-medium leading-tight text-gray-900 dark:text-white">
@@ -171,7 +207,7 @@ const RecordPage: React.FC<IRecordPage> = ({ id }) => {
 
           {isShowEditForm ? (
             <RecordForm
-              sessionUserId={sessionData.user.id}
+              sessionUserId={sessionData.userId}
               handleRefetchData={handleRefetchData}
               isFetchingInParentComp={isRefetchingAfterUpdatedRecord}
               currentRecord={record}
