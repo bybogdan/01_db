@@ -1,10 +1,19 @@
-import type { GetServerSideProps, NextApiRequest, NextApiResponse } from "next";
+import type {
+  GetServerSideProps,
+  GetStaticPaths,
+  GetStaticProps,
+  GetStaticPropsContext,
+  InferGetStaticPropsType,
+  NextApiRequest,
+  NextApiResponse,
+} from "next";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import type { ReactNode } from "react";
 import { useCallback } from "react";
 import { useEffect, useState } from "react";
+import { createProxySSGHelpers } from "@trpc/react-query/ssg";
 import { Loader } from "../../components/Loader";
 import { RecordForm } from "../../components/RecordForm";
 import { getCurrencySymbol, numToFloat } from "../../utils/common";
@@ -14,45 +23,75 @@ import { appRouter } from "../../server/trpc/router/_app";
 import { createContext } from "../../server/trpc/context";
 import type { Record } from "@prisma/client";
 import superjson from "superjson";
+import { prisma } from "../../server/db/client";
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const req = context.req as NextApiRequest;
-  const res = context.res as NextApiResponse;
-  const ctx = await createContext({ req, res });
-  const caller = appRouter.createCaller(ctx);
+export const getStaticProps = async (
+  context: GetStaticPropsContext<{ id: string }>
+) => {
+  const id = context.params?.id as string;
 
-  const id = context.query.id;
-  try {
-    const session = await caller.auth.getSession();
+  const ssg = createProxySSGHelpers({
+    router: appRouter,
+    ctx: await createContext(),
+    transformer: superjson,
+  });
 
-    if (!session?.user || !id) {
-      return {
-        redirect: {
-          destination: "/",
-          permanent: false,
-        },
-      };
-    }
+  // const req = context.req as NextApiRequest;
+  // const res = context.res as NextApiResponse;
+  // const ctx = await createContext({ req, res });
+  // const caller = appRouter.createCaller(ctx);
 
-    const record = await caller.record.getRecord(id as string);
+  // const id = context.query.id;
+  // try {
+  // const session = await caller.auth.getSession();
 
-    return {
-      props: {
-        id,
-        sessionData: {
-          userName: session.user.name,
-          userId: session.user.id,
-        },
-        initialRecord: superjson.serialize(record).json,
+  // if (!id) {
+  //   return {
+  //     redirect: {
+  //       destination: "/",
+  //       permanent: false,
+  //     },
+  //   };
+  // }
+
+  const record = await ssg.record.getRecord.fetch(id as string);
+
+  return {
+    props: {
+      trpcState: ssg.dehydrate(),
+      id,
+      record: (record && superjson.serialize(record).json) || null,
+      // sessionData: {
+      //   userName: session.user.name,
+      //   userId: session.user.id,
+      // },
+      // initialRecord: superjson.serialize(record).json,
+    },
+    revalidate: 1,
+  };
+  // } catch (err) {
+  //   return {
+  //     props: {
+  //       id,
+  //     },
+  //   };
+  // }
+};
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const records = await prisma.record.findMany({
+    select: {
+      id: true,
+    },
+  });
+  return {
+    paths: records.map((record) => ({
+      params: {
+        id: record.id,
       },
-    };
-  } catch (err) {
-    return {
-      props: {
-        id,
-      },
-    };
-  }
+    })),
+    fallback: "blocking",
+  };
 };
 
 interface IRecordPage {
@@ -64,11 +103,15 @@ interface IRecordPage {
   initialRecord: Record;
 }
 
-const RecordPage: React.FC<IRecordPage> = ({
-  id,
-  sessionData,
-  initialRecord,
-}) => {
+// const RecordPage: React.FC<IRecordPage> = ({
+//   id,
+//   sessionData,
+//   initialRecord,
+// }) => {
+
+const RecordPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
+  const { id, record: initialRecord } = props;
+
   const {
     data: record,
     isLoading: isGetRecordLoading,
@@ -114,6 +157,10 @@ const RecordPage: React.FC<IRecordPage> = ({
       router.push("/");
     }
   }, [isDeleteRecordSuccess, router]);
+
+  if (isGetRecordLoading) {
+    return <div>LOADING</div>;
+  }
 
   if (isDeletingRecord) {
     return (
@@ -175,7 +222,7 @@ const RecordPage: React.FC<IRecordPage> = ({
               </svg>
             </Link>
 
-            <div>{sessionData.userName}</div>
+            {/* <div>{sessionData.userName}</div> */}
           </div>
           <div>
             <div
@@ -205,7 +252,7 @@ const RecordPage: React.FC<IRecordPage> = ({
             </div>
           </div>
 
-          {isShowEditForm ? (
+          {/* {isShowEditForm ? (
             <RecordForm
               sessionUserId={sessionData.userId}
               handleRefetchData={handleRefetchData}
@@ -213,7 +260,7 @@ const RecordPage: React.FC<IRecordPage> = ({
               currentRecord={record}
               discardButton={DiscardButton}
             />
-          ) : null}
+          ) : null} */}
         </div>
 
         <div className="flex flex-col gap-6">
