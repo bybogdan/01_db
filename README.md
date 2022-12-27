@@ -27,7 +27,7 @@ You can check out the [create-t3-app GitHub repository](https://github.com/t3-os
 
 Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
 
-## Some command
+## Some commands
 
 ### Prisma
 
@@ -53,4 +53,8 @@ Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/ver
 - Add page with many stats to see different info about financial profile
 - PWA?
 - Try to use answer from api, to save time to not to call refetch
-- Try in GetServerSideProps to use trpc by context as in server/trpc/record (DONE)(BUT NOT SURE)
+- Try in GetServerSideProps to use trpc by context as in server/trpc/record (DONE)(BUT NOT SURE) (IT WAS MISTAKE)
+  `To use GetServerSideProps you should have very good reason. In general it make app slower, because GetServerSideProps is blocking. (getStaticProps and getStaticPaths work better in most cases)`
+
+- should end rewriting from GetServerSideProps to getStaticProps and getStaticPaths.
+- on record page need to raise buttons, for easier interaction with them
