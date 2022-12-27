@@ -1,11 +1,7 @@
 import type {
-  GetServerSideProps,
   GetStaticPaths,
-  GetStaticProps,
   GetStaticPropsContext,
   InferGetStaticPropsType,
-  NextApiRequest,
-  NextApiResponse,
 } from "next";
 import Head from "next/head";
 import Link from "next/link";
@@ -21,9 +17,9 @@ import { trpc } from "../../utils/trpc";
 import { twHeading, twButton, twCenteringBlock } from "../../utils/twCommon";
 import { appRouter } from "../../server/trpc/router/_app";
 import { createContext } from "../../server/trpc/context";
-import type { Record } from "@prisma/client";
 import superjson from "superjson";
 import { prisma } from "../../server/db/client";
+import { useSession } from "next-auth/react";
 
 export const getStaticProps = async (
   context: GetStaticPropsContext<{ id: string }>
@@ -36,46 +32,25 @@ export const getStaticProps = async (
     transformer: superjson,
   });
 
-  // const req = context.req as NextApiRequest;
-  // const res = context.res as NextApiResponse;
-  // const ctx = await createContext({ req, res });
-  // const caller = appRouter.createCaller(ctx);
-
-  // const id = context.query.id;
-  // try {
-  // const session = await caller.auth.getSession();
-
-  // if (!id) {
-  //   return {
-  //     redirect: {
-  //       destination: "/",
-  //       permanent: false,
-  //     },
-  //   };
-  // }
-
   const record = await ssg.record.getRecord.fetch(id as string);
+  const user = record
+    ? await ssg.user.getUser.fetch(record.userId as string)
+    : null;
 
   return {
     props: {
       trpcState: ssg.dehydrate(),
       id,
       record: (record && superjson.serialize(record).json) || null,
-      // sessionData: {
-      //   userName: session.user.name,
-      //   userId: session.user.id,
-      // },
-      // initialRecord: superjson.serialize(record).json,
+      recordUsedData: user
+        ? {
+            userName: user.name,
+            userId: user.id,
+          }
+        : {},
     },
     revalidate: 1,
   };
-  // } catch (err) {
-  //   return {
-  //     props: {
-  //       id,
-  //     },
-  //   };
-  // }
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
@@ -94,27 +69,14 @@ export const getStaticPaths: GetStaticPaths = async () => {
   };
 };
 
-interface IRecordPage {
-  id: string;
-  sessionData: {
-    userName: string;
-    userId: string;
-  };
-  initialRecord: Record;
-}
-
-// const RecordPage: React.FC<IRecordPage> = ({
-//   id,
-//   sessionData,
-//   initialRecord,
-// }) => {
-
 const RecordPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { id, record: initialRecord } = props;
+  const { id, record: initialRecord, recordUsedData } = props;
+
+  const { data: sessionData, status } = useSession();
 
   const {
     data: record,
-    isLoading: isGetRecordLoading,
+    // isLoading: isGetRecordLoading,
     refetch: refetchGetRecord,
   } = trpc.record.getRecord.useQuery(id as string, {
     refetchInterval: false,
@@ -158,14 +120,23 @@ const RecordPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
     }
   }, [isDeleteRecordSuccess, router]);
 
-  if (isGetRecordLoading) {
-    return <div>LOADING</div>;
-  }
-
-  if (isDeletingRecord) {
+  if (isDeletingRecord || status === "loading") {
     return (
       <div className={`${twCenteringBlock}`}>
         <Loader />
+      </div>
+    );
+  }
+
+  if (recordUsedData.userId !== sessionData?.user?.id) {
+    return (
+      <div className={`${twCenteringBlock}`}>
+        <div className="flex flex-col gap-2">
+          <div>Do not have access</div>
+          <Link className={twButton} href="/">
+            back
+          </Link>
+        </div>
       </div>
     );
   }
@@ -222,7 +193,7 @@ const RecordPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
               </svg>
             </Link>
 
-            {/* <div>{sessionData.userName}</div> */}
+            <div>{recordUsedData.userName}</div>
           </div>
           <div>
             <div
@@ -252,15 +223,15 @@ const RecordPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
             </div>
           </div>
 
-          {/* {isShowEditForm ? (
+          {isShowEditForm ? (
             <RecordForm
-              sessionUserId={sessionData.userId}
+              sessionUserId={recordUsedData.userId as string}
               handleRefetchData={handleRefetchData}
               isFetchingInParentComp={isRefetchingAfterUpdatedRecord}
               currentRecord={record}
               discardButton={DiscardButton}
             />
-          ) : null} */}
+          ) : null}
         </div>
 
         <div className="flex flex-col gap-6">

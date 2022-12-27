@@ -14,10 +14,7 @@ export const Comp: React.FC<IComp> = ({ records }) => {
         {records
           ? records.map((record) => (
               <div key={record.id}>
-                <Link
-                  href={`/record/${record.id}`}
-                  onClick={() => console.log("weon")}
-                >
+                <Link href={`/record/${record.id}`}>
                   <RecordCard record={record} />
                 </Link>
               </div>
