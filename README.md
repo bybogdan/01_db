@@ -56,5 +56,6 @@ Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/ver
 - Try in GetServerSideProps to use trpc by context as in server/trpc/record (DONE)(BUT NOT SURE) (IT WAS MISTAKE)
   `To use GetServerSideProps you should have very good reason. In general it make app slower, because GetServerSideProps is blocking. (getStaticProps and getStaticPaths work better in most cases)`
 
-- should end rewriting from GetServerSideProps to getStaticProps and getStaticPaths.
-- on record page need to raise buttons, for easier interaction with them
+- should end rewriting from GetServerSideProps to getStaticProps and getStaticPaths (DONE)
+- on record page need to raise buttons, for easier interaction with them (DONE)
+- Try to add middelware to detect have user right or not, on records pages
