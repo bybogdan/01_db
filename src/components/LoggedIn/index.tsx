@@ -1,4 +1,5 @@
-import { memo, useCallback, useState } from "react";
+import { useRouter } from "next/router";
+import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { trpc } from "../../utils/trpc";
 import { twCenteringBlock } from "../../utils/twCommon";
 import { Header } from "../Header";
@@ -23,6 +24,9 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
     refetchOnWindowFocus: false,
   });
 
+  const router = useRouter();
+
+  const [isAwaitingFreshData, setAwaitingFreshData] = useState(false);
   const [isFetchingAfterAddedRecord, setFetchingAfterAddedRecord] =
     useState(false);
 
@@ -38,6 +42,21 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
     [refetchGetData]
   );
 
+  // executed before render
+  useMemo(() => {
+    const { update } = router.query;
+    router.replace("");
+    if (update) {
+      setAwaitingFreshData(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!isFetching) {
+      setAwaitingFreshData(false);
+    }
+  }, [isFetching]);
+
   if (!data) {
     return (
       <div className={`${twCenteringBlock}`}>
@@ -47,11 +66,10 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
   }
 
   const { records, stats } = data;
-  const isGeneralFetching = isFetching && !isFetchingAfterAddedRecord;
 
   return (
     <>
-      {isSuccess && !isGeneralFetching ? (
+      {isSuccess && !isAwaitingFreshData ? (
         <div className="align-between flex  min-h-screen flex-col text-slate-900 dark:text-white">
           <Header sessionUserName={sessionUserName} stats={stats} />
           <div className="flex flex-col gap-12 p-6">

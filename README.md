@@ -59,3 +59,4 @@ Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/ver
 - should end rewriting from GetServerSideProps to getStaticProps and getStaticPaths (DONE)
 - on record page need to raise buttons, for easier interaction with them (DONE)
 - Try to add middelware to detect have user right or not, on records pages
+- Add ability to set month where record should be include (transfer in december, but it relate to november)

@@ -72,71 +72,77 @@ export const getStaticPaths: GetStaticPaths = async () => {
 const RecordPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { id, record: initialRecord, recordUsedData } = props;
 
-  const { data: sessionData, status } = useSession();
-
-  const {
-    data: record,
-    // isLoading: isGetRecordLoading,
-    refetch: refetchGetRecord,
-  } = trpc.record.getRecord.useQuery(id as string, {
-    refetchInterval: false,
-    refetchOnReconnect: false,
-    refetchOnWindowFocus: false,
-    initialData: initialRecord,
-  });
-
   const router = useRouter();
-
-  const { mutate: deleteRecord, isSuccess: isDeleteRecordSuccess } =
-    trpc.record.deleteRecord.useMutation();
+  const { data: sessionData, status } = useSession();
 
   const [isShowEditForm, setShowEditForm] = useState(false);
   const [isDeletingRecord, setDeletingRecord] = useState(false);
   const [isRefetchingAfterUpdatedRecord, setRefetchingAfterUpdatedRecord] =
     useState(false);
 
+  const [homePageHref, setHomePageHref] = useState("/");
+
+  const { data: record, refetch: refetchGetRecord } =
+    trpc.record.getRecord.useQuery(id as string, {
+      refetchInterval: false,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+      initialData: initialRecord,
+    });
+
+  const { mutate: deleteRecord, isSuccess: isDeleteRecordSuccess } =
+    trpc.record.deleteRecord.useMutation();
+
   const toggleShowingForm = useCallback(() => {
     setShowEditForm((prev) => !prev);
   }, []);
 
+  const addQueryParamToRefetchDataOnHomePage = useCallback(() => {
+    setHomePageHref("/?update=1");
+  }, []);
+
   const handleDeleteRecord = useCallback(
     (id: string) => {
+      addQueryParamToRefetchDataOnHomePage();
       deleteRecord(id);
       setDeletingRecord(true);
     },
-    [deleteRecord]
+    [deleteRecord, addQueryParamToRefetchDataOnHomePage]
   );
 
   const handleRefetchData = useCallback(async () => {
+    addQueryParamToRefetchDataOnHomePage();
     setRefetchingAfterUpdatedRecord(true);
     await refetchGetRecord();
     toggleShowingForm();
     setRefetchingAfterUpdatedRecord(false);
-  }, [refetchGetRecord, toggleShowingForm]);
+  }, [
+    refetchGetRecord,
+    toggleShowingForm,
+    addQueryParamToRefetchDataOnHomePage,
+  ]);
 
   useEffect(() => {
     if (isDeleteRecordSuccess) {
-      router.push("/");
+      router.push(homePageHref);
     }
-  }, [isDeleteRecordSuccess, router]);
+  }, [isDeleteRecordSuccess, router, homePageHref]);
 
-  if (isDeletingRecord || status === "loading") {
+  useEffect(() => {
+    if (recordUsedData.userId !== sessionData?.user?.id) {
+      router.push(homePageHref);
+    }
+  }, [recordUsedData.userId, sessionData?.user?.id, homePageHref, router]);
+
+  const showLoader =
+    isDeletingRecord ||
+    status === "loading" ||
+    recordUsedData.userId !== sessionData?.user?.id;
+
+  if (showLoader) {
     return (
       <div className={`${twCenteringBlock}`}>
         <Loader />
-      </div>
-    );
-  }
-
-  if (recordUsedData.userId !== sessionData?.user?.id) {
-    return (
-      <div className={`${twCenteringBlock}`}>
-        <div className="flex flex-col gap-2">
-          <div>Do not have access</div>
-          <Link className={twButton} href="/">
-            back
-          </Link>
-        </div>
       </div>
     );
   }
@@ -175,7 +181,7 @@ const RecordPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
       >
         <div className="flex flex-col gap-10">
           <div className="flex justify-between">
-            <Link className="h-fit" href="/">
+            <Link className="h-fit" href={homePageHref}>
               <svg
                 aria-hidden="true"
                 focusable="false"
