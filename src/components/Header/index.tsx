@@ -15,7 +15,7 @@ interface IComp {
 
 const Comp: React.FC<IComp> = ({ stats, sessionUserName }) => {
   return (
-    <div className="sticky top-0 z-10 flex flex-row items-center justify-between gap-2 bg-white p-6 pb-8 text-slate-900 dark:bg-slate-800 dark:text-white">
+    <div className="flex flex-row items-center justify-between gap-2  p-6 ">
       <div>
         <span>User: {capitalizeString(sessionUserName)}</span>
         {stats &&

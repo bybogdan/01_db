@@ -5,6 +5,7 @@ export const createRecordSchema = z.object({
   type: z.enum(["INCOME", "EXPENSE"]),
   name: z.string(),
   message: z.string().nullish(),
+  category: z.string().nullish(),
   amount: z.string(),
   currency: z.string(),
   userId: z.string(),

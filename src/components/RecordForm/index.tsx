@@ -1,8 +1,7 @@
 import type { Record } from "@prisma/client";
-
-import { memo, ReactNode, useEffect, useState } from "react";
+import type { ReactNode } from "react";
+import { memo, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-
 import type { RecordSchema } from "../../server/schema/post.schema";
 import { LoaderSize } from "../../types/misc";
 import { trpc } from "../../utils/trpc";
@@ -50,7 +49,7 @@ const Comp: React.FC<IComp> = ({
     defaultValues,
   });
 
-  const [isShowLoader, setIsShowLoader] = useState(false);
+  const [isShowLoader, setShowLoader] = useState(false);
 
   const onSubmit = async (data: RecordSchema) => {
     if (currentRecord) {
@@ -64,14 +63,14 @@ const Comp: React.FC<IComp> = ({
         userId: sessionUserId,
       });
     }
-    setIsShowLoader(true);
+    setShowLoader(true);
   };
 
   useEffect(() => {
     (async () => {
       if (isUpdateRecordSuccess || isSetRecordSuccess) {
         await handleRefetchData();
-        setIsShowLoader(false);
+        setShowLoader(false);
         reset();
       }
     })();
@@ -83,7 +82,7 @@ const Comp: React.FC<IComp> = ({
         <input
           autoComplete="off"
           className={`${twInput}`}
-          placeholder="amount"
+          placeholder="Amount"
           type="number"
           min="0.00"
           step="0.01"
@@ -94,7 +93,7 @@ const Comp: React.FC<IComp> = ({
         <select
           className={`absolute ${twSelect} right-0 w-fit bg-gray-100`}
           style={{ top: "50%", transform: "translate(0, -50%)" }}
-          placeholder="currency"
+          placeholder="Currency"
           defaultValue="USD"
           {...register("currency", {
             required: "Please enter currency",
@@ -107,9 +106,18 @@ const Comp: React.FC<IComp> = ({
         </select>
       </div>
 
+      <input
+        autoComplete="off"
+        className={`${twInput}`}
+        placeholder="Name"
+        {...register("name", {
+          required: "Please enter label for transaction",
+        })}
+      />
+
       <select
         className={`${twSelect}`}
-        placeholder="type"
+        placeholder="Type"
         defaultValue="EXPENSE"
         {...register("type", {
           required: "Please enter type of transaction",
@@ -119,21 +127,26 @@ const Comp: React.FC<IComp> = ({
         <option>INCOME</option>
       </select>
 
-      <input
-        autoComplete="off"
-        className={`${twInput}`}
-        placeholder="label"
-        {...register("name", {
-          required: "Please enter label for transaction",
-        })}
-      />
+      <select
+        className={`${twSelect}`}
+        placeholder="Category"
+        defaultValue=""
+        {...register("category", {})}
+      >
+        <option value="">Category (unselected)</option>
+        <option>FOOD</option>
+        <option>RENT</option>
+        <option>UTILITY PAYMENT</option>
+        <option>SALARY</option>
+        <option>OTHERS</option>
+      </select>
 
-      <input
+      {/* <input
         autoComplete="off"
         className={`${twInput}`}
         placeholder="message"
         {...register("message")}
-      />
+      /> */}
       <div className={`flex gap-2 ${discardButton ? "flex-row-reverse" : ""}`}>
         <button
           disabled={isSetRecordLoading || isUpdateRecordLoading}

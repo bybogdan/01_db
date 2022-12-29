@@ -43,6 +43,7 @@ enum RecordType {
 model Record {
   id        String     @id @default(cuid())
   type      RecordType @default(EXPENSE)
+  category  String?
   name      String
   message   String?
   amount    String
