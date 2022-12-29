@@ -27,20 +27,11 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
   const router = useRouter();
 
   const [isAwaitingFreshData, setAwaitingFreshData] = useState(false);
-  const [isFetchingAfterAddedRecord, setFetchingAfterAddedRecord] =
-    useState(false);
 
-  const handleRefetchData = useCallback(
-    async (afterRefetchCallback: () => void) => {
-      setFetchingAfterAddedRecord(true);
-      await refetchGetData();
-      if (afterRefetchCallback) {
-        afterRefetchCallback();
-        setFetchingAfterAddedRecord(false);
-      }
-    },
-    [refetchGetData]
-  );
+  const handleRefetchData = useCallback(async () => {
+    await refetchGetData();
+    return;
+  }, [refetchGetData]);
 
   // executed before render
   useMemo(() => {
@@ -76,7 +67,6 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
             <RecordForm
               sessionUserId={sessionUserId}
               handleRefetchData={handleRefetchData}
-              isFetchingInParentComp={isFetchingAfterAddedRecord}
             />
             <RecordsList records={records} />
           </div>

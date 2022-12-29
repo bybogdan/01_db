@@ -77,8 +77,6 @@ const RecordPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
 
   const [isShowEditForm, setShowEditForm] = useState(false);
   const [isDeletingRecord, setDeletingRecord] = useState(false);
-  const [isRefetchingAfterUpdatedRecord, setRefetchingAfterUpdatedRecord] =
-    useState(false);
 
   const [homePageHref, setHomePageHref] = useState("/");
 
@@ -112,10 +110,9 @@ const RecordPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
 
   const handleRefetchData = useCallback(async () => {
     addQueryParamToRefetchDataOnHomePage();
-    setRefetchingAfterUpdatedRecord(true);
     await refetchGetRecord();
     toggleShowingForm();
-    setRefetchingAfterUpdatedRecord(false);
+    return;
   }, [
     refetchGetRecord,
     toggleShowingForm,
@@ -233,14 +230,13 @@ const RecordPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
             <RecordForm
               sessionUserId={recordUsedData.userId as string}
               handleRefetchData={handleRefetchData}
-              isFetchingInParentComp={isRefetchingAfterUpdatedRecord}
               currentRecord={record}
               discardButton={DiscardButton}
             />
           ) : null}
         </div>
 
-        <div className="flex flex-col gap-6 pb-8">
+        <div className="flex flex-col gap-6 pb-12">
           {!isShowEditForm ? (
             <button className={twButton} onClick={toggleShowingForm}>
               edit

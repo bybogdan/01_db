@@ -1,6 +1,6 @@
 import type { Record } from "@prisma/client";
 
-import { memo, ReactNode, useCallback, useEffect, useState } from "react";
+import { memo, ReactNode, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import type { RecordSchema } from "../../server/schema/post.schema";
@@ -11,7 +11,7 @@ import { Loader } from "../Loader";
 
 interface IComp {
   sessionUserId: string;
-  handleRefetchData: (afterRefetchCallback: () => void) => void;
+  handleRefetchData: () => Promise<void>;
   isFetchingInParentComp?: boolean;
   currentRecord?: Record;
   discardButton?: ReactNode;
@@ -20,7 +20,6 @@ interface IComp {
 const Comp: React.FC<IComp> = ({
   sessionUserId,
   handleRefetchData,
-  isFetchingInParentComp,
   currentRecord,
   discardButton,
 }) => {
@@ -51,6 +50,8 @@ const Comp: React.FC<IComp> = ({
     defaultValues,
   });
 
+  const [isShowLoader, setIsShowLoader] = useState(false);
+
   const onSubmit = async (data: RecordSchema) => {
     if (currentRecord) {
       updateRecord({
@@ -63,12 +64,17 @@ const Comp: React.FC<IComp> = ({
         userId: sessionUserId,
       });
     }
+    setIsShowLoader(true);
   };
 
   useEffect(() => {
-    if (isUpdateRecordSuccess || isSetRecordSuccess) {
-      handleRefetchData(reset);
-    }
+    (async () => {
+      if (isUpdateRecordSuccess || isSetRecordSuccess) {
+        await handleRefetchData();
+        setIsShowLoader(false);
+        reset();
+      }
+    })();
   }, [isUpdateRecordSuccess, isSetRecordSuccess, handleRefetchData, reset]);
 
   return (
@@ -134,13 +140,7 @@ const Comp: React.FC<IComp> = ({
           type="submit"
           className={`grow ${twButton}`}
         >
-          {isSetRecordLoading ||
-          isUpdateRecordLoading ||
-          isFetchingInParentComp ? (
-            <Loader size={LoaderSize.SMALL} />
-          ) : (
-            "save"
-          )}
+          {isShowLoader ? <Loader size={LoaderSize.SMALL} /> : "save"}
         </button>
         {discardButton ? discardButton : null}
       </div>
