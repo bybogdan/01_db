@@ -51,6 +51,7 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
   if (!data) {
     return (
       <div className={`${twCenteringBlock}`}>
+        loader 1
         <Loader />
       </div>
     );
@@ -73,6 +74,7 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
         </div>
       ) : (
         <div className={`${twCenteringBlock}`}>
+          loader 2
           <Loader />
         </div>
       )}

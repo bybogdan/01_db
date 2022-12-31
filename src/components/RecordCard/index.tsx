@@ -18,7 +18,7 @@ export const Comp: React.FC<IComp> = ({ record }) => {
         {record.timestamp.getFullYear()}
       </p>
       <div className="flex justify-between">
-        <h5 className="mb-2 text-xl font-medium leading-tight text-gray-900 dark:text-white">
+        <h5 className="mb-2 max-w-[50%] text-xl font-medium leading-tight text-gray-900 dark:text-white">
           {record.name}
         </h5>
         <div

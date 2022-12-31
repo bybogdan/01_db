@@ -77,7 +77,6 @@ export const recordRouter = router({
             timestamp: "desc",
           },
         ],
-        take: 5,
       });
 
       const totalExpensesSortedByCurrency = records.length
@@ -90,14 +89,20 @@ export const recordRouter = router({
 
       const isDevMode = process.env.NODE_ENV === "development";
       let currenciesResponse: currencyResponseType = currencyResponseMock;
-      const currencies = await ctx.prisma.currencies.findMany();
+      const currencies = await ctx.prisma.currencies.findMany({
+        orderBy: [
+          {
+            timestamp: "desc",
+          },
+        ],
+      });
 
       if (isDevMode) {
         currenciesResponse =
           currencies?.length && currencies[0]?.value
             ? (currencies[0].value as currencyResponseType)
             : currenciesResponse;
-      } else if (!currencies?.length) {
+      } else if (currencies.length === 0) {
         currenciesResponse = await getCurrrency();
 
         await ctx.prisma.currencies.create({
