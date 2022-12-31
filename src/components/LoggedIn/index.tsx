@@ -51,7 +51,6 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
   if (!data) {
     return (
       <div className={`${twCenteringBlock}`}>
-        loader 1
         <Loader />
       </div>
     );
@@ -63,7 +62,11 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
     <>
       {isSuccess && !isAwaitingFreshData ? (
         <div className="align-between flex  min-h-screen flex-col text-slate-900 dark:text-white">
-          <Header sessionUserName={sessionUserName} stats={stats} />
+          <Header
+            sessionUserName={sessionUserName}
+            sessionUserId={sessionUserId}
+            stats={stats}
+          />
           <div className="flex flex-col gap-12 p-6">
             <RecordForm
               sessionUserId={sessionUserId}
@@ -74,7 +77,6 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
         </div>
       ) : (
         <div className={`${twCenteringBlock}`}>
-          loader 2
           <Loader />
         </div>
       )}

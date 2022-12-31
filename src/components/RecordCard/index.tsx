@@ -14,7 +14,7 @@ export const Comp: React.FC<IComp> = ({ record }) => {
       key={record.id}
     >
       <p className="text-base text-gray-700 dark:text-slate-200">
-        {record.timestamp.getDate()}.{record.timestamp.getMonth()}.
+        {record.timestamp.getDate()}.{record.timestamp.getMonth() + 1}.
         {record.timestamp.getFullYear()}
       </p>
       <div className="flex justify-between">

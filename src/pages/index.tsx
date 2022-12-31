@@ -19,7 +19,6 @@ const Home: NextPage = () => {
       <div>
         {status === "loading" ? (
           <div className={`${twCenteringBlock}`}>
-            loader 0
             <Loader />
           </div>
         ) : null}

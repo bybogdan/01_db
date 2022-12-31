@@ -1,4 +1,5 @@
 import { signOut } from "next-auth/react";
+import Link from "next/link";
 import { memo } from "react";
 import type { HeaderStatsType } from "../../types/misc";
 import {
@@ -7,16 +8,18 @@ import {
   getCurrencySymbol,
   numToFloat,
 } from "../../utils/common";
+import { twButton } from "../../utils/twCommon";
 
 interface IComp {
   stats: HeaderStatsType;
   sessionUserName: string;
+  sessionUserId: string;
 }
 
-const Comp: React.FC<IComp> = ({ stats, sessionUserName }) => {
+const Comp: React.FC<IComp> = ({ stats, sessionUserName, sessionUserId }) => {
   return (
     <div className="flex flex-row items-center justify-between gap-2  p-6 ">
-      <div>
+      <div className="flex flex-col gap-2">
         <span>User: {capitalizeString(sessionUserName)}</span>
         {stats &&
           Object.entries(stats).map(([key, value], index) => (
@@ -26,6 +29,9 @@ const Comp: React.FC<IComp> = ({ stats, sessionUserName }) => {
               BASE_CURRENCY
             )}`}</div>
           ))}
+        <Link className={twButton} href={`/stats/${sessionUserId}`}>
+          To stats
+        </Link>
       </div>
       <div>
         <button className="h-fit" onClick={() => signOut()}>

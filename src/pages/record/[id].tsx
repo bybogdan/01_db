@@ -16,10 +16,10 @@ import { getCurrencySymbol, numToFloat } from "../../utils/common";
 import { trpc } from "../../utils/trpc";
 import { twHeading, twButton, twCenteringBlock } from "../../utils/twCommon";
 import { appRouter } from "../../server/trpc/router/_app";
-import { createContext } from "../../server/trpc/context";
-import superjson from "superjson";
-import { prisma } from "../../server/db/client";
 import { useSession } from "next-auth/react";
+import superjson from "superjson";
+import { createContext } from "../../server/trpc/context";
+import { prisma } from "../../server/db/client";
 
 export const getStaticProps = async (
   context: GetStaticPropsContext<{ id: string }>
@@ -214,7 +214,7 @@ const RecordPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
             </div>
             <p className="text-base text-gray-700 dark:text-slate-200">
               {}
-              {date.getDate()}.{date.getMonth()}.{date.getFullYear()}
+              {date.getDate()}.{date.getMonth() + 1}.{date.getFullYear()}
             </p>
 
             <h5 className="mb-2 text-xl leading-tight text-gray-900 dark:text-white">
