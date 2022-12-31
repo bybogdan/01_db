@@ -77,6 +77,7 @@ export const recordRouter = router({
             timestamp: "desc",
           },
         ],
+        take: 5,
       });
 
       const totalExpensesSortedByCurrency = records.length
