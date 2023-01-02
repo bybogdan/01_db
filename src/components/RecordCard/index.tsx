@@ -1,13 +1,17 @@
 import type { Record } from "@prisma/client";
-import { memo, useEffect, useState } from "react";
-import { getCurrencySymbol, numToFloat } from "../../utils/common";
-import { RecordForm } from "../RecordForm";
+import { memo } from "react";
+import {
+  capitalizeString,
+  getCurrencySymbol,
+  numToFloat,
+} from "../../utils/common";
 
 interface IComp {
   record: Record;
+  showCategory?: boolean;
 }
 
-export const Comp: React.FC<IComp> = ({ record }) => {
+export const Comp: React.FC<IComp> = ({ record, showCategory }) => {
   return (
     <li
       className="flex flex-col	 justify-center gap-1 text-slate-900 dark:text-white"
@@ -33,6 +37,9 @@ export const Comp: React.FC<IComp> = ({ record }) => {
           <p>{getCurrencySymbol(record.currency)}</p>
         </div>
       </div>
+      {showCategory && record.category && (
+        <p>Category: {capitalizeString(record.category)}</p>
+      )}
     </li>
   );
 };

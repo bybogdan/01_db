@@ -1,28 +1,22 @@
-import { createProxySSGHelpers } from "@trpc/react-query/ssg";
 import type {
   GetStaticPaths,
   GetStaticPropsContext,
   InferGetStaticPropsType,
 } from "next";
-import superjson from "superjson";
 import Head from "next/head";
 import Link from "next/link";
-import { createContext } from "../../server/trpc/context";
-import { appRouter } from "../../server/trpc/router/_app";
 import type { Record, RecordType } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import { twCenteringBlock } from "../../utils/twCommon";
 import { Loader } from "../../components/Loader";
 import { prisma } from "../../server/db/client";
-import { RecordCard } from "../../components/RecordCard";
-import { RecordsList } from "../../components/RecordsList";
-import { capitalizeString, numToFloat } from "../../utils/common";
 import { useEffect } from "react";
-import { router } from "../../server/trpc/trpc";
 import { useRouter } from "next/router";
-import { currencyResponseType } from "../../types/misc";
+import type { currencyResponseType } from "../../types/misc";
+import { StatsMonth } from "../../components/StatsMonth";
+import { BASE_CURRENCY } from "../../utils/common";
 
-type recordTimestampNumberType = {
+export type recordTimestampNumberType = {
   id: string;
   type: RecordType;
   category: string | null;
@@ -34,8 +28,33 @@ type recordTimestampNumberType = {
   userId: string;
 };
 
-type accType = {
-  [key: string]: recordTimestampNumberType[];
+export type recordsByCategroriesType = {
+  [key: string]: {
+    records: recordTimestampNumberType[];
+    income: number;
+    expense: number;
+  };
+};
+
+export type accType = {
+  [key: string]: {
+    records: recordTimestampNumberType[];
+    income: number;
+    expense: number;
+    recordsByCategories: recordsByCategroriesType;
+  };
+};
+
+const getConvertedToBaseCurrencyRecordAmount = (
+  record: Record,
+  currency: currencyResponseType
+): number => {
+  if (record.currency === BASE_CURRENCY) {
+    return +record.amount;
+  } else {
+    const currencyValue = currency.data[record.currency]?.value || 1;
+    return +record.amount / currencyValue;
+  }
 };
 
 export const getStaticProps = async (
@@ -64,28 +83,77 @@ export const getStaticProps = async (
 
   const currency = currencies[0]?.value as currencyResponseType;
 
-  const recordsByMonths = records?.reduce((acc: accType, record) => {
+  const recordsDataByMonths = records?.reduce((acc: accType, record) => {
     const dateKey = `${
       record.timestamp.getMonth() + 1
     }.${record.timestamp.getFullYear()}`;
 
     if (!acc[dateKey]) {
-      acc[dateKey] = [];
+      acc[dateKey] = {
+        records: [],
+        income: 0,
+        expense: 0,
+        recordsByCategories: {},
+      };
     }
-    acc[dateKey]?.push({
+
+    const item = acc[dateKey];
+    if (!item) {
+      return acc;
+    }
+
+    item.records.push({
       ...record,
       timestamp: +record.timestamp,
     });
 
+    if (record.type === "INCOME") {
+      item.income += getConvertedToBaseCurrencyRecordAmount(record, currency);
+    }
+    if (record.type === "EXPENSE") {
+      item.expense += getConvertedToBaseCurrencyRecordAmount(record, currency);
+    }
+
+    const key =
+      record.category !== null && record.category
+        ? record.category
+        : "UNSPECIFIED";
+
+    if (!item.recordsByCategories[key]) {
+      item.recordsByCategories[key] = {
+        income: 0,
+        expense: 0,
+        records: [],
+      };
+    }
+
+    const recordByCategory = item.recordsByCategories[key];
+
+    if (recordByCategory !== undefined) {
+      if (record.type === "INCOME") {
+        recordByCategory.income = getConvertedToBaseCurrencyRecordAmount(
+          record,
+          currency
+        );
+      }
+      if (record.type === "EXPENSE") {
+        recordByCategory.expense = getConvertedToBaseCurrencyRecordAmount(
+          record,
+          currency
+        );
+      }
+      recordByCategory.records.push({
+        ...record,
+        timestamp: +record.timestamp,
+      });
+    }
     return acc;
   }, {});
 
   return {
     props: {
       userId,
-      // trpcState: ssg.dehydrate(),
-      recordsByMonths,
-      currency: currency.data,
+      recordsDataByMonths,
     },
     revalidate: 1,
   };
@@ -108,7 +176,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 };
 
 const Stats = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { recordsByMonths, userId, currency } = props;
+  const { recordsDataByMonths, userId } = props;
   const { data: sessionData, status } = useSession();
   const router = useRouter();
 
@@ -156,104 +224,14 @@ const Stats = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
           </div>
         </div>
         <div>
-          {Object.entries(recordsByMonths).map(([month, records]) => {
-            const recordsByCategories = records.reduce(
-              (
-                acc: {
-                  [key: string]: {
-                    records: recordTimestampNumberType[];
-                    income: number;
-                    expense: number;
-                  };
-                },
-                record
-              ) => {
-                const key =
-                  record.category !== null && record.category
-                    ? record.category
-                    : "UNSPECIFIED";
-                if (!acc[key]) {
-                  acc[key] = {
-                    income: 0,
-                    expense: 0,
-                    records: [],
-                  };
-                }
-
-                const recordByCategory = acc[key];
-
-                if (recordByCategory) {
-                  if (record.type === "INCOME") {
-                    if (record.currency === "USD") {
-                      recordByCategory.income += +record.amount;
-                    } else {
-                      const currentCurrency = currency[record.currency]?.value;
-                      const amountConvertedToUSD = currentCurrency
-                        ? +record.amount / currentCurrency
-                        : 0;
-                      recordByCategory.income += +amountConvertedToUSD;
-                    }
-                  }
-                  if (record.type === "EXPENSE") {
-                    if (record.currency === "USD") {
-                      recordByCategory.expense += +record.amount;
-                    } else {
-                      const currentCurrency = currency[record.currency]?.value;
-                      const amountConvertedToUSD = currentCurrency
-                        ? +record.amount / currentCurrency
-                        : 0;
-                      recordByCategory.expense += +amountConvertedToUSD;
-                    }
-                  }
-                  recordByCategory.records.push(record);
-                }
-
-                return acc;
-              },
-              {}
-            );
-
-            const income = Object.values(recordsByCategories).reduce(
-              (acc, { income }) => acc + income,
-              0
-            );
-            const expense = Object.values(recordsByCategories).reduce(
-              (acc, { expense }) => acc + expense,
-              0
-            );
-            const balance = income - expense;
-
-            return (
-              <div className="" key={`stats-${month}`}>
-                <h5 className="mb-2 text-xl leading-tight text-gray-900 dark:text-white">
-                  Stats for: {month}
-                </h5>
-                <h5 className="mb-2 text-xl leading-tight text-gray-900 dark:text-white">
-                  Amount of transactions: {records.length}
-                </h5>
-                <h5 className="mb-2 text-xl leading-tight text-gray-900 dark:text-white">
-                  {capitalizeString("balance")}: {numToFloat(balance)}
-                </h5>
-                <h5 className="mb-2 text-xl leading-tight text-gray-900 dark:text-white">
-                  {capitalizeString("income")}: {numToFloat(income)}
-                </h5>
-                <h5 className="mb-2 text-xl leading-tight text-gray-900 dark:text-white">
-                  {capitalizeString("expense")}: {numToFloat(expense)}
-                </h5>
-                <h5 className="mb-2 text-xl leading-tight text-gray-900 dark:text-white">
-                  Categories:
-                </h5>
-                {Object.entries(recordsByCategories).map(([category, data]) => (
-                  <div key={`stats-${category}`}>
-                    <h5 className="mb-2 text-xl leading-tight text-gray-900 dark:text-white">
-                      {capitalizeString(category)}: {data.records.length}
-                    </h5>
-                  </div>
-                ))}
-                <hr className="my-6 border-gray-300" />
-              </div>
-            );
-          })}
+          {Object.entries(recordsDataByMonths).map(
+            (recordDataByMonth, index) => (
+              <StatsMonth
+                key={`stats-month-${index}`}
+                data={recordDataByMonth}
+              />
+            )
+          )}
         </div>
       </div>
     </>
