@@ -20,6 +20,7 @@ import { capitalizeString, numToFloat } from "../../utils/common";
 import { useEffect } from "react";
 import { router } from "../../server/trpc/trpc";
 import { useRouter } from "next/router";
+import { currencyResponseType } from "../../types/misc";
 
 type recordTimestampNumberType = {
   id: string;
@@ -53,6 +54,16 @@ export const getStaticProps = async (
     ],
   });
 
+  const currencies = await prisma.currencies.findMany({
+    orderBy: [
+      {
+        timestamp: "desc",
+      },
+    ],
+  });
+
+  const currency = currencies[0]?.value as currencyResponseType;
+
   const recordsByMonths = records?.reduce((acc: accType, record) => {
     const dateKey = `${
       record.timestamp.getMonth() + 1
@@ -74,6 +85,7 @@ export const getStaticProps = async (
       userId,
       // trpcState: ssg.dehydrate(),
       recordsByMonths,
+      currency: currency.data,
     },
     revalidate: 1,
   };
@@ -96,8 +108,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 };
 
 const Stats = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { recordsByMonths, userId } = props;
-
+  const { recordsByMonths, userId, currency } = props;
   const { data: sessionData, status } = useSession();
   const router = useRouter();
 
@@ -173,10 +184,26 @@ const Stats = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
 
                 if (recordByCategory) {
                   if (record.type === "INCOME") {
-                    recordByCategory.income += +record.amount;
+                    if (record.currency === "USD") {
+                      recordByCategory.income += +record.amount;
+                    } else {
+                      const currentCurrency = currency[record.currency]?.value;
+                      const amountConvertedToUSD = currentCurrency
+                        ? +record.amount / currentCurrency
+                        : 0;
+                      recordByCategory.income += +amountConvertedToUSD;
+                    }
                   }
                   if (record.type === "EXPENSE") {
-                    recordByCategory.expense += +record.amount;
+                    if (record.currency === "USD") {
+                      recordByCategory.expense += +record.amount;
+                    } else {
+                      const currentCurrency = currency[record.currency]?.value;
+                      const amountConvertedToUSD = currentCurrency
+                        ? +record.amount / currentCurrency
+                        : 0;
+                      recordByCategory.expense += +amountConvertedToUSD;
+                    }
                   }
                   recordByCategory.records.push(record);
                 }
