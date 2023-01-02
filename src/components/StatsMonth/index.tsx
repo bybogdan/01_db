@@ -52,27 +52,33 @@ export const Comp: React.FC<IComp> = ({ data }) => {
       </h5>
       {showStat && (
         <>
-          {showRecords ? <hr className="my-2 border-gray-300" /> : null}
-          <ul className="flex flex-col gap-4">
-            {showRecords &&
-              recordData.records.map((record, index) => {
-                const formattedRecord: Record = {
-                  ...record,
-                  timestamp: new Date(record.timestamp),
-                };
-                return (
-                  <RecordCard
-                    key={`record-${index}`}
-                    showCategory
-                    record={formattedRecord}
-                  />
-                );
-              })}
-          </ul>
+          {showRecords ? (
+            <>
+              <hr className="my-2 border-gray-300" />
+              <h5 className=" text-xl leading-tight text-gray-900 dark:text-white">
+                {capitalizeString("all records")}:
+              </h5>
+              <ul className="flex flex-col gap-4">
+                {recordData.records.map((record, index) => {
+                  const formattedRecord: Record = {
+                    ...record,
+                    timestamp: new Date(record.timestamp),
+                  };
+                  return (
+                    <RecordCard
+                      key={`record-${index}`}
+                      showCategory
+                      record={formattedRecord}
+                    />
+                  );
+                })}
+              </ul>
+            </>
+          ) : null}
           {showRecords ? <hr className="my-2 border-gray-300" /> : null}
           <div>
             <button
-              className={`mb-2 ${twButton}`}
+              className={twButton}
               onClick={() => setShowRecords((prev) => !prev)}
             >
               {showRecords
