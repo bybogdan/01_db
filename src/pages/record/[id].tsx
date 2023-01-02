@@ -213,7 +213,6 @@ const RecordPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
               </h3>
             </div>
             <p className="text-base text-gray-700 dark:text-slate-200">
-              {}
               {date.getDate()}.{date.getMonth() + 1}.{date.getFullYear()}
             </p>
 

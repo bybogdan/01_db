@@ -26,18 +26,17 @@ export const Comp: React.FC<IComp> = ({ data, category }) => {
             <h5 className=" text-xl leading-tight text-gray-900 dark:text-white">
               {capitalizeString(category)}:
             </h5>
+            {data.records.map((record, index) => {
+              const formattedRecord: Record = {
+                ...record,
+                timestamp: new Date(record.timestamp),
+              };
+              return (
+                <RecordCard key={`record-${index}`} record={formattedRecord} />
+              );
+            })}
           </>
         ) : null}
-        {showRecords &&
-          data.records.map((record, index) => {
-            const formattedRecord: Record = {
-              ...record,
-              timestamp: new Date(record.timestamp),
-            };
-            return (
-              <RecordCard key={`record-${index}`} record={formattedRecord} />
-            );
-          })}
         <div>
           <button
             className={` ${twButton}`}
