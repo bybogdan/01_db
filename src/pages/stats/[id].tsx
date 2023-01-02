@@ -131,13 +131,13 @@ export const getStaticProps = async (
 
     if (recordByCategory !== undefined) {
       if (record.type === "INCOME") {
-        recordByCategory.income = getConvertedToBaseCurrencyRecordAmount(
+        recordByCategory.income += getConvertedToBaseCurrencyRecordAmount(
           record,
           currency
         );
       }
       if (record.type === "EXPENSE") {
-        recordByCategory.expense = getConvertedToBaseCurrencyRecordAmount(
+        recordByCategory.expense += getConvertedToBaseCurrencyRecordAmount(
           record,
           currency
         );

@@ -1,7 +1,12 @@
 import type { Record } from "@prisma/client";
 import { memo, useState } from "react";
 import type { recordTimestampNumberType } from "../../pages/stats/[id]";
-import { capitalizeString } from "../../utils/common";
+import {
+  BASE_CURRENCY,
+  capitalizeString,
+  getCurrencySymbol,
+  numToFloat,
+} from "../../utils/common";
 import { twButton } from "../../utils/twCommon";
 import { RecordCard } from "../RecordCard";
 
@@ -35,6 +40,13 @@ export const Comp: React.FC<IComp> = ({ data, category }) => {
                 <RecordCard key={`record-${index}`} record={formattedRecord} />
               );
             })}
+            <p className="text-base text-gray-700 dark:text-slate-200">
+              Total:{" "}
+              {data.expense > data.income
+                ? numToFloat(data.expense)
+                : numToFloat(data.income)}{" "}
+              {getCurrencySymbol(BASE_CURRENCY)}
+            </p>
           </>
         ) : null}
         <div>
