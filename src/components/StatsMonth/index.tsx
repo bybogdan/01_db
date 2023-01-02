@@ -33,7 +33,7 @@ export const Comp: React.FC<IComp> = ({ data }) => {
   const [showRecords, setShowRecords] = useState(false);
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-4">
       <h5 className=" text-xl leading-tight text-gray-900 dark:text-white">
         Stats for: {month}
       </h5>
@@ -53,7 +53,7 @@ export const Comp: React.FC<IComp> = ({ data }) => {
       {showStat && (
         <>
           {showRecords ? <hr className="my-2 border-gray-300" /> : null}
-          <ul className="flex flex-col gap-2">
+          <ul className="flex flex-col gap-4">
             {showRecords &&
               recordData.records.map((record, index) => {
                 const formattedRecord: Record = {

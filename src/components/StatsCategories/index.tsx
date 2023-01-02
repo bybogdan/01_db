@@ -17,8 +17,9 @@ export const Comp: React.FC<IComp> = ({ data }) => {
       <h5 className=" text-xl leading-tight text-gray-900 dark:text-white">
         Categories:
       </h5>
+
       {Object.entries(data).map(([category, data]) => (
-        <div key={`stats-${category}`} className="flex flex-col gap-2">
+        <div key={`stats-${category}`} className="flex flex-col gap-4">
           {showRecords ? (
             <>
               <hr className="my-2 border-gray-300" />
