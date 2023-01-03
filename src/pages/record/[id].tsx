@@ -10,7 +10,7 @@ import type { ReactNode } from "react";
 import { useCallback } from "react";
 import { useEffect, useState } from "react";
 import { createProxySSGHelpers } from "@trpc/react-query/ssg";
-import { Loader } from "../../components/Loader";
+import { FunLoader } from "../../components/Loader";
 import { RecordForm } from "../../components/RecordForm";
 import { getCurrencySymbol, numToFloat } from "../../utils/common";
 import { trpc } from "../../utils/trpc";
@@ -20,6 +20,7 @@ import { useSession } from "next-auth/react";
 import superjson from "superjson";
 import { createContext } from "../../server/trpc/context";
 import { prisma } from "../../server/db/client";
+import { BaseHeader } from "../../components/BaseHeader";
 
 export const getStaticProps = async (
   context: GetStaticPropsContext<{ id: string }>
@@ -119,27 +120,25 @@ const RecordPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
     addQueryParamToRefetchDataOnHomePage,
   ]);
 
-  useEffect(() => {
-    if (isDeleteRecordSuccess) {
-      router.push(homePageHref);
-    }
-  }, [isDeleteRecordSuccess, router, homePageHref]);
-
-  useEffect(() => {
-    if (recordUsedData.userId !== sessionData?.user?.id) {
-      router.push(homePageHref);
-    }
-  }, [recordUsedData.userId, sessionData?.user?.id, homePageHref, router]);
-
   const showLoader =
     isDeletingRecord ||
     status === "loading" ||
     recordUsedData.userId !== sessionData?.user?.id;
 
+  const shouldRedirectToHomePage =
+    (status !== "loading" && recordUsedData.userId !== sessionData?.user?.id) ||
+    isDeleteRecordSuccess;
+
+  useEffect(() => {
+    if (shouldRedirectToHomePage) {
+      router.push(homePageHref);
+    }
+  }, [shouldRedirectToHomePage, homePageHref, router]);
+
   if (showLoader) {
     return (
       <div className={`${twCenteringBlock}`}>
-        <Loader />
+        <FunLoader />
       </div>
     );
   }
@@ -168,7 +167,7 @@ const RecordPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
   return (
     <>
       <Head>
-        <title>Dialga</title>
+        <title>Dialga:Record</title>
         <meta name="description" content="Dialga" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
@@ -177,27 +176,10 @@ const RecordPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
         key={record.id}
       >
         <div className="flex flex-col gap-10">
-          <div className="flex justify-between">
-            <Link className="h-fit" href={homePageHref}>
-              <svg
-                aria-hidden="true"
-                focusable="false"
-                data-prefix="far"
-                data-icon="arrow-alt-circle-left"
-                className="h-7 w-7"
-                role="img"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 512 512"
-              >
-                <path
-                  fill="currentColor"
-                  d="M8 256c0 137 111 248 248 248s248-111 248-248S393 8 256 8 8 119 8 256zm448 0c0 110.5-89.5 200-200 200S56 366.5 56 256 145.5 56 256 56s200 89.5 200 200zm-72-20v40c0 6.6-5.4 12-12 12H256v67c0 10.7-12.9 16-20.5 8.5l-99-99c-4.7-4.7-4.7-12.3 0-17l99-99c7.6-7.6 20.5-2.2 20.5 8.5v67h116c6.6 0 12 5.4 12 12z"
-                ></path>
-              </svg>
-            </Link>
-
-            <div>{recordUsedData.userName}</div>
-          </div>
+          <BaseHeader
+            userName={recordUsedData.userName as string}
+            homePageHref={homePageHref}
+          />
           <div className="flex flex-col gap-4">
             <div
               className={`flex gap-2 ${

@@ -2,8 +2,8 @@ import { useRouter } from "next/router";
 import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { trpc } from "../../utils/trpc";
 import { twCenteringBlock } from "../../utils/twCommon";
-import { Header } from "../Header";
-import { Loader } from "../Loader";
+import { HomeHeader } from "../HomeHeader";
+import { FunLoader } from "../Loader";
 import { RecordForm } from "../RecordForm";
 import { RecordsList } from "../RecordsList";
 
@@ -51,7 +51,7 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
   if (!data) {
     return (
       <div className={`${twCenteringBlock}`}>
-        <Loader />
+        <FunLoader />
       </div>
     );
   }
@@ -62,7 +62,7 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
     <>
       {isSuccess && !isAwaitingFreshData ? (
         <div className="align-between flex  min-h-screen flex-col text-slate-900 dark:text-white">
-          <Header
+          <HomeHeader
             sessionUserName={sessionUserName}
             sessionUserId={sessionUserId}
             stats={stats}
@@ -77,7 +77,7 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
         </div>
       ) : (
         <div className={`${twCenteringBlock}`}>
-          <Loader />
+          <FunLoader />
         </div>
       )}
     </>

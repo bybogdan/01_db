@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { LoaderSize } from "../../types/misc";
 
 interface ILoader {
@@ -25,6 +26,14 @@ export const Loader: React.FC<ILoader> = ({ size = LoaderSize.BASE }) => {
         />
       </svg>
       <span className="sr-only">Loading...</span>
+    </div>
+  );
+};
+
+export const FunLoader: React.FC = () => {
+  return (
+    <div>
+      <Image alt="Loading" src={"/loaders/4.gif"} width={200} height={200} />
     </div>
   );
 };

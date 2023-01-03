@@ -8,6 +8,7 @@ import {
   BASE_CURRENCY,
   capitalizeString,
   getCurrencySymbol,
+  getMonthName,
   numToFloat,
 } from "../../utils/common";
 import { twButton } from "../../utils/twCommon";
@@ -35,7 +36,7 @@ export const Comp: React.FC<IComp> = ({ data }) => {
   return (
     <div className="flex flex-col gap-4">
       <h5 className=" text-xl leading-tight text-gray-900 dark:text-white">
-        Stats for: {month}
+        Stats for: {getMonthName(month)}
       </h5>
       <h5 className="text-xl leading-tight text-gray-900 dark:text-white">
         {capitalizeString("balance")}:{" "}
@@ -97,7 +98,6 @@ export const Comp: React.FC<IComp> = ({ data }) => {
           {showStat ? "Hide more" : "Show more"}
         </button>
       </div>
-      <hr className="my-6 border-gray-300" />
     </div>
   );
 };

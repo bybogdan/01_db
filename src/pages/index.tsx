@@ -3,7 +3,7 @@ import Head from "next/head";
 import { signIn, useSession } from "next-auth/react";
 
 import { twBigButton, twCenteringBlock } from "../utils/twCommon";
-import { Loader } from "../components/Loader";
+import { FunLoader } from "../components/Loader";
 import { LoggedIn } from "../components/LoggedIn";
 
 const Home: NextPage = () => {
@@ -19,7 +19,7 @@ const Home: NextPage = () => {
       <div>
         {status === "loading" ? (
           <div className={`${twCenteringBlock}`}>
-            <Loader />
+            <FunLoader />
           </div>
         ) : null}
 
