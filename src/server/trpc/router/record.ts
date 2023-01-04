@@ -19,6 +19,7 @@ import type {
   currencyResponseType,
   HeaderStatsType,
 } from "../../../types/misc";
+import { getRecordsDataByMonths } from "../../../pages/stats/[id]";
 
 const ONE_DAY = 1000 * 60 * 60 * 24;
 
@@ -216,5 +217,32 @@ export const recordRouter = router({
         },
       });
       return updatedRecord;
+    }),
+  getStats: publicProcedure
+    .input(z.string())
+    .query(async ({ input: userId, ctx }) => {
+      const records = await ctx.prisma.record.findMany({
+        where: {
+          userId,
+        },
+        orderBy: [
+          {
+            timestamp: "desc",
+          },
+        ],
+      });
+
+      const currencies = await ctx.prisma.currencies.findMany({
+        orderBy: [
+          {
+            timestamp: "desc",
+          },
+        ],
+      });
+
+      const currency = currencies[0]?.value as currencyResponseType;
+      const recordsDataByMonths = getRecordsDataByMonths(records, currency);
+
+      return recordsDataByMonths;
     }),
 });
