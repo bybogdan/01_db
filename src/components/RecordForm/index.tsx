@@ -51,6 +51,10 @@ const Comp: React.FC<IComp> = ({
 
   const [isShowLoader, setShowLoader] = useState(false);
 
+  const revalidate = async (userId: string) => {
+    await fetch(`/stats/${userId}`);
+  };
+
   const onSubmit = async (data: RecordSchema) => {
     if (currentRecord) {
       updateRecord({
@@ -64,6 +68,7 @@ const Comp: React.FC<IComp> = ({
       });
     }
     setShowLoader(true);
+    revalidate(sessionUserId);
   };
 
   useEffect(() => {
