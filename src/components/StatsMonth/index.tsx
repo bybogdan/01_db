@@ -1,9 +1,6 @@
 import type { Record } from "@prisma/client";
 import { memo, useState } from "react";
-import type {
-  recordsByCategroriesType,
-  recordTimestampNumberType,
-} from "../../pages/stats/[id]";
+import type { recordsByCategroriesType } from "../../server/trpc/router/record";
 import {
   BASE_CURRENCY,
   capitalizeString,
@@ -19,7 +16,7 @@ interface IComp {
   data: [
     string,
     {
-      records: recordTimestampNumberType[];
+      records: Record[];
       income: number;
       expense: number;
       recordsByCategories: recordsByCategroriesType;

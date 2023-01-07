@@ -1,6 +1,6 @@
 import type { Record } from "@prisma/client";
 import { memo, useState } from "react";
-import type { recordTimestampNumberType } from "../../pages/stats/[id]";
+
 import {
   BASE_CURRENCY,
   capitalizeString,
@@ -12,7 +12,7 @@ import { RecordCard } from "../RecordCard";
 
 interface IComp {
   data: {
-    records: recordTimestampNumberType[];
+    records: Record[];
     income: number;
     expense: number;
   };
