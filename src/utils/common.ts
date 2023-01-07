@@ -72,3 +72,6 @@ export const getMonthName = (date: string) => {
 
   return `${monthName} ${year}`;
 };
+
+export const getIsStandalone = () =>
+  window.matchMedia("(display-mode: standalone)").matches;

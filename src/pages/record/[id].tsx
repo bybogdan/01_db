@@ -12,7 +12,11 @@ import { useEffect, useState } from "react";
 import { createProxySSGHelpers } from "@trpc/react-query/ssg";
 import { FunLoader } from "../../components/Loader";
 import { RecordForm } from "../../components/RecordForm";
-import { getCurrencySymbol, numToFloat } from "../../utils/common";
+import {
+  getCurrencySymbol,
+  getIsStandalone,
+  numToFloat,
+} from "../../utils/common";
 import { trpc } from "../../utils/trpc";
 import { twHeading, twButton, twCenteringBlock } from "../../utils/twCommon";
 import { appRouter } from "../../server/trpc/router/_app";
@@ -164,6 +168,8 @@ const RecordPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
 
   const date = new Date(record.timestamp);
 
+  const isStandalone: boolean = getIsStandalone();
+
   return (
     <>
       <Head>
@@ -224,7 +230,7 @@ const RecordPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
           ) : null}
         </div>
 
-        <div className="flex flex-col gap-6 pb-14">
+        <div className={`flex flex-col gap-6 ${!isStandalone ? "pb-14" : ""}`}>
           {!isShowEditForm ? (
             <button className={twButton} onClick={toggleShowingForm}>
               edit
