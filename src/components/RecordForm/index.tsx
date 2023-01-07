@@ -135,6 +135,7 @@ const Comp: React.FC<IComp> = ({
       >
         <option value="">Category (unselected)</option>
         <option>FOOD</option>
+        <option>TRANSPORT</option>
         <option>RENT</option>
         <option>UTILITY PAYMENT</option>
         <option>SALARY</option>

@@ -224,7 +224,7 @@ const RecordPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
           ) : null}
         </div>
 
-        <div className="flex flex-col gap-6 pb-12">
+        <div className="flex flex-col gap-6 pb-14">
           {!isShowEditForm ? (
             <button className={twButton} onClick={toggleShowingForm}>
               edit

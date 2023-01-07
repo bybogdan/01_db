@@ -40,6 +40,7 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
     if (update) {
       setAwaitingFreshData(true);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
