@@ -1,5 +1,5 @@
 import { memo } from "react";
-import type { recordsByCategroriesType } from "../../pages/stats/[id]";
+import type { recordsByCategroriesType } from "../../server/trpc/router/record";
 import { StatsCategory } from "../StatsCategory";
 
 interface IComp {

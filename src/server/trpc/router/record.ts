@@ -30,12 +30,19 @@ export type recordsByCategroriesType = {
   };
 };
 
+export type recordsByType = {
+  [key: string]: {
+    recordsByCategories: recordsByCategroriesType;
+    amount: number;
+  };
+};
+
 type recordsDataByMonthsType = {
   [key: string]: {
     records: Record[];
     income: number;
     expense: number;
-    recordsByCategories: recordsByCategroriesType;
+    recordsByType: recordsByType;
   };
 };
 
@@ -65,7 +72,7 @@ const getRecordsDataByMonths = (
         records: [],
         income: 0,
         expense: 0,
-        recordsByCategories: {},
+        recordsByType: {},
       };
     }
 
@@ -76,41 +83,46 @@ const getRecordsDataByMonths = (
 
     item.records.push(record);
 
-    if (record.type === "INCOME") {
-      item.income += getConvertedToBaseCurrencyRecordAmount(record, currency);
-    }
-    if (record.type === "EXPENSE") {
-      item.expense += getConvertedToBaseCurrencyRecordAmount(record, currency);
+    if (!item.recordsByType[record.type as string]) {
+      item.recordsByType[record.type as string] = {
+        recordsByCategories: {},
+        amount: 0,
+      };
     }
 
-    const key =
+    const recordByType = item.recordsByType[record.type as string];
+
+    if (!recordByType) {
+      return acc;
+    }
+
+    const categoryKey =
       record.category !== null && record.category
         ? record.category
         : "UNSPECIFIED";
 
-    if (!item.recordsByCategories[key]) {
-      item.recordsByCategories[key] = {
+    if (!recordByType.recordsByCategories[categoryKey]) {
+      recordByType.recordsByCategories[categoryKey] = {
         income: 0,
         expense: 0,
         records: [],
       };
     }
 
-    const recordByCategory = item.recordsByCategories[key];
+    const recordByCategory = recordByType?.recordsByCategories[categoryKey];
 
     if (recordByCategory !== undefined) {
+      const amount = getConvertedToBaseCurrencyRecordAmount(record, currency);
       if (record.type === "INCOME") {
-        recordByCategory.income += getConvertedToBaseCurrencyRecordAmount(
-          record,
-          currency
-        );
+        item.income += amount;
+        recordByCategory.income += amount;
       }
       if (record.type === "EXPENSE") {
-        recordByCategory.expense += getConvertedToBaseCurrencyRecordAmount(
-          record,
-          currency
-        );
+        item.expense += amount;
+        recordByCategory.expense += amount;
       }
+      recordByType.amount += amount;
+
       recordByCategory.records.push(record);
     }
     return acc;

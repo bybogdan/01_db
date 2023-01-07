@@ -1,6 +1,6 @@
 import type { Record } from "@prisma/client";
 import { memo, useState } from "react";
-import type { recordsByCategroriesType } from "../../server/trpc/router/record";
+import type { recordsByType } from "../../server/trpc/router/record";
 import {
   BASE_CURRENCY,
   capitalizeString,
@@ -19,7 +19,7 @@ interface IComp {
       records: Record[];
       income: number;
       expense: number;
-      recordsByCategories: recordsByCategroriesType;
+      recordsByType: recordsByType;
     }
   ];
 }
@@ -40,18 +40,10 @@ export const Comp: React.FC<IComp> = ({ data }) => {
         {numToFloat(recordData.income - recordData.expense)}{" "}
         {getCurrencySymbol(BASE_CURRENCY)}
       </h5>
-      <h5 className="text-xl leading-tight text-gray-900 dark:text-white">
-        {capitalizeString("income")}: {numToFloat(recordData.income)}{" "}
-        {getCurrencySymbol(BASE_CURRENCY)}
-      </h5>
-      <h5 className="text-xl leading-tight text-gray-900 dark:text-white">
-        {capitalizeString("expense")}: {numToFloat(recordData.expense)}{" "}
-        {getCurrencySymbol(BASE_CURRENCY)}
-      </h5>
       {showStat && (
         <>
           {showRecords ? (
-            <>
+            <div>
               <hr className="my-2 border-gray-300" />
               <h5 className=" text-xl leading-tight text-gray-900 dark:text-white">
                 {capitalizeString("all records")}:
@@ -71,7 +63,7 @@ export const Comp: React.FC<IComp> = ({ data }) => {
                   );
                 })}
               </ul>
-            </>
+            </div>
           ) : null}
           {showRecords ? <hr className="my-2 border-gray-300" /> : null}
           <div>
@@ -84,7 +76,22 @@ export const Comp: React.FC<IComp> = ({ data }) => {
                 : `All records: ${recordData.records.length}`}
             </button>
           </div>
-          <StatsCategories data={recordData.recordsByCategories} />
+          <div className="flex flex-col gap-4 pl-8">
+            {Object.entries(recordData.recordsByType).map(
+              ([type, data], index) => (
+                <div
+                  className="flex flex-col gap-4"
+                  key={`stats-type-${index}`}
+                >
+                  <h5 className="text-xl leading-tight text-gray-900 dark:text-white">
+                    {capitalizeString(type)}: {numToFloat(data.amount)}{" "}
+                    {getCurrencySymbol(BASE_CURRENCY)}
+                  </h5>
+                  <StatsCategories data={data.recordsByCategories} />
+                </div>
+              )
+            )}
+          </div>
         </>
       )}
       <div>

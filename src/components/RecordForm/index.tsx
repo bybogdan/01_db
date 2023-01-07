@@ -138,7 +138,6 @@ const Comp: React.FC<IComp> = ({
         <option>RENT</option>
         <option>UTILITY PAYMENT</option>
         <option>SALARY</option>
-        <option>OTHERS</option>
       </select>
 
       {/* <input
