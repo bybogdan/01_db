@@ -5,11 +5,12 @@ import { capitalizeString } from "../../utils/common";
 interface IComp {
   userName: string;
   isPositionLeft?: boolean;
+  userId: string;
 }
 
-const Comp: React.FC<IComp> = ({ userName, isPositionLeft }) => {
+const Comp: React.FC<IComp> = ({ userName, isPositionLeft, userId }) => {
   return (
-    <Link href="/">
+    <Link href={`/user/${userId}`}>
       <span
         className={`flex items-center gap-2 ${
           isPositionLeft ? "flex-row" : "flex-row-reverse"

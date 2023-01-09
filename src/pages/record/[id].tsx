@@ -184,6 +184,7 @@ const RecordPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
         <div className="flex flex-col gap-10">
           <BaseHeader
             userName={recordUsedData.userName as string}
+            userId={recordUsedData.userId as string}
             homePageHref={homePageHref}
           />
           <div className="flex flex-col gap-4">

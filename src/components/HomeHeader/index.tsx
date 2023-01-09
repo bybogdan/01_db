@@ -21,7 +21,11 @@ const Comp: React.FC<IComp> = ({ stats, sessionUserName, sessionUserId }) => {
   return (
     <div className="flex flex-col  gap-2  p-6 ">
       <div className="flex items-center justify-between gap-2">
-        <UserIcon userName={sessionUserName} isPositionLeft />
+        <UserIcon
+          userName={sessionUserName}
+          userId={sessionUserId}
+          isPositionLeft
+        />
         <div>
           <button className="h-fit" onClick={() => signOut()}>
             <svg

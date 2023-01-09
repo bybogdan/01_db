@@ -112,16 +112,18 @@ const getRecordsDataByMonths = (
     const recordByCategory = recordByType?.recordsByCategories[categoryKey];
 
     if (recordByCategory !== undefined) {
-      const amount = getConvertedToBaseCurrencyRecordAmount(record, currency);
+      const amountUSD = record.amountUSD
+        ? +record.amountUSD
+        : getConvertedToBaseCurrencyRecordAmount(record, currency);
       if (record.type === "INCOME") {
-        item.income += amount;
-        recordByCategory.income += amount;
+        item.income += amountUSD;
+        recordByCategory.income += amountUSD;
       }
       if (record.type === "EXPENSE") {
-        item.expense += amount;
-        recordByCategory.expense += amount;
+        item.expense += amountUSD;
+        recordByCategory.expense += amountUSD;
       }
-      recordByType.amount += amount;
+      recordByType.amount += amountUSD;
 
       recordByCategory.records.push(record);
     }
@@ -277,11 +279,25 @@ export const recordRouter = router({
   setRecord: publicProcedure
     .input(createRecordSchema)
     .mutation(async ({ input: recordData, ctx }) => {
+      const currencies = await ctx.prisma.currencies.findMany({
+        orderBy: [
+          {
+            timestamp: "desc",
+          },
+        ],
+      });
+
+      const currencyResponse = currencies[0]?.value as currencyResponseType;
+      const currencyValue =
+        currencyResponse.data[recordData.currency]?.value || 1;
+      const amountUSD = (+recordData.amount / currencyValue).toString();
+
       const newRecord = await ctx.prisma.record.create({
         data: {
           ...recordData,
           name: capitalizeString(recordData.name),
           message: capitalizeString(recordData.message || ""),
+          amountUSD,
         },
       });
       return newRecord;
@@ -291,14 +307,43 @@ export const recordRouter = router({
       z.object({
         updRecordData: createRecordSchema,
         id: z.string(),
+        oldCurrency: z.string(),
+        oldAmount: z.string(),
+        oldAmountUSD: z.string(),
       })
     )
     .mutation(async ({ input, ctx }) => {
-      const { id, updRecordData } = input;
+      const { id, updRecordData, oldCurrency, oldAmount, oldAmountUSD } = input;
 
       if (!id) {
         throw new Error("don't have id");
       }
+
+      let amountUSD: string;
+
+      if (oldCurrency === updRecordData.currency) {
+        if (oldAmount === updRecordData.amount) {
+          amountUSD = updRecordData.amountUSD as string;
+        } else {
+          const currency = +oldAmount / +oldAmountUSD;
+          amountUSD = (+updRecordData.amount / currency).toString();
+        }
+      } else {
+        const currencies = await ctx.prisma.currencies.findMany({
+          orderBy: [
+            {
+              timestamp: "desc",
+            },
+          ],
+        });
+
+        const currencyResponse = currencies[0]?.value as currencyResponseType;
+        const currencyValue =
+          currencyResponse.data[updRecordData.currency]?.value || 1;
+
+        amountUSD = (+updRecordData.amount / currencyValue).toString();
+      }
+
       const updatedRecord = await ctx.prisma.record.update({
         where: {
           id,
@@ -307,6 +352,7 @@ export const recordRouter = router({
           ...updRecordData,
           name: capitalizeString(updRecordData.name),
           message: capitalizeString(updRecordData.message || ""),
+          amountUSD,
         },
       });
       return updatedRecord;

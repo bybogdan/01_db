@@ -56,6 +56,9 @@ const Comp: React.FC<IComp> = ({
       updateRecord({
         id: currentRecord.id,
         updRecordData: { ...data, userId: sessionUserId },
+        oldCurrency: currentRecord.currency,
+        oldAmount: currentRecord.amount,
+        oldAmountUSD: currentRecord.amountUSD,
       });
     } else {
       setRecord({

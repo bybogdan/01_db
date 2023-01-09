@@ -5,9 +5,10 @@ import { UserIcon } from "../UserIcon";
 interface IComp {
   homePageHref: string;
   userName: string;
+  userId: string;
 }
 
-const Comp: React.FC<IComp> = ({ homePageHref, userName }) => {
+const Comp: React.FC<IComp> = ({ homePageHref, userName, userId }) => {
   return (
     <div className="flex justify-between">
       <Link className="h-fit" href={homePageHref}>
@@ -28,7 +29,7 @@ const Comp: React.FC<IComp> = ({ homePageHref, userName }) => {
         </svg>
       </Link>
 
-      <UserIcon userName={userName} />
+      <UserIcon userId={userId} userName={userName} />
     </div>
   );
 };

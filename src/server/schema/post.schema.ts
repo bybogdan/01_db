@@ -7,6 +7,7 @@ export const createRecordSchema = z.object({
   message: z.string().nullish(),
   category: z.string().nullish(),
   amount: z.string(),
+  amountUSD: z.string().nullish(),
   currency: z.string(),
   userId: z.string(),
 });

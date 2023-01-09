@@ -47,6 +47,7 @@ model Record {
   name      String
   message   String?
   amount    String
+  amountUSD String
   currency  String
   timestamp DateTime   @default(now())
   userId    String
