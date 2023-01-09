@@ -63,6 +63,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   records       Record[]
+  categories    Json?
 }
 
 model VerificationToken {

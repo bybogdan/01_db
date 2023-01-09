@@ -13,4 +13,22 @@ export const userRouter = router({
 
       return user;
     }),
+  setCategories: publicProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        categories: z.array(z.string()),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const { id, categories } = input;
+      await ctx.prisma.user.update({
+        where: {
+          id,
+        },
+        data: {
+          categories,
+        },
+      });
+    }),
 });

@@ -24,7 +24,7 @@ import { useSession } from "next-auth/react";
 import superjson from "superjson";
 import { createContext } from "../../server/trpc/context";
 import { prisma } from "../../server/db/client";
-import { BaseHeader } from "../../components/BaseHeader";
+import { Header } from "../../components/Header";
 
 export const getStaticProps = async (
   context: GetStaticPropsContext<{ id: string }>
@@ -51,6 +51,7 @@ export const getStaticProps = async (
         ? {
             userName: user.name,
             userId: user.id,
+            categories: user.categories || null,
           }
         : {},
     },
@@ -182,7 +183,7 @@ const RecordPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
         key={record.id}
       >
         <div className="flex flex-col gap-10">
-          <BaseHeader
+          <Header
             userName={recordUsedData.userName as string}
             userId={recordUsedData.userId as string}
             homePageHref={homePageHref}
@@ -227,6 +228,7 @@ const RecordPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
               handleRefetchData={handleRefetchData}
               currentRecord={record}
               discardButton={DiscardButton}
+              categories={recordUsedData.categories as string[]}
             />
           ) : null}
         </div>

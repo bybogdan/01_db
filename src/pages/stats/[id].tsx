@@ -11,7 +11,7 @@ import { prisma } from "../../server/db/client";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 import { StatsMonth } from "../../components/StatsMonth";
-import { BaseHeader } from "../../components/BaseHeader";
+import { Header } from "../../components/Header";
 import { trpc } from "../../utils/trpc";
 import Link from "next/link";
 
@@ -99,7 +99,7 @@ const Stats = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="align-between flex min-h-screen flex-col gap-8 p-6 text-slate-900 dark:text-white">
-        <BaseHeader
+        <Header
           userName={(sessionData.user.name as string) || ""}
           userId={(sessionData.user.id as string) || ""}
           homePageHref="/"

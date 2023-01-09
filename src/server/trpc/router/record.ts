@@ -14,7 +14,7 @@ import { createRecordSchema } from "../../schema/post.schema";
 import { env } from "../../../env/server.mjs";
 
 import { router, publicProcedure } from "../trpc";
-import type { Record, RecordType } from "@prisma/client";
+import type { Record, RecordType, User } from "@prisma/client";
 import type {
   currencyResponseType,
   HeaderStatsType,
@@ -262,9 +262,16 @@ export const recordRouter = router({
         income,
       };
 
+      const userData: User | null = await ctx.prisma.user.findFirst({
+        where: {
+          id: userId,
+        },
+      });
+
       return {
         records,
         stats,
+        categories: userData?.categories || null,
       };
     }),
   getRecord: publicProcedure
