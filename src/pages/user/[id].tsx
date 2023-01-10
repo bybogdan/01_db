@@ -19,6 +19,7 @@ import { appRouter } from "../../server/trpc/router/_app";
 import { createContext } from "../../server/trpc/context";
 import { trpc } from "../../utils/trpc";
 import { LoaderSize } from "../../types/misc";
+import { User } from "@prisma/client";
 
 const deafultCategories = [
   "FOOD",
@@ -39,16 +40,12 @@ export const getStaticProps = async (
     transformer: superjson,
   });
 
-  const user = await ssg.user.getUser.fetch(userId as string);
+  const user = (await ssg.user.getUser.fetch(userId as string)) as User;
 
   return {
     props: {
       userId,
-      recordUsedData: user
-        ? {
-            categories: user.categories || null,
-          }
-        : {},
+      user,
     },
     revalidate: 1,
   };
@@ -71,37 +68,55 @@ export const getStaticPaths: GetStaticPaths = async () => {
 };
 
 const Stats = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { userId, recordUsedData } = props;
+  const { userId, user: initialData } = props;
 
-  const { categories } = recordUsedData;
+  const categoriesArray: string[] =
+    initialData.categories !== null
+      ? (initialData.categories as string[])
+      : deafultCategories;
 
-  const categoriesArray =
-    categories !== null ? (categories as string[]) : deafultCategories;
+  const {
+    data: userData,
+    refetch: refetchGetUser,
+    isRefetching: isRefetchingGetUser,
+  } = trpc.user.getUser.useQuery(userId as string, {
+    refetchInterval: false,
+    refetchOnReconnect: false,
+    refetchOnWindowFocus: false,
+    initialData: {
+      ...initialData,
+      categories: categoriesArray,
+    },
+  });
+
+  const categories = userData?.categories as string[];
 
   const { data: sessionData, status } = useSession();
   const router = useRouter();
 
   const [newCategory, setNewCategory] = useState("");
+  const [showCategoryLoader, setShowCategoryLoader] = useState(false);
 
-  const {
-    mutate: setCategories,
-    isLoading: setCategoriesIsLoading,
-    isSuccess: setCategoriesIsSuccess,
-  } = trpc.user.setCategories.useMutation();
+  const { mutate: setCategories, isSuccess: setCategoriesIsSuccess } =
+    trpc.user.setCategories.useMutation();
 
-  const saveNewCategory = () => {
+  const saveNewCategory = async () => {
+    setShowCategoryLoader(true);
     setCategories({
       id: userId,
-      categories: [...categoriesArray, newCategory.toUpperCase().trim()],
+      categories: [...categories, newCategory.toUpperCase().trim()],
     });
   };
 
   useEffect(() => {
-    if (setCategoriesIsSuccess) {
-      console.log("heheh");
-      setNewCategory("");
-    }
-  }, [setCategoriesIsSuccess]);
+    (async () => {
+      if (setCategoriesIsSuccess) {
+        await refetchGetUser();
+        setNewCategory("");
+        setShowCategoryLoader(false);
+      }
+    })();
+  }, [setCategoriesIsSuccess, refetchGetUser]);
 
   useEffect(() => {
     if (status !== "loading" && sessionData?.user?.id !== userId) {
@@ -132,29 +147,36 @@ const Stats = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
         />
         <div className="flex flex-col gap-4">
           <h5 className="text-xl leading-tight text-gray-900 dark:text-white">
-            {capitalizeString("User page")}
+            {capitalizeString("Categories")}
           </h5>
-
-          <h5 className="text-xl leading-tight text-gray-900 dark:text-white">
-            {capitalizeString("Add category")}
-          </h5>
-          <div className="flex gap-2">
-            <input
-              type="text"
-              autoComplete="off"
-              className={`${twInput}`}
-              placeholder="New category"
-              value={newCategory}
-              onChange={(e) => setNewCategory(e.target.value)}
-            />
-            <button className={twButton} onClick={saveNewCategory}>
-              {!setCategoriesIsLoading ? (
-                capitalizeString("Save")
-              ) : (
-                <Loader size={LoaderSize.SMALL} />
-              )}
-            </button>
-          </div>
+          <ul className="flex flex-col gap-4">
+            {categories ? (
+              categories.map((category, index) => (
+                <li key={`category-${index}`}>{category as string}</li>
+              ))
+            ) : (
+              <li>
+                <Loader />
+              </li>
+            )}
+            <li className="flex gap-2">
+              <input
+                type="text"
+                autoComplete="off"
+                className={`${twInput}`}
+                placeholder="New category"
+                value={newCategory}
+                onChange={(e) => setNewCategory(e.target.value)}
+              />
+              <button className={twButton} onClick={saveNewCategory}>
+                {!showCategoryLoader ? (
+                  capitalizeString("Save")
+                ) : (
+                  <Loader size={LoaderSize.SMALL} />
+                )}
+              </button>
+            </li>
+          </ul>
 
           <Link href={`/stats/${userId}`} className={twButton}>
             {capitalizeString("To stats")}
