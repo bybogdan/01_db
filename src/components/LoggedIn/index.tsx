@@ -85,11 +85,6 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
                     BASE_CURRENCY
                   )}`}</div>
                 ))}
-              <div>
-                <Link className={twButton} href={`/stats/${sessionUserId}`}>
-                  To stats
-                </Link>
-              </div>
             </div>
           </div>
           <div className="flex flex-col gap-12 p-6">

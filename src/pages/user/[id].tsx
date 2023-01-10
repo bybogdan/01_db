@@ -220,10 +220,6 @@ const Stats = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
             </li>
           </ul>
 
-          <Link href={`/stats/${userId}`} className={twButton}>
-            {capitalizeString("To stats")}
-          </Link>
-
           <button className={twButton} onClick={() => signOut()}>
             {capitalizeString("sign out")}
           </button>

@@ -20,7 +20,7 @@ const Comp: React.FC<IComp> = ({ homePageHref, userName, userId }) => {
         <svg
           aria-hidden="true"
           focusable="false"
-          className="h-7 w-7"
+          className="h-8 w-8"
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 576 512"
         >
@@ -37,7 +37,7 @@ const Comp: React.FC<IComp> = ({ homePageHref, userName, userId }) => {
         <svg
           aria-hidden="true"
           focusable="false"
-          className="h-7 w-7"
+          className="h-8 w-8"
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 448 512"
         >
@@ -53,9 +53,9 @@ const Comp: React.FC<IComp> = ({ homePageHref, userName, userId }) => {
       </Link>
 
       <Link href={`/user/${userId}`}>
-        <span className="flex flex-row-reverse items-center gap-2">
+        <span className="relative flex items-center gap-2">
           <svg
-            className="h-7 w-7"
+            className="h-8 w-8"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 512 512"
             aria-hidden="true"
@@ -68,10 +68,22 @@ const Comp: React.FC<IComp> = ({ homePageHref, userName, userId }) => {
                   ? HIGHLIGHT_COLOR
                   : "currentColor"
               }
-              d="M256 112c-48.6 0-88 39.4-88 88C168 248.6 207.4 288 256 288s88-39.4 88-88C344 151.4 304.6 112 256 112zM256 240c-22.06 0-40-17.95-40-40C216 177.9 233.9 160 256 160s40 17.94 40 40C296 222.1 278.1 240 256 240zM256 0C114.6 0 0 114.6 0 256s114.6 256 256 256s256-114.6 256-256S397.4 0 256 0zM256 464c-46.73 0-89.76-15.68-124.5-41.79C148.8 389 182.4 368 220.2 368h71.69c37.75 0 71.31 21.01 88.68 54.21C345.8 448.3 302.7 464 256 464zM416.2 388.5C389.2 346.3 343.2 320 291.8 320H220.2c-51.36 0-97.35 26.25-124.4 68.48C65.96 352.5 48 306.3 48 256c0-114.7 93.31-208 208-208s208 93.31 208 208C464 306.3 446 352.5 416.2 388.5z"
+              d="M512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256zM256 48C141.1 48 48 141.1 48 256C48 370.9 141.1 464 256 464C370.9 464 464 370.9 464 256C464 141.1 370.9 48 256 48z"
             />
           </svg>
-          {/* {capitalizeString(userName)} */}
+          <span
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transform text-lg"
+            style={{
+              color: `${
+                `/user/${userId}` === router.asPath
+                  ? HIGHLIGHT_COLOR
+                  : "currentColor"
+              }`,
+              fontWeight: 500,
+            }}
+          >
+            {capitalizeString(userName[0] as string)}
+          </span>
         </span>
       </Link>
     </div>
