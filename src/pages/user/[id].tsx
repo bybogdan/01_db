@@ -19,7 +19,7 @@ import { appRouter } from "../../server/trpc/router/_app";
 import { createContext } from "../../server/trpc/context";
 import { trpc } from "../../utils/trpc";
 import { LoaderSize } from "../../types/misc";
-import { User } from "@prisma/client";
+import type { User } from "@prisma/client";
 
 const deafultCategories = [
   "FOOD",
@@ -78,7 +78,7 @@ const Stats = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
   const {
     data: userData,
     refetch: refetchGetUser,
-    isRefetching: isRefetchingGetUser,
+    isLoading: isLoadingGetUser,
   } = trpc.user.getUser.useQuery(userId as string, {
     refetchInterval: false,
     refetchOnReconnect: false,
@@ -132,7 +132,11 @@ const Stats = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
     }
   }, [sessionData?.user?.id, status, userId, router]);
 
-  if (status === "loading" || sessionData?.user?.id !== userId) {
+  if (
+    status === "loading" ||
+    sessionData?.user?.id !== userId ||
+    isLoadingGetUser
+  ) {
     return (
       <div className={`${twCenteringBlock}`}>
         <FunLoader />
@@ -157,7 +161,7 @@ const Stats = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
           <h5 className="text-xl leading-tight text-gray-900 dark:text-white">
             {capitalizeString("Categories")}
           </h5>
-          <ul className="flex flex-col gap-4">
+          <ul className="flex flex-col gap-6">
             {categories ? (
               categories.map((category, index) => (
                 <li
@@ -186,22 +190,33 @@ const Stats = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
                 <Loader />
               </li>
             )}
-            <li className="flex gap-2">
-              <input
-                type="text"
-                autoComplete="off"
-                className={`${twInput}`}
-                placeholder="New category"
-                value={newCategory}
-                onChange={(e) => setNewCategory(e.target.value)}
-              />
-              <button className={twButton} onClick={saveNewCategory}>
-                {!showCategoryLoader ? (
-                  capitalizeString("Save")
-                ) : (
-                  <Loader size={LoaderSize.SMALL} />
-                )}
-              </button>
+            <li>
+              <form
+                className="flex gap-2"
+                onSubmit={(e: React.FormEvent<HTMLFormElement>) =>
+                  e.preventDefault()
+                }
+              >
+                <input
+                  type="text"
+                  autoComplete="off"
+                  className={`${twInput}`}
+                  placeholder="New category"
+                  value={newCategory}
+                  onChange={(e) => setNewCategory(e.target.value)}
+                />
+                <button
+                  className={twButton}
+                  onClick={saveNewCategory}
+                  disabled={!newCategory.trim().length}
+                >
+                  {!showCategoryLoader ? (
+                    capitalizeString("Save")
+                  ) : (
+                    <Loader size={LoaderSize.SMALL} />
+                  )}
+                </button>
+              </form>
             </li>
           </ul>
 

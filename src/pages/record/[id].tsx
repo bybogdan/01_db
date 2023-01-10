@@ -47,13 +47,7 @@ export const getStaticProps = async (
       trpcState: ssg.dehydrate(),
       id,
       record: (record && superjson.serialize(record).json) || null,
-      recordUsedData: user
-        ? {
-            userName: user.name,
-            userId: user.id,
-            categories: user.categories || null,
-          }
-        : {},
+      recordUsedData: user,
     },
     revalidate: 1,
   };
@@ -76,7 +70,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 };
 
 const RecordPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { id, record: initialRecord, recordUsedData } = props;
+  const { id, record: initialRecord, recordUsedData: initialUserData } = props;
 
   const router = useRouter();
   const { data: sessionData, status } = useSession();
@@ -93,6 +87,16 @@ const RecordPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
       refetchOnWindowFocus: false,
       initialData: initialRecord,
     });
+
+  const { data: userData } = trpc.user.getUser.useQuery(
+    initialUserData?.id as string,
+    {
+      refetchInterval: false,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+      initialData: initialUserData,
+    }
+  );
 
   const { mutate: deleteRecord, isSuccess: isDeleteRecordSuccess } =
     trpc.record.deleteRecord.useMutation();
@@ -128,10 +132,10 @@ const RecordPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
   const showLoader =
     isDeletingRecord ||
     status === "loading" ||
-    recordUsedData.userId !== sessionData?.user?.id;
+    userData?.id !== sessionData?.user?.id;
 
   const shouldRedirectToHomePage =
-    (status !== "loading" && recordUsedData.userId !== sessionData?.user?.id) ||
+    (status !== "loading" && userData?.id !== sessionData?.user?.id) ||
     isDeleteRecordSuccess;
 
   useEffect(() => {
@@ -184,8 +188,8 @@ const RecordPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
       >
         <div className="flex flex-col gap-10">
           <Header
-            userName={recordUsedData.userName as string}
-            userId={recordUsedData.userId as string}
+            userName={userData?.name as string}
+            userId={userData?.id as string}
             homePageHref={homePageHref}
           />
           <div className="flex flex-col gap-4">
@@ -224,11 +228,11 @@ const RecordPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
 
           {isShowEditForm ? (
             <RecordForm
-              sessionUserId={recordUsedData.userId as string}
+              sessionUserId={userData?.id as string}
               handleRefetchData={handleRefetchData}
               currentRecord={record}
               discardButton={DiscardButton}
-              categories={recordUsedData.categories as string[]}
+              categories={userData?.categories as string[]}
             />
           ) : null}
         </div>
