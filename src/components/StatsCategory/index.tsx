@@ -1,4 +1,5 @@
 import type { Record } from "@prisma/client";
+import Link from "next/link";
 import { memo, useState } from "react";
 
 import {
@@ -31,25 +32,14 @@ export const Comp: React.FC<IComp> = ({ data, category }) => {
             <h5 className=" text-xl leading-tight text-gray-900 dark:text-white">
               {capitalizeString(category)}:
             </h5>
-            {data.records.map((record, index) => {
-              const formattedRecord: Record = {
-                ...record,
-                timestamp: new Date(record.timestamp),
-              };
-              return (
-                <RecordCard key={`record-${index}`} record={formattedRecord} />
-              );
-            })}
-            <p className="text-base text-gray-700 dark:text-slate-200">
-              Total:{" "}
-              {data.expense > data.income
-                ? numToFloat(data.expense)
-                : numToFloat(data.income)}{" "}
-              {getCurrencySymbol(BASE_CURRENCY)}
-            </p>
+            {data.records.map((record, index) => (
+              <Link key={`record-${index}`} href={`/record/${record.id}`}>
+                <RecordCard record={record} />
+              </Link>
+            ))}
           </>
         ) : null}
-        <div>
+        <div className="flex justify-between">
           <button
             className={` ${twButton}`}
             onClick={() => setShowRecords((prev) => !prev)}
@@ -58,6 +48,12 @@ export const Comp: React.FC<IComp> = ({ data, category }) => {
               ? `Hide ${capitalizeString(category)}: ${data.records.length}`
               : ` ${capitalizeString(category)}: ${data.records.length}`}
           </button>
+          <p className="text-base text-gray-700 dark:text-slate-200">
+            {data.expense > data.income
+              ? numToFloat(data.expense)
+              : numToFloat(data.income)}{" "}
+            {getCurrencySymbol(BASE_CURRENCY)}
+          </p>
         </div>
       </div>
     </>

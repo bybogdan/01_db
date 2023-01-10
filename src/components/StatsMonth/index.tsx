@@ -49,19 +49,13 @@ export const Comp: React.FC<IComp> = ({ data }) => {
                 {capitalizeString("all records")}:
               </h5>
               <ul className="flex flex-col gap-4">
-                {recordData.records.map((record, index) => {
-                  const formattedRecord: Record = {
-                    ...record,
-                    timestamp: new Date(record.timestamp),
-                  };
-                  return (
-                    <RecordCard
-                      key={`record-${index}`}
-                      showCategory
-                      record={formattedRecord}
-                    />
-                  );
-                })}
+                {recordData.records.map((record, index) => (
+                  <RecordCard
+                    key={`record-${index}`}
+                    showCategory
+                    record={record}
+                  />
+                ))}
               </ul>
             </div>
           ) : null}
