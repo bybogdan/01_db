@@ -40,14 +40,28 @@ export const Comp: React.FC<IComp> = ({ data }) => {
         {numToFloat(recordData.income - recordData.expense)}{" "}
         {getCurrencySymbol(BASE_CURRENCY)}
       </h5>
+      <div>
+        <button
+          className={twButton}
+          onClick={() => setShowStat((prev) => !prev)}
+        >
+          {showStat ? "Hide more" : "Show more"}
+        </button>
+      </div>
       {showStat && (
         <>
+          <div>
+            <button
+              className={twButton}
+              onClick={() => setShowRecords((prev) => !prev)}
+            >
+              {showRecords
+                ? "Hide all records"
+                : `All records: ${recordData.records.length}`}
+            </button>
+          </div>
           {showRecords ? (
-            <div>
-              <hr className="my-2 border-gray-300" />
-              <h5 className=" text-xl leading-tight text-gray-900 dark:text-white">
-                {capitalizeString("all records")}:
-              </h5>
+            <div className="flex flex-col gap-4">
               <ul className="flex flex-col gap-4">
                 {recordData.records.map((record, index) => (
                   <RecordCard
@@ -60,16 +74,6 @@ export const Comp: React.FC<IComp> = ({ data }) => {
             </div>
           ) : null}
           {showRecords ? <hr className="my-2 border-gray-300" /> : null}
-          <div>
-            <button
-              className={twButton}
-              onClick={() => setShowRecords((prev) => !prev)}
-            >
-              {showRecords
-                ? "Hide all records"
-                : `All records: ${recordData.records.length}`}
-            </button>
-          </div>
           <div className="flex flex-col gap-4 pl-8">
             {Object.entries(recordData.recordsByType).map(
               ([type, data], index) => (
@@ -88,14 +92,6 @@ export const Comp: React.FC<IComp> = ({ data }) => {
           </div>
         </>
       )}
-      <div>
-        <button
-          className={twButton}
-          onClick={() => setShowStat((prev) => !prev)}
-        >
-          {showStat ? "Hide more" : "Show more"}
-        </button>
-      </div>
     </div>
   );
 };

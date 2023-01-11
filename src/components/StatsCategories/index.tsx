@@ -8,9 +8,6 @@ interface IComp {
 
 export const Comp: React.FC<IComp> = ({ data }) => (
   <>
-    <h5 className=" text-xl leading-tight text-gray-900 dark:text-white">
-      Categories:
-    </h5>
     {Object.entries(data)
       .sort(([, data1], [, data2]) => {
         const value1 =

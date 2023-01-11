@@ -26,9 +26,24 @@ export const Comp: React.FC<IComp> = ({ data, category }) => {
   return (
     <>
       <div key={`stats-${category}`} className="flex flex-col gap-4">
+        <div className="flex justify-between">
+          <button
+            className={` ${twButton}`}
+            onClick={() => setShowRecords((prev) => !prev)}
+          >
+            {showRecords
+              ? `Hide ${capitalizeString(category)}`
+              : `Show ${capitalizeString(category)}`}
+          </button>
+          <p className="text-base text-gray-700 dark:text-slate-200">
+            {data.expense > data.income
+              ? numToFloat(data.expense)
+              : numToFloat(data.income)}{" "}
+            {getCurrencySymbol(BASE_CURRENCY)}
+          </p>
+        </div>
         {showRecords ? (
           <>
-            <hr className="my-2 border-gray-300" />
             <h5 className=" text-xl leading-tight text-gray-900 dark:text-white">
               {capitalizeString(category)}:
             </h5>
@@ -39,22 +54,6 @@ export const Comp: React.FC<IComp> = ({ data, category }) => {
             ))}
           </>
         ) : null}
-        <div className="flex justify-between">
-          <button
-            className={` ${twButton}`}
-            onClick={() => setShowRecords((prev) => !prev)}
-          >
-            {showRecords
-              ? `Hide ${capitalizeString(category)}: ${data.records.length}`
-              : ` ${capitalizeString(category)}: ${data.records.length}`}
-          </button>
-          <p className="text-base text-gray-700 dark:text-slate-200">
-            {data.expense > data.income
-              ? numToFloat(data.expense)
-              : numToFloat(data.income)}{" "}
-            {getCurrencySymbol(BASE_CURRENCY)}
-          </p>
-        </div>
       </div>
     </>
   );
