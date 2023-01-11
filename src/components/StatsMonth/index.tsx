@@ -27,28 +27,20 @@ interface IComp {
 export const Comp: React.FC<IComp> = ({ data }) => {
   const [month, recordData] = data;
 
-  const [showStat, setShowStat] = useState(false);
   const [showRecords, setShowRecords] = useState(false);
 
   return (
-    <div className="flex flex-col gap-4">
-      <h5 className=" text-xl leading-tight text-gray-900 dark:text-white">
+    <div className=" flex min-w-full flex-col gap-8">
+      <h5 className=" text-center text-xl leading-tight text-gray-900 dark:text-white">
         Stats for: {getMonthName(month)}
       </h5>
-      <h5 className="text-xl leading-tight text-gray-900 dark:text-white">
-        {capitalizeString("balance")}:{" "}
-        {numToFloat(recordData.income - recordData.expense)}{" "}
-        {getCurrencySymbol(BASE_CURRENCY)}
-      </h5>
-      <div>
-        <button
-          className={twButton}
-          onClick={() => setShowStat((prev) => !prev)}
-        >
-          {showStat ? "Hide more" : "Show more"}
-        </button>
-      </div>
-      {showStat && (
+      <div className="flex flex-col gap-4">
+        <h5 className="text-xl leading-tight text-gray-900 dark:text-white">
+          {capitalizeString("balance")}:{" "}
+          {numToFloat(recordData.income - recordData.expense)}{" "}
+          {getCurrencySymbol(BASE_CURRENCY)}
+        </h5>
+
         <>
           <div>
             <button
@@ -74,7 +66,7 @@ export const Comp: React.FC<IComp> = ({ data }) => {
             </div>
           ) : null}
           {showRecords ? <hr className="my-2 border-gray-300" /> : null}
-          <div className="flex flex-col gap-4 pl-8">
+          <div className="flex flex-col gap-4 ">
             {Object.entries(recordData.recordsByType).map(
               ([type, data], index) => (
                 <div
@@ -91,7 +83,7 @@ export const Comp: React.FC<IComp> = ({ data }) => {
             )}
           </div>
         </>
-      )}
+      </div>
     </div>
   );
 };

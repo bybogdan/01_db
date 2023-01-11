@@ -122,7 +122,7 @@ const Stats = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
         <meta name="description" content="Dialga" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div className="align-between flex min-h-screen flex-col gap-8 p-6 text-slate-900 dark:text-white">
+      <div className="align-between flex min-h-screen flex-col gap-12 p-6 text-slate-900 dark:text-white">
         <Header
           userId={(sessionData.user.id as string) || ""}
           userName={(sessionData.user.name as string) || ""}

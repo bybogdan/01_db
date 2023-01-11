@@ -70,7 +70,7 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
     <>
       {isSuccess && !isAwaitingFreshData ? (
         <div className="align-between flex  min-h-screen flex-col text-slate-900 dark:text-white">
-          <div className="flex flex-col gap-6 pt-6 pl-6 pr-6">
+          <div className="flex flex-col gap-12 pt-6 pl-6 pr-6">
             <Header
               userName={sessionUserName}
               userId={sessionUserId}
