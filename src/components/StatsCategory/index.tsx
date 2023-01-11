@@ -33,7 +33,7 @@ export const Comp: React.FC<IComp> = ({ data, category }) => {
           >
             {showRecords
               ? `Hide ${capitalizeString(category)}`
-              : `Show ${capitalizeString(category)}`}
+              : `${capitalizeString(category)}`}
           </button>
           <p className="text-base text-gray-700 dark:text-slate-200">
             {data.expense > data.income
