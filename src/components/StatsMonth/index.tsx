@@ -1,4 +1,5 @@
 import type { Record } from "@prisma/client";
+import Link from "next/link";
 import { memo, useState } from "react";
 import type { recordsByType } from "../../server/trpc/router/record";
 import {
@@ -56,11 +57,9 @@ export const Comp: React.FC<IComp> = ({ data }) => {
             <div className="flex flex-col gap-4">
               <ul className="flex flex-col gap-4">
                 {recordData.records.map((record, index) => (
-                  <RecordCard
-                    key={`record-${index}`}
-                    showCategory
-                    record={record}
-                  />
+                  <Link key={`record-${index}`} href={`/record/${record.id}`}>
+                    <RecordCard showCategory record={record} />
+                  </Link>
                 ))}
               </ul>
             </div>

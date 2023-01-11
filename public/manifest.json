@@ -6,7 +6,7 @@
   "start_url": "/",
   "name": "Dialga",
   "short_name": "Dialga",
-  "description": "Control your finances",
+  "description": "Money tracker",
   "icons": [
     {
       "src": "/icon-192x192.png",

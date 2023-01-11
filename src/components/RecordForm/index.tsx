@@ -39,6 +39,7 @@ const Comp: React.FC<IComp> = ({
         amount: currentRecord.amount,
         type: currentRecord.type,
         currency: currentRecord.currency,
+        category: currentRecord.category,
       }
     : {};
 

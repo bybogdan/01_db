@@ -31,7 +31,7 @@ Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/ver
 
 ### Prisma
 
-- `prisma generate` - before starting work with prisma
+- `npx prisma generate` - before starting work with prisma
 - `npx prisma db push` - to push something to scheme.prisma to db
 - `npx prisma studio` - watch db tables
 

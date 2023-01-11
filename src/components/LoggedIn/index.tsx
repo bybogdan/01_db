@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import {
@@ -8,7 +7,7 @@ import {
   numToFloat,
 } from "../../utils/common";
 import { trpc } from "../../utils/trpc";
-import { twButton, twCenteringBlock } from "../../utils/twCommon";
+import { twCenteringBlock } from "../../utils/twCommon";
 import { Header } from "../Header";
 import { FunLoader } from "../Loader";
 import { RecordForm } from "../RecordForm";
