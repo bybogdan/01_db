@@ -80,13 +80,16 @@ const RecordPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
 
   const [homePageHref, setHomePageHref] = useState("/");
 
-  const { data: record, refetch: refetchGetRecord } =
-    trpc.record.getRecord.useQuery(id as string, {
-      refetchInterval: false,
-      refetchOnReconnect: false,
-      refetchOnWindowFocus: false,
-      initialData: initialRecord,
-    });
+  const {
+    data: record,
+    refetch: refetchGetRecord,
+    isLoading,
+  } = trpc.record.getRecord.useQuery(id as string, {
+    refetchInterval: false,
+    refetchOnReconnect: false,
+    refetchOnWindowFocus: false,
+    initialData: initialRecord,
+  });
 
   const { data: userData } = trpc.user.getUser.useQuery(
     initialUserData?.id as string,
@@ -130,6 +133,7 @@ const RecordPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
   ]);
 
   const showLoader =
+    isLoading ||
     isDeletingRecord ||
     status === "loading" ||
     userData?.id !== sessionData?.user?.id;

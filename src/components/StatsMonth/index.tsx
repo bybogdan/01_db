@@ -9,7 +9,7 @@ import {
   getMonthName,
   numToFloat,
 } from "../../utils/common";
-import { twButton } from "../../utils/twCommon";
+import { twMinWidthButton } from "../../utils/twCommon";
 import { RecordCard } from "../RecordCard";
 import { StatsCategories } from "../StatsCategories";
 
@@ -45,7 +45,7 @@ export const Comp: React.FC<IComp> = ({ data }) => {
         <>
           <div>
             <button
-              className={twButton}
+              className={`${twMinWidthButton}`}
               onClick={() => setShowRecords((prev) => !prev)}
             >
               {showRecords

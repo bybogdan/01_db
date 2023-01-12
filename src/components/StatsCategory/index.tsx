@@ -8,7 +8,7 @@ import {
   getCurrencySymbol,
   numToFloat,
 } from "../../utils/common";
-import { twButton } from "../../utils/twCommon";
+import { twMinWidthButton } from "../../utils/twCommon";
 import { RecordCard } from "../RecordCard";
 
 interface IComp {
@@ -28,7 +28,7 @@ export const Comp: React.FC<IComp> = ({ data, category }) => {
       <div key={`stats-${category}`} className="flex flex-col gap-4">
         <div className="flex justify-between">
           <button
-            className={` ${twButton}`}
+            className={` ${twMinWidthButton}`}
             onClick={() => setShowRecords((prev) => !prev)}
           >
             {showRecords
