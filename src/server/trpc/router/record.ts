@@ -1,9 +1,5 @@
 import { z } from "zod";
-import {
-  BASE_CURRENCY,
-  capitalizeString,
-  numToFloat,
-} from "../../../utils/common";
+import { capitalizeString, numToFloat } from "../../../utils/common";
 
 import { currencyResponseMock } from "../../../utils/mocks/currency";
 
@@ -46,22 +42,7 @@ type recordsDataByMonthsType = {
   };
 };
 
-const getConvertedToBaseCurrencyRecordAmount = (
-  record: Record,
-  currency: currencyResponseType
-): number => {
-  if (record.currency === BASE_CURRENCY) {
-    return +record.amount;
-  } else {
-    const currencyValue = currency.data[record.currency]?.value || 1;
-    return +record.amount / currencyValue;
-  }
-};
-
-const getRecordsDataByMonths = (
-  records: Record[],
-  currency: currencyResponseType
-) => {
+const getRecordsDataByMonths = (records: Record[]) => {
   return records?.reduce((acc: recordsDataByMonthsType, record: Record) => {
     const dateKey = `${
       record.timestamp.getMonth() + 1
@@ -112,9 +93,8 @@ const getRecordsDataByMonths = (
     const recordByCategory = recordByType?.recordsByCategories[categoryKey];
 
     if (recordByCategory !== undefined) {
-      const amountUSD = record.amountUSD
-        ? +record.amountUSD
-        : getConvertedToBaseCurrencyRecordAmount(record, currency);
+      const amountUSD = +record.amountUSD;
+
       if (record.type === "INCOME") {
         item.income += amountUSD;
         recordByCategory.income += amountUSD;
@@ -349,17 +329,6 @@ export const recordRouter = router({
         ],
       });
 
-      const currencies = await ctx.prisma.currencies.findMany({
-        orderBy: [
-          {
-            timestamp: "desc",
-          },
-        ],
-      });
-
-      const currency = currencies[0]?.value as currencyResponseType;
-      const recordsDataByMonths = getRecordsDataByMonths(records, currency);
-
-      return recordsDataByMonths;
+      return getRecordsDataByMonths(records) as recordsDataByMonthsType;
     }),
 });
