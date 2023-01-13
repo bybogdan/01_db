@@ -68,16 +68,12 @@ export const Comp: React.FC<IComp> = ({ data }) => {
           <div className="flex flex-col gap-4 ">
             {Object.entries(recordData.recordsByType).map(
               ([type, data], index) => (
-                <div
-                  className="flex flex-col gap-4"
+                <StatsCategories
                   key={`stats-type-${index}`}
-                >
-                  <h5 className="text-xl leading-tight text-gray-900 dark:text-white">
-                    {capitalizeString(type)}: {numToFloat(data.amount)}{" "}
-                    {getCurrencySymbol(BASE_CURRENCY)}
-                  </h5>
-                  <StatsCategories data={data.recordsByCategories} />
-                </div>
+                  type={type}
+                  data={data.recordsByCategories}
+                  totalAmount={data.amount}
+                />
               )
             )}
           </div>

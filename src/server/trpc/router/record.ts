@@ -14,7 +14,7 @@ import { createRecordSchema } from "../../schema/post.schema";
 import { env } from "../../../env/server.mjs";
 
 import { router, publicProcedure } from "../trpc";
-import type { Record, RecordType, User } from "@prisma/client";
+import type { Record, User } from "@prisma/client";
 import type {
   currencyResponseType,
   HeaderStatsType,
@@ -137,42 +137,6 @@ const getCurrrency = async () => {
   });
 };
 
-const getTotalRecordsTypeSortedByCurrency = (
-  records: Record[],
-  type: RecordType
-) => {
-  return records
-    .filter((record) => record.type === type)
-    .reduce((acc: { [key: string]: number }, record) => {
-      const key = record.currency;
-      if (acc[key] === undefined) {
-        acc[key] = 0;
-      }
-
-      acc[key] += +record.amount;
-      return acc;
-    }, {});
-};
-
-const getTotalRecordsTypeValue = (
-  totalRecordsTypeSortedByCurrency: {
-    [key: string]: number;
-  },
-  currenciesResponse: currencyResponseType
-) => {
-  return Object.keys(totalRecordsTypeSortedByCurrency).reduce((acc, key) => {
-    if (key === BASE_CURRENCY) {
-      acc += +(totalRecordsTypeSortedByCurrency[key] as number);
-    } else {
-      const currency = currenciesResponse.data[key]?.value;
-      if (currency) {
-        acc += +(totalRecordsTypeSortedByCurrency[key] as number) / currency;
-      }
-    }
-    return acc;
-  }, 0);
-};
-
 export const recordRouter = router({
   getData: publicProcedure
     .input(z.string())
@@ -187,14 +151,6 @@ export const recordRouter = router({
           },
         ],
       });
-
-      const totalExpensesSortedByCurrency = records.length
-        ? getTotalRecordsTypeSortedByCurrency(records, "EXPENSE")
-        : {};
-
-      const totalIncomeSortedByCurrency = records.length
-        ? getTotalRecordsTypeSortedByCurrency(records, "INCOME")
-        : {};
 
       const isDevMode = process.env.NODE_ENV === "development";
       let currenciesResponse: currencyResponseType = currencyResponseMock;
@@ -240,19 +196,21 @@ export const recordRouter = router({
         }
       }
 
-      const expense: string = numToFloat(
-        getTotalRecordsTypeValue(
-          totalExpensesSortedByCurrency,
-          currenciesResponse
-        )
-      );
+      const expense: string = records.length
+        ? numToFloat(
+            records
+              .filter((record) => record.type === "EXPENSE")
+              .reduce((acc, record) => (acc += +record.amountUSD), 0)
+          )
+        : "0.00";
 
-      const income: string = numToFloat(
-        getTotalRecordsTypeValue(
-          totalIncomeSortedByCurrency,
-          currenciesResponse
-        )
-      );
+      const income: string = records.length
+        ? numToFloat(
+            records
+              .filter((record) => record.type === "INCOME")
+              .reduce((acc, record) => (acc += +record.amountUSD), 0)
+          )
+        : "0.00";
 
       const balance: string = numToFloat(+income - +expense);
 
