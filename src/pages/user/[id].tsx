@@ -8,7 +8,7 @@ import { signOut, useSession } from "next-auth/react";
 import superjson from "superjson";
 import { twButton, twCenteringBlock } from "../../utils/twCommon";
 import { prisma } from "../../server/db/client";
-import { FunLoader } from "../../components/Loader";
+import { Loader } from "../../components/Loader";
 import { useRouter } from "next/router";
 import { Header } from "../../components/Header";
 import { useEffect } from "react";
@@ -106,7 +106,7 @@ const Stats = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
   ) {
     return (
       <div className={`${twCenteringBlock}`}>
-        <FunLoader />
+        <Loader />
       </div>
     );
   }

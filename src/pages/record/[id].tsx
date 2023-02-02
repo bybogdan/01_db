@@ -10,7 +10,7 @@ import type { ReactNode } from "react";
 import { useCallback } from "react";
 import { useEffect, useState } from "react";
 import { createProxySSGHelpers } from "@trpc/react-query/ssg";
-import { FunLoader } from "../../components/Loader";
+import { Loader } from "../../components/Loader";
 import { RecordForm } from "../../components/RecordForm";
 import {
   getCurrencySymbol,
@@ -84,6 +84,7 @@ const RecordPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
     data: record,
     refetch: refetchGetRecord,
     isLoading,
+    isFetching,
   } = trpc.record.getRecord.useQuery(id as string, {
     refetchInterval: false,
     refetchOnReconnect: false,
@@ -134,6 +135,7 @@ const RecordPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
 
   const showLoader =
     isLoading ||
+    isFetching ||
     isDeletingRecord ||
     status === "loading" ||
     userData?.id !== sessionData?.user?.id;
@@ -151,7 +153,7 @@ const RecordPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
   if (showLoader) {
     return (
       <div className={`${twCenteringBlock}`}>
-        <FunLoader />
+        <Loader />
       </div>
     );
   }

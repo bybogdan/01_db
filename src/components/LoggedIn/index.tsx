@@ -9,7 +9,7 @@ import {
 import { trpc } from "../../utils/trpc";
 import { twCenteringBlock } from "../../utils/twCommon";
 import { Header } from "../Header";
-import { FunLoader } from "../Loader";
+import { Loader } from "../Loader";
 import { RecordForm } from "../RecordForm";
 import { RecordsList } from "../RecordsList";
 
@@ -58,7 +58,7 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
   if (!data) {
     return (
       <div className={`${twCenteringBlock}`}>
-        <FunLoader />
+        <Loader />
       </div>
     );
   }
@@ -97,7 +97,7 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
         </div>
       ) : (
         <div className={`${twCenteringBlock}`}>
-          <FunLoader />
+          <Loader />
         </div>
       )}
     </>

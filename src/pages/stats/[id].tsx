@@ -6,7 +6,7 @@ import type {
 import Head from "next/head";
 import { useSession } from "next-auth/react";
 import { twButton, twCenteringBlock } from "../../utils/twCommon";
-import { FunLoader } from "../../components/Loader";
+import { Loader } from "../../components/Loader";
 import { prisma } from "../../server/db/client";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
@@ -122,7 +122,7 @@ const Stats = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
   ) {
     return (
       <div className={`${twCenteringBlock}`}>
-        <FunLoader />
+        <Loader />
       </div>
     );
   }
