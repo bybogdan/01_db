@@ -124,12 +124,11 @@ const RecordPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
 
   const handleRefetchData = useCallback(async () => {
     addQueryParamToRefetchDataOnHomePage();
+    toggleShowingForm()
     await refetchGetRecord();
-    setShowEditForm(false)
-    return;
   }, [
     refetchGetRecord,
-    setShowEditForm,
+    toggleShowingForm,
     addQueryParamToRefetchDataOnHomePage,
   ]);
 
