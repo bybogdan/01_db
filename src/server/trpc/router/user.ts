@@ -3,8 +3,11 @@ import { publicProcedure, router } from "../trpc";
 
 export const userRouter = router({
   getUser: publicProcedure
-    .input(z.string())
+    .input(z.string().nullish())
     .query(async ({ input: id, ctx }) => {
+      if (!id) {
+        return;
+      }
       const user = await ctx.prisma.user.findFirst({
         where: {
           id,

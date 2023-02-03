@@ -213,8 +213,11 @@ export const recordRouter = router({
       };
     }),
   getRecord: publicProcedure
-    .input(z.string())
+    .input(z.string().nullish())
     .query(async ({ input: id, ctx }) => {
+      if (!id) {
+        return;
+      }
       return await ctx.prisma.record.findFirst({
         where: {
           id,

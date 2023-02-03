@@ -1,4 +1,3 @@
-import type { GetServerSideProps } from "next";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -17,16 +16,9 @@ import { twHeading, twButton, twCenteringBlock } from "../../utils/twCommon";
 import { useSession } from "next-auth/react";
 import { Header } from "../../components/Header";
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  return {
-    props: { id: ctx.params?.id || "" },
-  };
-};
-
-const RecordPage = (props: { id: string }) => {
-  const { id } = props;
-
+const RecordPage = () => {
   const router = useRouter();
+
   const { data: sessionData, status } = useSession();
 
   const [isShowEditForm, setShowEditForm] = useState(false);
@@ -39,18 +31,20 @@ const RecordPage = (props: { id: string }) => {
     refetch: refetchGetRecord,
     isLoading,
     isFetching,
-  } = trpc.record.getRecord.useQuery(id as string, {
+  } = trpc.record.getRecord.useQuery(router.query.id as string, {
     refetchInterval: false,
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
   });
 
-  const { data: userData, refetch: refetchUserData } =
-    trpc.user.getUser.useQuery(sessionData?.user?.id as string, {
+  const { data: userData } = trpc.user.getUser.useQuery(
+    sessionData?.user?.id as string,
+    {
       refetchInterval: false,
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
-    });
+    }
+  );
 
   const { mutate: deleteRecord, isSuccess: isDeleteRecordSuccess } =
     trpc.record.deleteRecord.useMutation();
