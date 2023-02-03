@@ -26,18 +26,17 @@ const Home: NextPage = () => {
         ) : null}
 
         {status === "unauthenticated" ? (
-          <div className="p-6">
+          <div className="flex h-screen flex-col items-center justify-between p-6">
             <div className="flex items-center justify-center gap-2">
               <Image priority={true} width={50} src={logo} alt="Logo" />
               <h5 className=" text-center text-xl leading-tight text-gray-900 dark:text-white">
                 Dialga : Money tracker
               </h5>
             </div>
-            <div className={twCenteringBlock}>
-              <button className={`${twBigButton}`} onClick={() => signIn()}>
-                sign in
-              </button>
-            </div>
+            <button className={`${twBigButton}`} onClick={() => signIn()}>
+              sign in
+            </button>
+            <div />
           </div>
         ) : null}
 
