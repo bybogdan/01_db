@@ -28,8 +28,14 @@ const Home: NextPage = () => {
         {status === "unauthenticated" ? (
           <div className="flex h-screen flex-col items-center justify-between p-6">
             <div className="flex items-center justify-center gap-2">
-              <Image priority={true} width={50} src={logo} alt="Logo" />
-              <h5 className=" text-center text-xl leading-tight text-gray-900 dark:text-white">
+              <Image
+                className="rounded-xl"
+                priority={true}
+                width={50}
+                src={logo}
+                alt="Logo"
+              />
+              <h5 className=" font-boldtext-gray-900 max-w-2xl text-xl dark:text-white sm:text-6xl">
                 Dialga : Money tracker
               </h5>
             </div>

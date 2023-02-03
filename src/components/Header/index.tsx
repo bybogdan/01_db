@@ -9,7 +9,7 @@ interface IComp {
   userId: string;
 }
 
-const HIGHLIGHT_COLOR = "#f59f00";
+const HIGHLIGHT_COLOR = "rgb(96 165 250)";
 
 const Comp: React.FC<IComp> = ({ homePageHref, userName, userId }) => {
   const router = useRouter();
