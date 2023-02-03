@@ -1,15 +1,10 @@
-import type {
-  GetStaticPaths,
-  GetStaticPropsContext,
-  InferGetStaticPropsType,
-} from "next";
+import type { GetServerSideProps } from "next";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import type { ReactNode } from "react";
 import { useCallback } from "react";
 import { useEffect, useState } from "react";
-import { createProxySSGHelpers } from "@trpc/react-query/ssg";
 import { Loader } from "../../components/Loader";
 import { RecordForm } from "../../components/RecordForm";
 import {
@@ -19,58 +14,17 @@ import {
 } from "../../utils/common";
 import { trpc } from "../../utils/trpc";
 import { twHeading, twButton, twCenteringBlock } from "../../utils/twCommon";
-import { appRouter } from "../../server/trpc/router/_app";
 import { useSession } from "next-auth/react";
-import superjson from "superjson";
-import { createContext } from "../../server/trpc/context";
-import { prisma } from "../../server/db/client";
 import { Header } from "../../components/Header";
 
-export const getStaticProps = async (
-  context: GetStaticPropsContext<{ id: string }>
-) => {
-  const id = context.params?.id as string;
-
-  const ssg = createProxySSGHelpers({
-    router: appRouter,
-    ctx: await createContext(),
-    transformer: superjson,
-  });
-
-  const record = await ssg.record.getRecord.fetch(id as string);
-  const user = record
-    ? await ssg.user.getUser.fetch(record.userId as string)
-    : null;
-
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
   return {
-    props: {
-      trpcState: ssg.dehydrate(),
-      id,
-      record: (record && superjson.serialize(record).json) || null,
-      recordUsedData: user,
-    },
-    revalidate: 1,
+    props: { id: ctx.params?.id || "" },
   };
 };
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  const records = await prisma.record.findMany({
-    select: {
-      id: true,
-    },
-  });
-  return {
-    paths: records.map((record) => ({
-      params: {
-        id: record.id,
-      },
-    })),
-    fallback: "blocking",
-  };
-};
-
-const RecordPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { id, record: initialRecord, recordUsedData: initialUserData } = props;
+const RecordPage = (props: { id: string }) => {
+  const { id } = props;
 
   const router = useRouter();
   const { data: sessionData, status } = useSession();
@@ -89,18 +43,14 @@ const RecordPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
     refetchInterval: false,
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
-    initialData: initialRecord,
   });
 
-  const { data: userData } = trpc.user.getUser.useQuery(
-    initialUserData?.id as string,
-    {
+  const { data: userData, refetch: refetchUserData } =
+    trpc.user.getUser.useQuery(sessionData?.user?.id as string, {
       refetchInterval: false,
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
-      initialData: initialUserData,
-    }
-  );
+    });
 
   const { mutate: deleteRecord, isSuccess: isDeleteRecordSuccess } =
     trpc.record.deleteRecord.useMutation();
@@ -124,7 +74,7 @@ const RecordPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
 
   const handleRefetchData = useCallback(async () => {
     addQueryParamToRefetchDataOnHomePage();
-    toggleShowingForm()
+    toggleShowingForm();
     await refetchGetRecord();
   }, [
     refetchGetRecord,
@@ -140,7 +90,10 @@ const RecordPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
     userData?.id !== sessionData?.user?.id;
 
   const shouldRedirectToHomePage =
-    (status !== "loading" && userData?.id !== sessionData?.user?.id) ||
+    (status !== "loading" &&
+      record?.userId &&
+      sessionData?.user?.id &&
+      record?.userId !== sessionData?.user?.id) ||
     isDeleteRecordSuccess;
 
   useEffect(() => {
