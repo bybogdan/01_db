@@ -15,5 +15,6 @@ export const currencyResponseMock = {
       code: "RUB",
       value: 69.750114,
     },
+    TRY: { code: "TRY", value: 18.819925 },
   },
 };

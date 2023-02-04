@@ -12,7 +12,8 @@ export const getCurrencySymbol = (currency: string) => {
     (currency === "GEL" && "₾") ||
     (currency === "USD" && "$") ||
     (currency === "EUR" && "€") ||
-    (currency === "RUB" && "₽")
+    (currency === "RUB" && "₽") ||
+    (currency === "TRY" && "₺")
   );
 };
 

@@ -113,7 +113,7 @@ const getRecordsDataByMonths = (records: Record[]) => {
 
 const getCurrrency = async () => {
   return await new CurrencyAPI(env.CURRENCYAPI_KEY)?.latest({
-    currencies: ["EUR", "GEL", "RUB"],
+    currencies: ["EUR", "GEL", "RUB", "TRY"],
   });
 };
 

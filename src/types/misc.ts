@@ -9,6 +9,7 @@ export enum Currency {
   GEL,
   EUR,
   RUB,
+  TRY,
 }
 
 export type currencyResponseType = {
