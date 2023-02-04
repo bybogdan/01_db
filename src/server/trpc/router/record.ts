@@ -319,8 +319,11 @@ export const recordRouter = router({
       return updatedRecord;
     }),
   getStats: publicProcedure
-    .input(z.string())
+    .input(z.string().nullish())
     .query(async ({ input: userId, ctx }) => {
+      if (!userId) {
+        return;
+      }
       const records = await ctx.prisma.record.findMany({
         where: {
           userId,

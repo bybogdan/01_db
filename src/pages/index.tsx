@@ -35,7 +35,7 @@ const Home: NextPage = () => {
                 src={logo}
                 alt="Logo"
               />
-              <h5 className=" font-boldtext-gray-900 max-w-2xl text-xl dark:text-white sm:text-6xl">
+              <h5 className=" font-boldtext-gray-900 max-w-2xl text-xl dark:text-white sm:text-3xl">
                 Dialga : Money tracker
               </h5>
             </div>

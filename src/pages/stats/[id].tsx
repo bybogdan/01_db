@@ -1,13 +1,8 @@
-import type {
-  GetStaticPaths,
-  GetStaticPropsContext,
-  InferGetStaticPropsType,
-} from "next";
 import Head from "next/head";
 import { useSession } from "next-auth/react";
 import { twButton, twCenteringBlock } from "../../utils/twCommon";
 import { Loader } from "../../components/Loader";
-import { prisma } from "../../server/db/client";
+
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import { StatsMonth } from "../../components/StatsMonth";
@@ -16,40 +11,11 @@ import { trpc } from "../../utils/trpc";
 import Link from "next/link";
 import { capitalizeString } from "../../utils/common";
 
-export const getStaticProps = async (
-  context: GetStaticPropsContext<{ id: string }>
-) => {
-  const userId = context.params?.id as string;
-
-  return {
-    props: {
-      userId,
-    },
-    revalidate: 1,
-  };
-};
-
-export const getStaticPaths: GetStaticPaths = async () => {
-  const users = await prisma.user.findMany({
-    select: {
-      id: true,
-    },
-  });
-  return {
-    paths: users.map((user) => ({
-      params: {
-        id: user.id,
-      },
-    })),
-    fallback: "blocking",
-  };
-};
-
-const Stats = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { userId } = props;
+const Stats = () => {
+  const router = useRouter();
+  const userId = router.query.id;
 
   const { data: sessionData, status } = useSession();
-  const router = useRouter();
   const statsNodeRef = useRef(null);
   const [showNextBtn, setShowNextBtn] = useState(true);
   const [showPrevBtn, setShowPrevBtn] = useState(false);
@@ -117,6 +83,7 @@ const Stats = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
 
   if (
     status === "loading" ||
+    !sessionData?.user ||
     sessionData?.user?.id !== userId ||
     dataIsLoading
   ) {
