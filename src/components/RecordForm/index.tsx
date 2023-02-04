@@ -115,11 +115,11 @@ const Comp: React.FC<IComp> = ({
             required: "Please enter currency",
           })}
         >
-          <option>USD $</option>
-          <option>GEL ₾</option>
-          <option>EUR €</option>
-          <option>RUB ₽</option>
-          <option>TRY ₺</option>
+          <option>USD</option>
+          <option>GEL</option>
+          <option>EUR</option>
+          <option>RUB</option>
+          <option>TRY</option>
         </select>
       </div>
 
