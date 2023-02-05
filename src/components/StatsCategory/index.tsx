@@ -26,7 +26,7 @@ export const Comp: React.FC<IComp> = ({ data, category }) => {
   return (
     <>
       <div key={`stats-${category}`} className="flex flex-col gap-4">
-        <div className="flex justify-between">
+        <div className="flex items-center justify-between">
           <button
             className={` ${twMinWidthButton}`}
             onClick={() => setShowRecords((prev) => !prev)}
