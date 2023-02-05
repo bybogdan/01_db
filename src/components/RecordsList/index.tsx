@@ -10,7 +10,7 @@ interface IComp {
 export const Comp: React.FC<IComp> = ({ records }) => {
   return (
     <>
-      <ul className="flex w-full flex-col gap-2 px-5">
+      <ul className="flex w-full flex-col gap-6 px-5">
         {records
           ? records.map((record) => (
               <div key={record.id}>

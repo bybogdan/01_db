@@ -20,12 +20,15 @@ const Stats = () => {
   const [showNextBtn, setShowNextBtn] = useState(true);
   const [showPrevBtn, setShowPrevBtn] = useState(false);
 
-  const { data: recordsDataByMonths, isLoading: dataIsLoading } =
-    trpc.record.getStats.useQuery(userId as string, {
-      refetchInterval: false,
-      refetchOnReconnect: false,
-      refetchOnWindowFocus: false,
-    });
+  const {
+    data: recordsDataByMonths,
+    isLoading: dataIsLoading,
+    isFetching: dataIsFetching,
+  } = trpc.record.getStats.useQuery(userId as string, {
+    refetchInterval: false,
+    refetchOnReconnect: false,
+    refetchOnWindowFocus: false,
+  });
 
   const showNext = () => {
     const statsNode = statsNodeRef.current
@@ -85,7 +88,8 @@ const Stats = () => {
     status === "loading" ||
     !sessionData?.user ||
     sessionData?.user?.id !== userId ||
-    dataIsLoading
+    dataIsLoading ||
+    dataIsFetching
   ) {
     return (
       <div className={`${twCenteringBlock}`}>

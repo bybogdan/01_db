@@ -4,6 +4,7 @@ import { memo, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import type { RecordSchema } from "../../server/schema/post.schema";
 import { LoaderSize } from "../../types/misc";
+import { getCurrencySymbol } from "../../utils/common";
 import { trpc } from "../../utils/trpc";
 import { twButton, twInput, twSelect } from "../../utils/twCommon";
 import { Loader } from "../Loader";
@@ -23,6 +24,7 @@ interface IComp {
   currentRecord?: Record;
   discardButton?: ReactNode;
   categories: string[] | null;
+  currenciesData: string[];
 }
 
 const Comp: React.FC<IComp> = ({
@@ -31,6 +33,7 @@ const Comp: React.FC<IComp> = ({
   currentRecord,
   discardButton,
   categories,
+  currenciesData,
 }) => {
   const defaultValues: RecordSchema | object = currentRecord
     ? {
@@ -115,11 +118,11 @@ const Comp: React.FC<IComp> = ({
             required: "Please enter currency",
           })}
         >
-          <option value="USD">USD $</option>
-          <option value="GEL">GEL ₾</option>
-          <option value="EUR">EUR €</option>
-          <option value="RUB">RUB ₽</option>
-          <option value="TRY">TRY ₺</option>
+          {currenciesData.map((currency) => (
+            <option key={currency} value={currency}>
+              {currency} {getCurrencySymbol(currency)}
+            </option>
+          ))}
         </select>
       </div>
 

@@ -64,7 +64,7 @@ export const Comp: React.FC<IComp> = ({ data }) => {
               </ul>
             </div>
           ) : null}
-          {showRecords ? <hr className="my-2 border-gray-300" /> : null}
+
           <div className="flex flex-col gap-4 ">
             {Object.entries(recordData.recordsByType).map(
               ([type, data], index) => (

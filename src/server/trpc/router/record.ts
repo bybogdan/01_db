@@ -1,5 +1,9 @@
 import { z } from "zod";
-import { capitalizeString, numToFloat } from "../../../utils/common";
+import {
+  capitalizeString,
+  INCLUDED_CURRENCIES,
+  numToFloat,
+} from "../../../utils/common";
 
 import { currencyResponseMock } from "../../../utils/mocks/currency";
 
@@ -111,13 +115,30 @@ const getRecordsDataByMonths = (records: Record[]) => {
   }, {});
 };
 
-const getCurrrency = async () => {
-  return await new CurrencyAPI(env.CURRENCYAPI_KEY)?.latest({
-    currencies: ["EUR", "GEL", "RUB", "TRY"],
-  });
+const getCurrrencyFromApi = async () => {
+  return await new CurrencyAPI(env.CURRENCYAPI_KEY)?.latest();
 };
 
 export const recordRouter = router({
+  getCurrrency: publicProcedure.query(async ({ ctx }) => {
+    const currencies = await ctx.prisma.currencies.findMany({
+      orderBy: [
+        {
+          timestamp: "desc",
+        },
+      ],
+    });
+    const currencyResponse =
+      currencies?.length && currencies[0]?.value
+        ? (currencies[0].value as currencyResponseType)
+        : currencyResponseMock;
+
+    const allCurrencies = Object.keys(currencyResponse.data);
+
+    return INCLUDED_CURRENCIES.filter(
+      (currency) => !!allCurrencies.includes(currency)
+    );
+  }),
   getData: publicProcedure
     .input(z.string())
     .query(async ({ input: userId, ctx }) => {
@@ -148,7 +169,7 @@ export const recordRouter = router({
             ? (currencies[0].value as currencyResponseType)
             : currenciesResponse;
       } else if (currencies.length === 0) {
-        currenciesResponse = await getCurrrency();
+        currenciesResponse = await getCurrrencyFromApi();
 
         await ctx.prisma.currencies.create({
           data: {
@@ -165,7 +186,7 @@ export const recordRouter = router({
               id: currencies[0].id,
             },
           });
-          currenciesResponse = await getCurrrency();
+          currenciesResponse = await getCurrrencyFromApi();
           await ctx.prisma.currencies.create({
             data: {
               value: currenciesResponse,

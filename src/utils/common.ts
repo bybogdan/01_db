@@ -1,3 +1,5 @@
+import getSymbolFromCurrency from "currency-symbol-map";
+
 export const funcPlaceholder = () => {
   return;
 };
@@ -8,13 +10,7 @@ export const capitalizeString = (string: string) => {
 };
 
 export const getCurrencySymbol = (currency: string) => {
-  return (
-    (currency === "GEL" && "₾") ||
-    (currency === "USD" && "$") ||
-    (currency === "EUR" && "€") ||
-    (currency === "RUB" && "₽") ||
-    (currency === "TRY" && "₺")
-  );
+  return getSymbolFromCurrency(currency) || currency;
 };
 
 export const numToFloat = (num: number) => {
@@ -76,3 +72,13 @@ export const getMonthName = (date: string) => {
 
 export const getIsStandalone = () =>
   window.matchMedia("(display-mode: standalone)").matches;
+
+export const INCLUDED_CURRENCIES = [
+  "USD",
+  "EUR",
+  "GEL",
+  "TRY",
+  "GBR",
+  "RUB",
+  "UAH",
+];

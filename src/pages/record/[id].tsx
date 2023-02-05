@@ -46,6 +46,15 @@ const RecordPage = () => {
     }
   );
 
+  const { data: currenciesData } = trpc.record.getCurrrency.useQuery(
+    undefined,
+    {
+      refetchInterval: false,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+    }
+  );
+
   const { mutate: deleteRecord, isSuccess: isDeleteRecordSuccess } =
     trpc.record.deleteRecord.useMutation();
 
@@ -81,7 +90,8 @@ const RecordPage = () => {
     isFetching ||
     isDeletingRecord ||
     status === "loading" ||
-    userData?.id !== sessionData?.user?.id;
+    userData?.id !== sessionData?.user?.id ||
+    !currenciesData;
 
   const shouldRedirectToHomePage =
     (status !== "loading" &&
@@ -185,6 +195,7 @@ const RecordPage = () => {
               currentRecord={record}
               discardButton={DiscardButton}
               categories={userData?.categories as string[]}
+              currenciesData={currenciesData}
             />
           ) : null}
         </div>

@@ -30,6 +30,15 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
     refetchOnWindowFocus: false,
   });
 
+  const { data: currenciesData } = trpc.record.getCurrrency.useQuery(
+    undefined,
+    {
+      refetchInterval: false,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+    }
+  );
+
   const router = useRouter();
 
   const [isAwaitingFreshData, setAwaitingFreshData] = useState(false);
@@ -55,7 +64,9 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
     }
   }, [isFetching]);
 
-  if (!data) {
+  const showLoader = !data || !currenciesData;
+
+  if (showLoader) {
     return (
       <div className={`${twCenteringBlock}`}>
         <Loader />
@@ -75,7 +86,7 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
               userId={sessionUserId}
               homePageHref="/"
             />
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-2 ">
               {stats &&
                 Object.entries(stats).map(([key, value], index) => (
                   <div key={`${key}-${index}`}>{`${capitalizeString(
@@ -91,6 +102,7 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
               sessionUserId={sessionUserId}
               handleRefetchData={handleRefetchData}
               categories={categories as string[]}
+              currenciesData={currenciesData}
             />
             <RecordsList records={records} />
           </div>
