@@ -14,7 +14,7 @@ interface IComp {
 export const Comp: React.FC<IComp> = ({ record, showCategory }) => {
   return (
     <li
-      className="flex flex-col justify-center gap-1 rounded-xl border border-solid border-transparent p-2 text-slate-900 hover:border-blue-400 dark:text-white"
+      className="flex flex-col justify-center gap-1 text-slate-900 dark:text-white"
       key={record.id}
     >
       <p className="text-base text-gray-700 dark:text-slate-200">
