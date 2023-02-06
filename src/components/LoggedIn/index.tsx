@@ -8,6 +8,7 @@ import {
 } from "../../utils/common";
 import { trpc } from "../../utils/trpc";
 import { twCenteringBlock } from "../../utils/twCommon";
+import { BalanceAmount } from "../BalanceAmount";
 import { Header } from "../Header";
 import { Loader } from "../Loader";
 import { RecordForm } from "../RecordForm";
@@ -76,6 +77,8 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
 
   const { records, stats, categories } = data;
 
+  const balance = +(stats.balance || 0);
+
   return (
     <>
       {isSuccess && !isAwaitingFreshData ? (
@@ -87,14 +90,18 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
               homePageHref="/"
             />
             <div className="flex flex-col gap-2 ">
-              {stats &&
+              <div className="font-sbold  flex flex-col items-center justify-center gap-2 text-xl sm:text-xl">
+                <span>Balance from last 30 days:</span>
+                <BalanceAmount balance={balance} />
+              </div>
+              {/* {stats &&
                 Object.entries(stats).map(([key, value], index) => (
                   <div key={`${key}-${index}`}>{`${capitalizeString(
                     key
                   )}: ${numToFloat(+value)} ${getCurrencySymbol(
                     BASE_CURRENCY
                   )}`}</div>
-                ))}
+                ))} */}
             </div>
           </div>
           <div className="flex flex-col gap-12 p-6">

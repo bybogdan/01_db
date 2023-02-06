@@ -1,6 +1,5 @@
 import { httpBatchLink, loggerLink } from "@trpc/client";
 import { createTRPCNext } from "@trpc/next";
-import { type inferRouterInputs, type inferRouterOutputs } from "@trpc/server";
 import superjson from "superjson";
 
 import { type AppRouter } from "../server/trpc/router/_app";
@@ -29,14 +28,3 @@ export const trpc = createTRPCNext<AppRouter>({
   },
   ssr: false,
 });
-
-/**
- * Inference helper for inputs
- * @example type HelloInput = RouterInputs['example']['hello']
- **/
-export type RouterInputs = inferRouterInputs<AppRouter>;
-/**
- * Inference helper for outputs
- * @example type HelloOutput = RouterOutputs['example']['hello']
- **/
-export type RouterOutputs = inferRouterOutputs<AppRouter>;

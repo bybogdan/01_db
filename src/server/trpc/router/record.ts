@@ -21,6 +21,7 @@ import type {
 } from "../../../types/misc";
 
 const ONE_DAY = 1000 * 60 * 60 * 24;
+const THIRTY_DAYS = ONE_DAY * 30;
 
 export type recordsByCategroriesType = {
   [key: string]: {
@@ -196,18 +197,22 @@ export const recordRouter = router({
           currenciesResponse = currencies[0].value as currencyResponseType;
         }
       }
+      const timeThirtyDaysAgo = +new Date() - THIRTY_DAYS;
+      const recordFromLastMonth = records.filter(
+        (record) => +record.timestamp >= timeThirtyDaysAgo
+      );
 
-      const expense: string = records.length
+      const expense: string = recordFromLastMonth.length
         ? numToFloat(
-            records
+            recordFromLastMonth
               .filter((record) => record.type === "EXPENSE")
               .reduce((acc, record) => (acc += +record.amountUSD), 0)
           )
         : "0.00";
 
-      const income: string = records.length
+      const income: string = recordFromLastMonth.length
         ? numToFloat(
-            records
+            recordFromLastMonth
               .filter((record) => record.type === "INCOME")
               .reduce((acc, record) => (acc += +record.amountUSD), 0)
           )
@@ -217,8 +222,8 @@ export const recordRouter = router({
 
       const stats: HeaderStatsType = {
         balance,
-        expense,
-        income,
+        // expense,
+        // income,
       };
 
       const userData: User | null = await ctx.prisma.user.findFirst({

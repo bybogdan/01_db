@@ -10,6 +10,7 @@ import {
   numToFloat,
 } from "../../utils/common";
 import { twMinWidthButton } from "../../utils/twCommon";
+import { BalanceAmount } from "../BalanceAmount";
 import { RecordCard } from "../RecordCard";
 import { StatsCategories } from "../StatsCategories";
 
@@ -30,6 +31,8 @@ export const Comp: React.FC<IComp> = ({ data }) => {
 
   const [showRecords, setShowRecords] = useState(false);
 
+  const balance = +(recordData.income - recordData.expense || 0);
+
   return (
     <div className=" flex min-w-full flex-col gap-8">
       <h5 className=" text-center text-xl leading-tight text-gray-900 dark:text-white">
@@ -37,9 +40,7 @@ export const Comp: React.FC<IComp> = ({ data }) => {
       </h5>
       <div className="flex flex-col gap-4">
         <h5 className="text-xl leading-tight text-gray-900 dark:text-white">
-          {capitalizeString("balance")}:{" "}
-          {numToFloat(recordData.income - recordData.expense)}{" "}
-          {getCurrencySymbol(BASE_CURRENCY)}
+          {capitalizeString("balance")}: <BalanceAmount balance={balance} />
         </h5>
 
         <>
