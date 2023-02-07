@@ -33,5 +33,6 @@ export const userRouter = router({
           categories,
         },
       });
+      return { categories };
     }),
 });

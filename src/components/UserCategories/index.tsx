@@ -1,4 +1,4 @@
-import { memo, useEffect, useState } from "react";
+import { memo, useState } from "react";
 import { LoaderSize } from "../../types/misc";
 import { capitalizeString } from "../../utils/common";
 import { trpc } from "../../utils/trpc";
@@ -21,8 +21,14 @@ export const Comp: React.FC<IComp> = ({
   const [newCategory, setNewCategory] = useState("");
   const [showCategoryLoader, setShowCategoryLoader] = useState(false);
 
-  const { mutate: setCategories, isSuccess: setCategoriesIsSuccess } =
-    trpc.user.setCategories.useMutation();
+  const { mutate: setCategories } = trpc.user.setCategories.useMutation({
+    onSuccess: async (data) => {
+      console.log("success data", data);
+      await refetchGetUser();
+      setNewCategory("");
+      setShowCategoryLoader(false);
+    },
+  });
 
   const saveNewCategory = async () => {
     setShowCategoryLoader(true);
@@ -39,16 +45,6 @@ export const Comp: React.FC<IComp> = ({
       categories: categories,
     });
   };
-
-  useEffect(() => {
-    (async () => {
-      if (setCategoriesIsSuccess) {
-        await refetchGetUser();
-        setNewCategory("");
-        setShowCategoryLoader(false);
-      }
-    })();
-  }, [setCategoriesIsSuccess, refetchGetUser]);
 
   return (
     <>

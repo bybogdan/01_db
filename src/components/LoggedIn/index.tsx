@@ -1,11 +1,5 @@
 import { useRouter } from "next/router";
 import { memo, useCallback, useEffect, useMemo, useState } from "react";
-import {
-  BASE_CURRENCY,
-  capitalizeString,
-  getCurrencySymbol,
-  numToFloat,
-} from "../../utils/common";
 import { trpc } from "../../utils/trpc";
 import { twCenteringBlock } from "../../utils/twCommon";
 import { BalanceAmount } from "../BalanceAmount";

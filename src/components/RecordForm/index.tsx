@@ -1,6 +1,6 @@
 import type { Record } from "@prisma/client";
 import type { ReactNode } from "react";
-import { memo, useEffect, useState } from "react";
+import { memo, useState } from "react";
 import { useForm } from "react-hook-form";
 import type { RecordSchema } from "../../server/schema/post.schema";
 import { LoaderSize } from "../../types/misc";
@@ -48,17 +48,21 @@ const Comp: React.FC<IComp> = ({
 
   const categoriesArray = categories !== null ? categories : deafultCategories;
 
-  const {
-    mutate: setRecord,
-    isSuccess: isSetRecordSuccess,
-    isLoading: isSetRecordLoading,
-  } = trpc.record.setRecord.useMutation();
+  const handleOnSuccess = async () => {
+    await handleRefetchData();
+    setShowLoader(false);
+    reset();
+  };
 
-  const {
-    mutate: updateRecord,
-    isSuccess: isUpdateRecordSuccess,
-    isLoading: isUpdateRecordLoading,
-  } = trpc.record.updateRecord.useMutation();
+  const { mutate: setRecord, isLoading: isSetRecordLoading } =
+    trpc.record.setRecord.useMutation({
+      onSuccess: handleOnSuccess,
+    });
+
+  const { mutate: updateRecord, isLoading: isUpdateRecordLoading } =
+    trpc.record.updateRecord.useMutation({
+      onSuccess: handleOnSuccess,
+    });
 
   const { register, handleSubmit, reset } = useForm<RecordSchema>({
     shouldUseNativeValidation: true,
@@ -84,16 +88,6 @@ const Comp: React.FC<IComp> = ({
     }
     setShowLoader(true);
   };
-
-  useEffect(() => {
-    (async () => {
-      if (isUpdateRecordSuccess || isSetRecordSuccess) {
-        await handleRefetchData();
-        setShowLoader(false);
-        reset();
-      }
-    })();
-  }, [isUpdateRecordSuccess, isSetRecordSuccess, handleRefetchData, reset]);
 
   return (
     <form className="flex flex-col gap-y-3 " onSubmit={handleSubmit(onSubmit)}>
