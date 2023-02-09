@@ -22,8 +22,7 @@ export const Comp: React.FC<IComp> = ({
   const [showCategoryLoader, setShowCategoryLoader] = useState(false);
 
   const { mutate: setCategories } = trpc.user.setCategories.useMutation({
-    onSuccess: async (data) => {
-      console.log("success data", data);
+    onSuccess: async () => {
       await refetchGetUser();
       setNewCategory("");
       setShowCategoryLoader(false);
