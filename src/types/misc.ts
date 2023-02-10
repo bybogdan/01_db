@@ -1,3 +1,5 @@
+import type { Record } from "@prisma/client";
+
 export enum LoaderSize {
   BASE,
   BIG,
@@ -197,4 +199,11 @@ export type currencyResponseType = {
 
 export type HeaderStatsType = {
   [index: string]: string;
+};
+
+export type GetDataType = {
+  records: Record[];
+  totalRecordsAmount: number;
+  stats: HeaderStatsType;
+  categories: string[];
 };

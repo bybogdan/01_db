@@ -1,7 +1,9 @@
 import { useRouter } from "next/router";
 import { memo, useCallback, useEffect, useMemo, useState } from "react";
+import type { GetDataType } from "../../types/misc";
+import { LoaderSize } from "../../types/misc";
 import { trpc } from "../../utils/trpc";
-import { twCenteringBlock } from "../../utils/twCommon";
+import { twButton, twCenteringBlock } from "../../utils/twCommon";
 import { BalanceAmount } from "../BalanceAmount";
 import { Header } from "../Header";
 import { Loader } from "../Loader";
@@ -13,17 +15,33 @@ interface IComp {
   sessionUserId: string;
 }
 
+const AMOUNT_FOR_PAGINATION = 10;
+
 export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
+  const [amount, setAmount] = useState(AMOUNT_FOR_PAGINATION);
+  const [isAwaitingFreshData, setAwaitingFreshData] = useState(false);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [stateData, setStateData] = useState<GetDataType>();
+
   const {
     isSuccess,
     isFetching,
-    data,
     refetch: refetchGetData,
-  } = trpc.record.getData.useQuery(sessionUserId, {
-    refetchInterval: false,
-    refetchOnReconnect: false,
-    refetchOnWindowFocus: false,
-  });
+  } = trpc.record.getData.useQuery(
+    { userId: sessionUserId, amount },
+    {
+      refetchInterval: false,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+      onSuccess: (data) => {
+        setStateData({
+          ...data,
+          categories: data.categories as string[],
+        });
+        setIsLoadingMore(false);
+      },
+    }
+  );
 
   const { data: currenciesData } = trpc.record.getCurrrency.useQuery(
     undefined,
@@ -36,11 +54,8 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
 
   const router = useRouter();
 
-  const [isAwaitingFreshData, setAwaitingFreshData] = useState(false);
-
   const handleRefetchData = useCallback(async () => {
     await refetchGetData();
-    return;
   }, [refetchGetData]);
 
   // executed before render
@@ -59,7 +74,11 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
     }
   }, [isFetching]);
 
-  const showLoader = !data || !currenciesData;
+  const showLoader =
+    !stateData ||
+    !currenciesData ||
+    (!isSuccess && !isLoadingMore) ||
+    isAwaitingFreshData;
 
   if (showLoader) {
     return (
@@ -69,26 +88,23 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
     );
   }
 
-  const { records, stats, categories } = data;
-
+  const { records, totalRecordsAmount, stats, categories } = stateData;
   const balance = +(stats.balance || 0);
 
   return (
-    <>
-      {isSuccess && !isAwaitingFreshData ? (
-        <div className="align-between flex  min-h-screen flex-col text-slate-900 dark:text-white">
-          <div className="flex flex-col gap-12 pt-6 pl-6 pr-6">
-            <Header
-              userName={sessionUserName}
-              userId={sessionUserId}
-              homePageHref="/"
-            />
-            <div className="flex flex-col gap-2 ">
-              <div className="font-sbold  flex flex-col items-center justify-center gap-2 text-xl sm:text-xl">
-                <span>Balance from last 30 days:</span>
-                <BalanceAmount balance={balance} />
-              </div>
-              {/* {stats &&
+    <div className="align-between flex  min-h-screen flex-col text-slate-900 dark:text-white">
+      <div className="flex flex-col gap-12 pt-6 pl-6 pr-6">
+        <Header
+          userName={sessionUserName}
+          userId={sessionUserId}
+          homePageHref="/"
+        />
+        <div className="flex flex-col gap-2 ">
+          <div className="font-sbold  flex flex-col items-center justify-center gap-2 text-xl sm:text-xl">
+            <span>Balance from last 30 days:</span>
+            <BalanceAmount balance={balance} />
+          </div>
+          {/* {stats &&
                 Object.entries(stats).map(([key, value], index) => (
                   <div key={`${key}-${index}`}>{`${capitalizeString(
                     key
@@ -96,24 +112,32 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
                     BASE_CURRENCY
                   )}`}</div>
                 ))} */}
-            </div>
-          </div>
-          <div className="flex flex-col gap-12 p-6">
-            <RecordForm
-              sessionUserId={sessionUserId}
-              handleRefetchData={handleRefetchData}
-              categories={categories as string[]}
-              currenciesData={currenciesData}
-            />
-            <RecordsList records={records} />
-          </div>
         </div>
-      ) : (
-        <div className={`${twCenteringBlock}`}>
-          <Loader />
-        </div>
-      )}
-    </>
+      </div>
+      <div className="flex flex-col gap-12 p-6">
+        <RecordForm
+          sessionUserId={sessionUserId}
+          handleRefetchData={handleRefetchData}
+          categories={categories as string[]}
+          currenciesData={currenciesData}
+        />
+        <RecordsList records={records} />
+        {(records.length >= AMOUNT_FOR_PAGINATION &&
+          totalRecordsAmount > amount) ||
+        isLoadingMore ? (
+          <button
+            className={twButton}
+            onClick={async () => {
+              setIsLoadingMore(true);
+              setAmount((prev) => prev + AMOUNT_FOR_PAGINATION);
+              await refetchGetData();
+            }}
+          >
+            {isLoadingMore ? <Loader size={LoaderSize.SMALL} /> : "Load more"}
+          </button>
+        ) : null}
+      </div>
+    </div>
   );
 };
 

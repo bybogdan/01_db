@@ -165,7 +165,7 @@ const Comp: React.FC<IComp> = ({
           type="submit"
           className={`grow ${twButton}`}
         >
-          {isShowLoader ? <Loader size={LoaderSize.SMALL} /> : "save"}
+          {isShowLoader ? <Loader size={LoaderSize.SMALL} /> : "Save"}
         </button>
         {discardButton ? discardButton : null}
       </div>

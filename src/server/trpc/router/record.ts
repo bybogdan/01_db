@@ -141,8 +141,11 @@ export const recordRouter = router({
     );
   }),
   getData: publicProcedure
-    .input(z.string())
-    .query(async ({ input: userId, ctx }) => {
+    .input(z.object({ userId: z.string(), amount: z.number().nullish() }))
+    .query(async ({ input, ctx }) => {
+      const { userId, amount } = input;
+      const take = amount || 0;
+
       const records: Record[] = await ctx.prisma.record.findMany({
         where: {
           userId: userId,
@@ -152,6 +155,13 @@ export const recordRouter = router({
             timestamp: "desc",
           },
         ],
+        take,
+      });
+
+      const totalRecordsAmount = await ctx.prisma.record.count({
+        where: {
+          userId: userId,
+        },
       });
 
       const isDevMode = process.env.NODE_ENV === "development";
@@ -234,6 +244,7 @@ export const recordRouter = router({
 
       return {
         records,
+        totalRecordsAmount,
         stats,
         categories: userData?.categories || null,
       };
