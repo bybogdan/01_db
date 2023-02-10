@@ -34,8 +34,8 @@ export const Comp: React.FC<IComp> = ({ data }) => {
   const balance = +(recordData.income - recordData.expense || 0);
 
   return (
-    <div className=" flex min-w-full flex-col gap-8">
-      <h5 className=" text-center text-xl leading-tight text-gray-900 dark:text-white">
+    <div className="flex min-w-full flex-col gap-8">
+      <h5 className="text-center text-xl font-semibold leading-tight text-gray-900 dark:text-white">
         Stats for: {getMonthName(month)}
       </h5>
       <div className="flex flex-col gap-4">

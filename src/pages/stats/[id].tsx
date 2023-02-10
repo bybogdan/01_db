@@ -1,6 +1,10 @@
 import Head from "next/head";
 import { useSession } from "next-auth/react";
-import { twButton, twCenteringBlock } from "../../utils/twCommon";
+import {
+  twButton,
+  twCenteringBlock,
+  twMinWidthButton,
+} from "../../utils/twCommon";
 import { Loader } from "../../components/Loader";
 
 import { useEffect, useRef, useState } from "react";
@@ -112,6 +116,8 @@ const Stats = () => {
     );
   }
 
+  const amountOfMonths = Object.keys(recordsDataByMonths).length;
+
   return (
     <>
       <Head>
@@ -125,30 +131,39 @@ const Stats = () => {
           userId={(sessionData.user.id as string) || ""}
           homePageHref="/"
         />
-        <div className="relative">
-          <div className="relative flex overflow-hidden" ref={statsNodeRef}>
-            {Object.entries(recordsDataByMonths).map(
-              (recordDataByMonth, index) => (
-                <StatsMonth
-                  key={`stats-month-${index}`}
-                  data={recordDataByMonth}
-                />
-              )
-            )}
+        {amountOfMonths ? (
+          <div className="relative">
+            <div className="relative flex overflow-hidden" ref={statsNodeRef}>
+              {Object.entries(recordsDataByMonths).map(
+                (recordDataByMonth, index) => (
+                  <StatsMonth
+                    key={`stats-month-${index}`}
+                    data={recordDataByMonth}
+                  />
+                )
+              )}
+            </div>
+
+            {showPrevBtn ? (
+              <button onClick={showPrev} className="absolute top-0 left-0">
+                <ArrowLeftIcon />
+              </button>
+            ) : null}
+
+            {showNextBtn && amountOfMonths > 1 ? (
+              <button onClick={showNext} className="absolute top-0 right-0">
+                <ArrowRightIcon />
+              </button>
+            ) : null}
           </div>
-
-          {showPrevBtn ? (
-            <button onClick={showPrev} className="absolute top-0 left-0">
-              <ArrowLeftIcon />
-            </button>
-          ) : null}
-
-          {showNextBtn ? (
-            <button onClick={showNext} className="absolute top-0 right-0">
-              <ArrowRightIcon />
-            </button>
-          ) : null}
-        </div>
+        ) : (
+          <div className="-mt-10 flex grow flex-col items-center justify-center gap-3">
+            <h4 className="text-3xl font-bold">No records yet</h4>
+            <Link href="/">
+              <button className={twMinWidthButton}>create the first</button>
+            </Link>
+          </div>
+        )}
       </div>
     </>
   );
