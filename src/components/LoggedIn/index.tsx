@@ -141,7 +141,7 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
         {(records.length >= AMOUNT_FOR_PAGINATION &&
           totalRecordsAmount > amount) ||
         isLoadingMore ? (
-          <div className="h-8 text-center" ref={loadMoreRef}>
+          <div className="text-center" ref={loadMoreRef}>
             {isLoadingMore ? <Loader /> : ""}
           </div>
         ) : null}
