@@ -1,9 +1,8 @@
 import { useRouter } from "next/router";
-import { memo, useCallback, useEffect, useMemo, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { GetDataType } from "../../types/misc";
-import { LoaderSize } from "../../types/misc";
 import { trpc } from "../../utils/trpc";
-import { twButton, twCenteringBlock } from "../../utils/twCommon";
+import { twCenteringBlock } from "../../utils/twCommon";
 import { BalanceAmount } from "../BalanceAmount";
 import { Header } from "../Header";
 import { Loader } from "../Loader";
@@ -18,10 +17,14 @@ interface IComp {
 const AMOUNT_FOR_PAGINATION = 10;
 
 export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
-  const [amount, setAmount] = useState(AMOUNT_FOR_PAGINATION);
   const [isAwaitingFreshData, setAwaitingFreshData] = useState(false);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [stateData, setStateData] = useState<GetDataType>();
+
+  const loadMoreRef = useRef<HTMLDivElement>(null);
+  const amountRef = useRef<number>(AMOUNT_FOR_PAGINATION);
+
+  const { current: amount } = amountRef;
 
   const {
     isSuccess,
@@ -74,6 +77,27 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
     }
   }, [isFetching]);
 
+  useEffect(() => {
+    const callBack = async () => {
+      const anchorBottomPos =
+        loadMoreRef.current?.getBoundingClientRect().bottom || null;
+      if (
+        anchorBottomPos &&
+        anchorBottomPos < window.innerHeight &&
+        !isLoadingMore
+      ) {
+        setIsLoadingMore(true);
+        amountRef.current += AMOUNT_FOR_PAGINATION;
+        await refetchGetData();
+      }
+    };
+    window.addEventListener("scroll", callBack);
+
+    return () => {
+      window.removeEventListener("scroll", callBack);
+    };
+  }, [isLoadingMore, refetchGetData]);
+
   const showLoader =
     !stateData ||
     !currenciesData ||
@@ -104,14 +128,6 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
             <span>Balance from last 30 days:</span>
             <BalanceAmount balance={balance} />
           </div>
-          {/* {stats &&
-                Object.entries(stats).map(([key, value], index) => (
-                  <div key={`${key}-${index}`}>{`${capitalizeString(
-                    key
-                  )}: ${numToFloat(+value)} ${getCurrencySymbol(
-                    BASE_CURRENCY
-                  )}`}</div>
-                ))} */}
         </div>
       </div>
       <div className="flex flex-col gap-12 p-6">
@@ -125,16 +141,9 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
         {(records.length >= AMOUNT_FOR_PAGINATION &&
           totalRecordsAmount > amount) ||
         isLoadingMore ? (
-          <button
-            className={twButton}
-            onClick={async () => {
-              setIsLoadingMore(true);
-              setAmount((prev) => prev + AMOUNT_FOR_PAGINATION);
-              await refetchGetData();
-            }}
-          >
-            {isLoadingMore ? <Loader size={LoaderSize.SMALL} /> : "Load more"}
-          </button>
+          <div className="text-center" ref={loadMoreRef}>
+            {isLoadingMore ? <Loader /> : ""}
+          </div>
         ) : null}
       </div>
     </div>
