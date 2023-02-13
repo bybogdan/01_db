@@ -123,12 +123,12 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
           userId={sessionUserId}
           homePageHref="/"
         />
-        <div className="flex flex-col gap-2">
+        {/* <div className="flex flex-col gap-2">
           <div className=" flex  flex-col items-center justify-center  gap-2 text-2xl font-semibold">
             <span>Balance from last 30 days:</span>
             <BalanceAmount balance={balance} />
           </div>
-        </div>
+        </div> */}
       </div>
       <div className="flex flex-col gap-12 p-6">
         <RecordForm
@@ -141,8 +141,8 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
         {(records.length >= AMOUNT_FOR_PAGINATION &&
           totalRecordsAmount > amount) ||
         isLoadingMore ? (
-          <div className="text-center" ref={loadMoreRef}>
-            <Loader />
+          <div className="h-8 text-center" ref={loadMoreRef}>
+            {isLoadingMore ? <Loader /> : ""}
           </div>
         ) : null}
       </div>
