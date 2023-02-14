@@ -3,9 +3,10 @@ import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { GetDataType } from "../../types/misc";
 import { LoaderSize } from "../../types/misc";
 import { trpc } from "../../utils/trpc";
-import { twCenteringBlock } from "../../utils/twCommon";
+import { twButton, twCenteringBlock } from "../../utils/twCommon";
 import { BalanceAmount } from "../BalanceAmount";
 import { Header } from "../Header";
+import { ArrowUp } from "../icons";
 import { Loader } from "../Loader";
 import { RecordForm } from "../RecordForm";
 import { RecordsList } from "../RecordsList";
@@ -22,8 +23,10 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
   const [isAwaitingFreshData, setAwaitingFreshData] = useState(false);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [stateData, setStateData] = useState<GetDataType>();
+  const [isShowBackToStart, setShowBackToStart] = useState(false);
 
   const loadMoreRef = useRef<HTMLButtonElement>(null);
+  const formWrapperRef = useRef<HTMLDivElement>(null);
 
   const {
     isSuccess,
@@ -60,6 +63,13 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
     await refetchGetData();
   }, [refetchGetData]);
 
+  const handleBackToStart = () => {
+    window.scroll({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
+
   // executed before render
   useMemo(() => {
     const { update } = router.query;
@@ -80,6 +90,16 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
     const callBack = async () => {
       const anchorBottomPos =
         loadMoreRef.current?.getBoundingClientRect().bottom || null;
+
+      const formBottomPos =
+        formWrapperRef.current?.getBoundingClientRect().bottom || 0;
+
+      if (formBottomPos < 0) {
+        setShowBackToStart(true);
+      } else {
+        setShowBackToStart(false);
+      }
+
       if (
         anchorBottomPos &&
         anchorBottomPos < window.innerHeight &&
@@ -115,7 +135,7 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
   const balance = +(stats.balance || 0);
 
   return (
-    <div className="align-between flex  min-h-screen flex-col text-slate-900 dark:text-white">
+    <div className="align-between relative flex min-h-screen flex-col text-slate-900 dark:text-white">
       <div className="flex flex-col gap-12 pt-6 pl-6 pr-6">
         <Header
           userName={sessionUserName}
@@ -130,12 +150,14 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
         </div>
       </div>
       <div className="flex flex-col gap-12 p-6">
-        <RecordForm
-          sessionUserId={sessionUserId}
-          handleRefetchData={handleRefetchData}
-          categories={categories as string[]}
-          currenciesData={currenciesData}
-        />
+        <div ref={formWrapperRef}>
+          <RecordForm
+            sessionUserId={sessionUserId}
+            handleRefetchData={handleRefetchData}
+            categories={categories as string[]}
+            currenciesData={currenciesData}
+          />
+        </div>
         <RecordsList records={records} />
         {(records.length >= AMOUNT_FOR_PAGINATION &&
           totalRecordsAmount > amount) ||
@@ -153,6 +175,13 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
           </button>
         ) : null}
       </div>
+      {isShowBackToStart ? (
+        <div className="fixed p-6">
+          <button onClick={handleBackToStart} className={twButton}>
+            <ArrowUp />
+          </button>
+        </div>
+      ) : null}
     </div>
   );
 };
