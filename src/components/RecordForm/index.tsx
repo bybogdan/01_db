@@ -1,7 +1,8 @@
 import type { Record } from "@prisma/client";
-import type { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import { memo, useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast, Toaster } from "react-hot-toast";
 import type { RecordSchema } from "../../server/schema/post.schema";
 import { LoaderSize } from "../../types/misc";
 import { getCurrencySymbol } from "../../utils/common";
@@ -64,8 +65,12 @@ const Comp: React.FC<IComp> = ({
       onSuccess: handleOnSuccess,
     });
 
-  const { register, handleSubmit, reset } = useForm<RecordSchema>({
-    shouldUseNativeValidation: true,
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<RecordSchema>({
     defaultValues,
   });
 
@@ -89,87 +94,108 @@ const Comp: React.FC<IComp> = ({
     setShowLoader(true);
   };
 
+  const handleErrors = () => {
+    if (!Object.keys(errors).length) {
+      return;
+    }
+
+    Object.entries(errors).forEach(([, value]) => {
+      toast.error(value.message as string, {
+        duration: 1000,
+      });
+    });
+  };
+
   return (
-    <form className="flex flex-col gap-y-3 " onSubmit={handleSubmit(onSubmit)}>
-      <div className="relative flex gap-2">
+    <>
+      <Toaster
+        position="top-center"
+        reverseOrder={false}
+        toastOptions={{ duration: 1000 }}
+      />
+
+      <form
+        className="flex flex-col gap-y-3 "
+        onSubmit={(e) => {
+          handleErrors();
+          handleSubmit(onSubmit)(e);
+        }}
+      >
+        <div className="relative flex gap-2">
+          <input
+            autoComplete="off"
+            className={`${twInput}`}
+            placeholder="Amount"
+            type="number"
+            min="0.00"
+            step="0.01"
+            {...register("amount", {
+              required: "Fill amount (only number)",
+            })}
+          />
+          <select
+            className={`absolute ${twSelect} right-0 w-fit bg-gray-100`}
+            style={{ top: "50%", transform: "translate(0, -50%)" }}
+            placeholder="Currency"
+            defaultValue="USD"
+            {...register("currency", {
+              required: "Please enter currency",
+            })}
+          >
+            {currenciesData.map((currency) => (
+              <option key={currency} value={currency}>
+                {currency} {getCurrencySymbol(currency)}
+              </option>
+            ))}
+          </select>
+        </div>
+
         <input
           autoComplete="off"
           className={`${twInput}`}
-          placeholder="Amount"
-          type="number"
-          min="0.00"
-          step="0.01"
-          {...register("amount", {
-            required: "Please enter amount, formats: 100, 10.20, 0.99",
+          placeholder="Name"
+          {...register("name", {
+            required: "Name must be filled",
           })}
         />
+
         <select
-          className={`absolute ${twSelect} right-0 w-fit bg-gray-100`}
-          style={{ top: "50%", transform: "translate(0, -50%)" }}
-          placeholder="Currency"
-          defaultValue="USD"
-          {...register("currency", {
-            required: "Please enter currency",
+          className={`${twSelect}`}
+          placeholder="Type"
+          defaultValue="EXPENSE"
+          {...register("type", {
+            required: "Please enter type of transaction",
           })}
         >
-          {currenciesData.map((currency) => (
-            <option key={currency} value={currency}>
-              {currency} {getCurrencySymbol(currency)}
-            </option>
+          <option>EXPENSE</option>
+          <option>INCOME</option>
+        </select>
+
+        <select
+          className={`${twSelect}`}
+          placeholder="Category"
+          defaultValue=""
+          {...register("category", {})}
+        >
+          <option value="">Category (unselected)</option>
+          {categoriesArray.map((category, index) => (
+            <option key={`category-${index}`}>{category}</option>
           ))}
         </select>
-      </div>
-
-      <input
-        autoComplete="off"
-        className={`${twInput}`}
-        placeholder="Name"
-        {...register("name", {
-          required: "Please enter label for transaction",
-        })}
-      />
-
-      <select
-        className={`${twSelect}`}
-        placeholder="Type"
-        defaultValue="EXPENSE"
-        {...register("type", {
-          required: "Please enter type of transaction",
-        })}
-      >
-        <option>EXPENSE</option>
-        <option>INCOME</option>
-      </select>
-
-      <select
-        className={`${twSelect}`}
-        placeholder="Category"
-        defaultValue=""
-        {...register("category", {})}
-      >
-        <option value="">Category (unselected)</option>
-        {categoriesArray.map((category, index) => (
-          <option key={`category-${index}`}>{category}</option>
-        ))}
-      </select>
-
-      {/* <input
-        autoComplete="off"
-        className={`${twInput}`}
-        placeholder="message"
-        {...register("message")}
-      /> */}
-      <div className={`flex gap-2 ${discardButton ? "flex-row-reverse" : ""}`}>
-        <button
-          disabled={isSetRecordLoading || isUpdateRecordLoading}
-          type="submit"
-          className={`grow ${twButton}`}
+        <div
+          className={`flex gap-2 ${discardButton ? "flex-row-reverse" : ""}`}
         >
-          {isShowLoader ? <Loader size={LoaderSize.SMALL} /> : "Save"}
-        </button>
-        {discardButton ? discardButton : null}
-      </div>
-    </form>
+          <button
+            disabled={isSetRecordLoading || isUpdateRecordLoading}
+            type="submit"
+            className={`grow ${twButton}`}
+          >
+            {isShowLoader ? <Loader size={LoaderSize.SMALL} /> : "Save"}
+          </button>
+          {discardButton ? discardButton : null}
+        </div>
+      </form>
+    </>
   );
 };
 
