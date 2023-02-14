@@ -67,16 +67,16 @@ export const Comp: React.FC<IComp> = ({ data }) => {
           ) : null}
 
           <div className="flex flex-col gap-4 ">
-            {Object.entries(recordData.recordsByType).map(
-              ([type, data], index) => (
+            {Object.entries(recordData.recordsByType)
+              .sort()
+              .map(([type, data], index) => (
                 <StatsCategories
                   key={`stats-type-${index}`}
                   type={type}
                   data={data.recordsByCategories}
                   totalAmount={data.amount}
                 />
-              )
-            )}
+              ))}
           </div>
         </>
       </div>

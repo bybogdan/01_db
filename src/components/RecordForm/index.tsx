@@ -1,5 +1,5 @@
 import type { Record } from "@prisma/client";
-import { ReactNode, useEffect } from "react";
+import { ReactNode, useCallback, useEffect } from "react";
 import { memo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast, Toaster } from "react-hot-toast";
@@ -94,7 +94,7 @@ const Comp: React.FC<IComp> = ({
     setShowLoader(true);
   };
 
-  const handleErrors = () => {
+  const handleErrors = useCallback(() => {
     if (!Object.keys(errors).length) {
       return;
     }
@@ -104,7 +104,14 @@ const Comp: React.FC<IComp> = ({
         duration: 1000,
       });
     });
-  };
+  }, [errors]);
+
+  // handling the first submission attempt
+  useEffect(() => {
+    if (errors) {
+      handleErrors();
+    }
+  }, [errors, handleErrors]);
 
   return (
     <>
@@ -117,8 +124,8 @@ const Comp: React.FC<IComp> = ({
       <form
         className="flex flex-col gap-y-3 "
         onSubmit={(e) => {
-          handleErrors();
           handleSubmit(onSubmit)(e);
+          handleErrors();
         }}
       >
         <div className="relative flex gap-2">
