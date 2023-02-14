@@ -144,7 +144,7 @@ export const recordRouter = router({
     .input(z.object({ userId: z.string(), amount: z.number().nullish() }))
     .query(async ({ input, ctx }) => {
       const { userId, amount } = input;
-      const take = amount || 0;
+      const lastIndex = amount || (0 as number);
 
       const records: Record[] = await ctx.prisma.record.findMany({
         where: {
@@ -155,7 +155,6 @@ export const recordRouter = router({
             timestamp: "desc",
           },
         ],
-        take,
       });
 
       const totalRecordsAmount = await ctx.prisma.record.count({
@@ -232,8 +231,6 @@ export const recordRouter = router({
 
       const stats: HeaderStatsType = {
         balance,
-        // expense,
-        // income,
       };
 
       const userData: User | null = await ctx.prisma.user.findFirst({
@@ -243,7 +240,7 @@ export const recordRouter = router({
       });
 
       return {
-        records,
+        records: records.slice(0, lastIndex),
         totalRecordsAmount,
         stats,
         categories: userData?.categories || null,
