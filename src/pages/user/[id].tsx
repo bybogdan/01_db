@@ -88,7 +88,7 @@ const Stats = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
     },
   });
 
-  const categories = userData?.categories as string[];
+  const categories = (userData?.categories as string[]) || categoriesArray;
 
   const { data: sessionData, status } = useSession();
   const router = useRouter();
