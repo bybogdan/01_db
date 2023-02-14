@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { memo, useCallback, useEffect, useMemo, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { GetDataType } from "../../types/misc";
 import { LoaderSize } from "../../types/misc";
 import { trpc } from "../../utils/trpc";
@@ -22,6 +22,8 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
   const [isAwaitingFreshData, setAwaitingFreshData] = useState(false);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [stateData, setStateData] = useState<GetDataType>();
+
+  const loadMoreRef = useRef<HTMLButtonElement>(null);
 
   const {
     isSuccess,
@@ -74,6 +76,27 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
     }
   }, [isFetching]);
 
+  useEffect(() => {
+    const callBack = async () => {
+      const anchorBottomPos =
+        loadMoreRef.current?.getBoundingClientRect().bottom || null;
+      if (
+        anchorBottomPos &&
+        anchorBottomPos < window.innerHeight &&
+        !isLoadingMore
+      ) {
+        setIsLoadingMore(true);
+        setAmount((prev) => prev + AMOUNT_FOR_PAGINATION);
+        await refetchGetData();
+      }
+    };
+    window.addEventListener("scroll", callBack);
+
+    return () => {
+      window.removeEventListener("scroll", callBack);
+    };
+  }, [isLoadingMore, refetchGetData]);
+
   const showLoader =
     !stateData ||
     !currenciesData ||
@@ -119,6 +142,7 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
         isLoadingMore ? (
           <button
             className={twButton}
+            ref={loadMoreRef}
             onClick={async () => {
               setIsLoadingMore(true);
               setAmount((prev) => prev + AMOUNT_FOR_PAGINATION);
