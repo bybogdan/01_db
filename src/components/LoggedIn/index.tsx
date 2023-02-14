@@ -3,7 +3,7 @@ import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { GetDataType } from "../../types/misc";
 import { LoaderSize } from "../../types/misc";
 import { trpc } from "../../utils/trpc";
-import { twButton, twCenteringBlock } from "../../utils/twCommon";
+import { twCenteringBlock } from "../../utils/twCommon";
 import { BalanceAmount } from "../BalanceAmount";
 import { Header } from "../Header";
 import { Loader } from "../Loader";
@@ -141,7 +141,7 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
           totalRecordsAmount > amount) ||
         isLoadingMore ? (
           <button
-            className={twButton}
+            className="h-8"
             ref={loadMoreRef}
             onClick={async () => {
               setIsLoadingMore(true);
@@ -149,7 +149,7 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
               await refetchGetData();
             }}
           >
-            {isLoadingMore ? <Loader size={LoaderSize.SMALL} /> : "Load more"}
+            {isLoadingMore ? <Loader size={LoaderSize.BASE} /> : ""}
           </button>
         ) : null}
       </div>
