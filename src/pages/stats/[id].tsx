@@ -145,13 +145,16 @@ const Stats = () => {
             </div>
 
             {showPrevBtn ? (
-              <button onClick={showPrev} className="absolute top-0 left-0">
+              <button onClick={showPrev} className="absolute -top-[3px] left-0">
                 <ArrowLeftIcon />
               </button>
             ) : null}
 
             {showNextBtn && amountOfMonths > 1 ? (
-              <button onClick={showNext} className="absolute top-0 right-0">
+              <button
+                onClick={showNext}
+                className="absolute -top-[3px] right-0"
+              >
                 <ArrowRightIcon />
               </button>
             ) : null}
