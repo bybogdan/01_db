@@ -1,5 +1,6 @@
 import type { Record } from "@prisma/client";
-import { ReactNode, useCallback, useEffect } from "react";
+import type { ReactNode } from "react";
+import { useCallback, useEffect } from "react";
 import { memo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast, Toaster } from "react-hot-toast";
@@ -9,6 +10,15 @@ import { getCurrencySymbol } from "../../utils/common";
 import { trpc } from "../../utils/trpc";
 import { twButton, twInput, twSelect } from "../../utils/twCommon";
 import { Loader } from "../Loader";
+
+const FORM_ERRORS = {
+  amount: "Fill amount (only number)",
+  currency: "Please enter currency",
+  name: "Name must be filled",
+  type: "Please enter type of transaction",
+  category: "Fill category",
+  categoryAndName: "Fill name or category",
+};
 
 const deafultCategories = [
   "FOOD",
@@ -49,6 +59,12 @@ const Comp: React.FC<IComp> = ({
 
   const categoriesArray = categories !== null ? categories : deafultCategories;
 
+  const showToast = (message: string) => {
+    toast.error(message, {
+      duration: 1000,
+    });
+  };
+
   const handleOnSuccess = async () => {
     await handleRefetchData();
     setShowLoader(false);
@@ -76,7 +92,29 @@ const Comp: React.FC<IComp> = ({
 
   const [isShowLoader, setShowLoader] = useState(false);
 
+  const handleErrors = useCallback(() => {
+    if (!Object.keys(errors).length) {
+      return;
+    }
+
+    const isOnlyAmountError =
+      Object.keys(errors).length === 1 && errors.amount?.message;
+
+    if (isOnlyAmountError) {
+      showToast(FORM_ERRORS.categoryAndName);
+    }
+
+    Object.entries(errors).forEach(([, value]) => {
+      showToast(value.message as string);
+    });
+  }, [errors]);
+
   const onSubmit = async (data: RecordSchema) => {
+    if (!data.category && !data.name) {
+      showToast(FORM_ERRORS.categoryAndName);
+      return;
+    }
+
     if (currentRecord) {
       updateRecord({
         id: currentRecord.id,
@@ -93,18 +131,6 @@ const Comp: React.FC<IComp> = ({
     }
     setShowLoader(true);
   };
-
-  const handleErrors = useCallback(() => {
-    if (!Object.keys(errors).length) {
-      return;
-    }
-
-    Object.entries(errors).forEach(([, value]) => {
-      toast.error(value.message as string, {
-        duration: 1000,
-      });
-    });
-  }, [errors]);
 
   // handling the first submission attempt
   useEffect(() => {
@@ -137,7 +163,7 @@ const Comp: React.FC<IComp> = ({
             min="0.00"
             step="0.01"
             {...register("amount", {
-              required: "Fill amount (only number)",
+              required: FORM_ERRORS.amount,
             })}
           />
           <select
@@ -146,7 +172,7 @@ const Comp: React.FC<IComp> = ({
             placeholder="Currency"
             defaultValue="USD"
             {...register("currency", {
-              required: "Please enter currency",
+              required: FORM_ERRORS.currency,
             })}
           >
             {currenciesData.map((currency) => (
@@ -161,9 +187,7 @@ const Comp: React.FC<IComp> = ({
           autoComplete="off"
           className={`${twInput}`}
           placeholder="Name"
-          {...register("name", {
-            required: "Name must be filled",
-          })}
+          {...register("name", {})}
         />
 
         <select
@@ -171,7 +195,7 @@ const Comp: React.FC<IComp> = ({
           placeholder="Type"
           defaultValue="EXPENSE"
           {...register("type", {
-            required: "Please enter type of transaction",
+            required: FORM_ERRORS.type,
           })}
         >
           <option>EXPENSE</option>

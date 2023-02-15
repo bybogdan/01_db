@@ -172,9 +172,11 @@ const RecordPage = () => {
               {date.getDate()}.{date.getMonth() + 1}.{date.getFullYear()}
             </p>
 
-            <h5 className="mb-2 text-xl leading-tight text-gray-900 dark:text-white">
-              {`Description: ${record.name}`}
-            </h5>
+            {record.name ? (
+              <h5 className="mb-2 text-xl leading-tight text-gray-900 dark:text-white">
+                {`Description: ${record.name}`}
+              </h5>
+            ) : null}
 
             {record.message ? (
               <h5 className="mb-2 text-xl leading-tight text-gray-900 dark:text-white">

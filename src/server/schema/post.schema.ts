@@ -3,7 +3,7 @@ import { z } from "zod";
 
 export const createRecordSchema = z.object({
   type: z.enum(["INCOME", "EXPENSE"]),
-  name: z.string(),
+  name: z.string().nullish(),
   message: z.string().nullish(),
   category: z.string().nullish(),
   amount: z.string(),
