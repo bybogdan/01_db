@@ -277,7 +277,7 @@ export const recordRouter = router({
       const newRecord = await ctx.prisma.record.create({
         data: {
           ...recordData,
-          name: capitalizeString(recordData.name),
+          name: capitalizeString(recordData.name || ""),
           message: capitalizeString(recordData.message || ""),
           amountUSD,
         },
@@ -332,7 +332,7 @@ export const recordRouter = router({
         },
         data: {
           ...updRecordData,
-          name: capitalizeString(updRecordData.name),
+          name: capitalizeString(updRecordData.name || ""),
           message: capitalizeString(updRecordData.message || ""),
           amountUSD,
         },
