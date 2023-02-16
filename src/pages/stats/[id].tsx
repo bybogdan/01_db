@@ -21,7 +21,7 @@ const Stats = () => {
   const userId = router.query.id;
 
   const { data: sessionData, status } = useSession();
-  const statsNodeRef = useRef(null);
+  const statsNodeRef = useRef<HTMLDivElement>(null);
   const [showNextBtn, setShowNextBtn] = useState(true);
   const [showPrevBtn, setShowPrevBtn] = useState(false);
 
@@ -36,9 +36,7 @@ const Stats = () => {
   });
 
   const showNext = () => {
-    const statsNode = statsNodeRef.current
-      ? (statsNodeRef.current as HTMLDivElement)
-      : null;
+    const statsNode = statsNodeRef.current ? statsNodeRef.current : null;
     if (!recordsDataByMonths || !statsNode) {
       return;
     }
@@ -60,9 +58,7 @@ const Stats = () => {
   };
 
   const showPrev = () => {
-    const statsNode = statsNodeRef.current
-      ? (statsNodeRef.current as HTMLDivElement)
-      : null;
+    const statsNode = statsNodeRef.current ? statsNodeRef.current : null;
     if (!recordsDataByMonths || !statsNode) {
       return;
     }
