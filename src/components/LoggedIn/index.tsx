@@ -1,6 +1,6 @@
+import type { Record } from "@prisma/client";
 import { useRouter } from "next/router";
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { GetDataType } from "../../types/misc";
 import { LoaderSize } from "../../types/misc";
 import { trpc } from "../../utils/trpc";
 import { twButton, twCenteringBlock } from "../../utils/twCommon";
@@ -22,7 +22,12 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
   const [amount, setAmount] = useState(AMOUNT_FOR_PAGINATION);
   const [isAwaitingFreshData, setAwaitingFreshData] = useState(false);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
-  const [stateData, setStateData] = useState<GetDataType>();
+  const [stateData, setStateData] = useState<{
+    records: Record[];
+    totalRecordsAmount: number;
+    balance: number;
+    categories: string[];
+  }>();
   const [isShowBackToStart, setShowBackToStart] = useState(false);
 
   const loadMoreRef = useRef<HTMLButtonElement>(null);
@@ -131,8 +136,7 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
     );
   }
 
-  const { records, totalRecordsAmount, stats, categories } = stateData;
-  const balance = +(stats.balance || 0);
+  const { records, totalRecordsAmount, balance, categories } = stateData;
 
   return (
     <div className="align-between relative flex min-h-screen flex-col text-slate-900 dark:text-white">

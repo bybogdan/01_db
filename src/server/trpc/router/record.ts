@@ -15,10 +15,7 @@ import { env } from "../../../env/server.mjs";
 
 import { router, publicProcedure } from "../trpc";
 import type { Record, User } from "@prisma/client";
-import type {
-  currencyResponseType,
-  HeaderStatsType,
-} from "../../../types/misc";
+import type { currencyResponseType } from "../../../types/misc";
 
 const ONE_DAY = 1000 * 60 * 60 * 24;
 const THIRTY_DAYS = ONE_DAY * 30;
@@ -227,11 +224,7 @@ export const recordRouter = router({
           )
         : "0.00";
 
-      const balance: string = numToFloat(+income - +expense);
-
-      const stats: HeaderStatsType = {
-        balance,
-      };
+      const balance = +numToFloat(+income - +expense);
 
       const userData: User | null = await ctx.prisma.user.findFirst({
         where: {
@@ -242,7 +235,7 @@ export const recordRouter = router({
       return {
         records: records.slice(0, lastIndex),
         totalRecordsAmount,
-        stats,
+        balance,
         categories: userData?.categories || null,
       };
     }),
