@@ -2,13 +2,7 @@ import type { Record } from "@prisma/client";
 import Link from "next/link";
 import { memo, useState } from "react";
 import type { recordsByType } from "../../server/trpc/router/record";
-import {
-  BASE_CURRENCY,
-  capitalizeString,
-  getCurrencySymbol,
-  getMonthName,
-  numToFloat,
-} from "../../utils/common";
+import { capitalizeString, getMonthName } from "../../utils/common";
 import { twMinWidthButton } from "../../utils/twCommon";
 import { BalanceAmount } from "../BalanceAmount";
 import { RecordCard } from "../RecordCard";

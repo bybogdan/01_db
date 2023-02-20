@@ -1,10 +1,11 @@
+import { memo } from "react";
 import { LoaderSize } from "../../types/misc";
 
 interface ILoader {
   size?: LoaderSize;
 }
 
-export const Loader: React.FC<ILoader> = ({ size = LoaderSize.BASE }) => {
+const Comp: React.FC<ILoader> = ({ size = LoaderSize.BASE }) => {
   return (
     <div role="status">
       <svg
@@ -28,3 +29,5 @@ export const Loader: React.FC<ILoader> = ({ size = LoaderSize.BASE }) => {
     </div>
   );
 };
+
+export const Loader = memo(Comp);
