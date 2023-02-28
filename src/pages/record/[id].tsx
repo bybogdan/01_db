@@ -168,26 +168,27 @@ const RecordPage = () => {
                 {getCurrencySymbol(record.currency)}
               </h3>
             </div>
-            <p className="text-base text-gray-700 dark:text-slate-200">
-              {date.getDate()}.{date.getMonth() + 1}.{date.getFullYear()}
-            </p>
 
             {record.name ? (
               <h5 className="mb-2 text-xl leading-tight text-gray-900 dark:text-white">
-                {`Description: ${record.name}`}
+                Description: {record.name}
               </h5>
             ) : null}
 
             {record.message ? (
               <h5 className="mb-2 text-xl leading-tight text-gray-900 dark:text-white">
-                {`Message: ${record.message}`}
+                Message: {record.message}
               </h5>
             ) : null}
             {record.category ? (
               <h5 className="mb-2 text-xl leading-tight text-gray-900 dark:text-white">
-                {`Category: ${record.category}`}
+                Category: {record.category}
               </h5>
             ) : null}
+
+            <h5 className="mb-2 text-xl leading-tight text-gray-900 dark:text-white">
+              Date: {date.getDate()}.{date.getMonth() + 1}.{date.getFullYear()}
+            </h5>
           </div>
 
           {isShowEditForm ? (
