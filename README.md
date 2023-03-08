@@ -1,3 +1,3 @@
 # Dialga
 
-Money tracker
+App for money tracker
