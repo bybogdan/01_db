@@ -1,12 +1,14 @@
 import type { Record } from "@prisma/client";
 import type { ReactNode } from "react";
-import { useCallback, useEffect } from "react";
-import { memo, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useCallback, useEffect, memo, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 import { toast, Toaster } from "react-hot-toast";
+import * as Select from "@radix-ui/react-select";
+import { ChevronDownIcon, ChevronUpIcon } from "@radix-ui/react-icons";
+
 import type { RecordSchema } from "../../server/schema/post.schema";
 import { LoaderSize } from "../../types/misc";
-import { getCurrencySymbol } from "../../utils/common";
+import { BASE_CURRENCY, getCurrencySymbol } from "../../utils/common";
 import { trpc } from "../../utils/trpc";
 import { twButton, twInput, twSelect } from "../../utils/twCommon";
 import { Loader } from "../Loader";
@@ -86,6 +88,7 @@ const Comp: React.FC<IComp> = ({
     handleSubmit,
     reset,
     formState: { errors },
+    control,
   } = useForm<RecordSchema>({
     defaultValues,
   });
@@ -139,6 +142,53 @@ const Comp: React.FC<IComp> = ({
     }
   }, [errors, handleErrors]);
 
+  const CurrencySelect = () => (
+    <Controller
+      control={control}
+      name="currency"
+      defaultValue={BASE_CURRENCY}
+      render={({ field: { onChange, ...props } }) => (
+        <Select.Root onValueChange={onChange} defaultValue={props.value}>
+          <Select.Trigger
+            className={`absolute ${twSelect} right-0 flex w-fit items-center gap-2 bg-gray-100 text-base`}
+            style={{ top: "50%", transform: "translate(0, -50%)" }}
+            aria-label="Food"
+          >
+            <Select.Value placeholder="Currency" />
+            <Select.Icon>
+              <ChevronDownIcon />
+            </Select.Icon>
+          </Select.Trigger>
+
+          <Select.Portal className="dark:bg-gray-100 dark:text-black">
+            <Select.Content className="rounded border border-solid border-gray-300">
+              <Select.ScrollUpButton>
+                <ChevronUpIcon />
+              </Select.ScrollUpButton>
+              <Select.Viewport>
+                <Select.Group>
+                  {currenciesData.map((currency) => (
+                    <Select.Item
+                      key={currency}
+                      value={currency}
+                      className="cursor-pointer rounded px-7 py-1.5 text-base leading-[25px] hover:bg-blue-600 hover:text-white"
+                    >
+                      <Select.ItemText>
+                        {currency} {getCurrencySymbol(currency)}
+                      </Select.ItemText>
+                    </Select.Item>
+                  ))}
+                </Select.Group>
+              </Select.Viewport>
+              <Select.ScrollDownButton />
+              <Select.Arrow />
+            </Select.Content>
+          </Select.Portal>
+        </Select.Root>
+      )}
+    />
+  );
+
   return (
     <>
       <Toaster
@@ -166,21 +216,7 @@ const Comp: React.FC<IComp> = ({
               required: FORM_ERRORS.amount,
             })}
           />
-          <select
-            className={`absolute ${twSelect} right-0 w-fit bg-gray-100`}
-            style={{ top: "50%", transform: "translate(0, -50%)" }}
-            placeholder="Currency"
-            defaultValue="USD"
-            {...register("currency", {
-              required: FORM_ERRORS.currency,
-            })}
-          >
-            {currenciesData.map((currency) => (
-              <option key={currency} value={currency}>
-                {currency} {getCurrencySymbol(currency)}
-              </option>
-            ))}
-          </select>
+          <CurrencySelect />
         </div>
 
         <input
