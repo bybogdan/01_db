@@ -13,6 +13,7 @@ import { trpc } from "../../utils/trpc";
 import {
   twButton,
   twCustomSelectOption,
+  twCustomSelectOptions,
   twInput,
   twSelect,
 } from "../../utils/twCommon";
@@ -157,7 +158,7 @@ const Comp: React.FC<IComp> = ({
       render={({ field: { onChange, ...props } }) => (
         <Select.Root onValueChange={onChange} defaultValue={props.value}>
           <Select.Trigger
-            className={`absolute ${twSelect} right-0 flex w-fit items-center gap-2 bg-gray-100 text-base`}
+            className={`absolute ${twSelect} right-0 flex w-fit items-center gap-2 bg-white text-base `}
             style={{ top: "50%", transform: "translate(0, -50%)" }}
             aria-label="Currency"
           >
@@ -168,12 +169,12 @@ const Comp: React.FC<IComp> = ({
           </Select.Trigger>
 
           <Select.Portal className="dark:bg-gray-100 dark:text-black">
-            <Select.Content className="rounded border border-solid border-gray-300">
+            <Select.Content className="rounded">
               <Select.ScrollUpButton>
                 <ChevronUpIcon />
               </Select.ScrollUpButton>
               <Select.Viewport>
-                <Select.Group className="h-60 overflow-y-scroll">
+                <Select.Group className={twCustomSelectOptions}>
                   {currenciesData.map((currency) => (
                     <Select.Item
                       key={currency}
@@ -204,7 +205,7 @@ const Comp: React.FC<IComp> = ({
       render={({ field: { onChange, ...props } }) => (
         <Select.Root onValueChange={onChange} defaultValue={props.value}>
           <Select.Trigger
-            className={`${twSelect} flex w-full items-center gap-2 bg-gray-100 text-base`}
+            className={`${twSelect} flex w-full items-center gap-2 bg-white text-base `}
             aria-label="Type"
           >
             <Select.Value placeholder="Type" />
@@ -214,12 +215,12 @@ const Comp: React.FC<IComp> = ({
           </Select.Trigger>
 
           <Select.Portal className="dark:bg-gray-100 dark:text-black">
-            <Select.Content className="rounded border border-solid border-gray-300">
+            <Select.Content className="rounded">
               <Select.ScrollUpButton>
                 <ChevronUpIcon />
               </Select.ScrollUpButton>
               <Select.Viewport>
-                <Select.Group className="h-60 overflow-y-scroll">
+                <Select.Group className={twCustomSelectOptions}>
                   {recordsTypes.map((t) => (
                     <Select.Item
                       key={t}
@@ -248,7 +249,7 @@ const Comp: React.FC<IComp> = ({
       render={({ field: { onChange, ...props } }) => (
         <Select.Root onValueChange={onChange} defaultValue={props.value ?? ""}>
           <Select.Trigger
-            className={`${twSelect} flex w-full items-center gap-2 bg-gray-100 text-base`}
+            className={`${twSelect} flex w-full items-center gap-2  bg-white text-base `}
             aria-label="Type"
           >
             <Select.Value placeholder="Type" />
@@ -258,12 +259,12 @@ const Comp: React.FC<IComp> = ({
           </Select.Trigger>
 
           <Select.Portal className="dark:bg-gray-100 dark:text-black ">
-            <Select.Content className="rounded border border-solid border-gray-300">
+            <Select.Content className="rounded">
               <Select.ScrollUpButton>
                 <ChevronUpIcon />
               </Select.ScrollUpButton>
               <Select.Viewport>
-                <Select.Group className="h-60 overflow-y-scroll">
+                <Select.Group className={twCustomSelectOptions}>
                   <Select.Item className={twCustomSelectOption} value="">
                     <Select.ItemText>Category (unselected)</Select.ItemText>
                   </Select.Item>
