@@ -173,7 +173,7 @@ const Comp: React.FC<IComp> = ({
                 <ChevronUpIcon />
               </Select.ScrollUpButton>
               <Select.Viewport>
-                <Select.Group>
+                <Select.Group className="h-60 overflow-y-scroll">
                   {currenciesData.map((currency) => (
                     <Select.Item
                       key={currency}
@@ -219,7 +219,7 @@ const Comp: React.FC<IComp> = ({
                 <ChevronUpIcon />
               </Select.ScrollUpButton>
               <Select.Viewport>
-                <Select.Group>
+                <Select.Group className="h-60 overflow-y-scroll">
                   {recordsTypes.map((t) => (
                     <Select.Item
                       key={t}
@@ -257,14 +257,14 @@ const Comp: React.FC<IComp> = ({
             </Select.Icon>
           </Select.Trigger>
 
-          <Select.Portal className="dark:bg-gray-100 dark:text-black">
+          <Select.Portal className="dark:bg-gray-100 dark:text-black ">
             <Select.Content className="rounded border border-solid border-gray-300">
               <Select.ScrollUpButton>
                 <ChevronUpIcon />
               </Select.ScrollUpButton>
               <Select.Viewport>
-                <Select.Group>
-                  <Select.Item value="">
+                <Select.Group className="h-60 overflow-y-scroll">
+                  <Select.Item className={twCustomSelectOption} value="">
                     <Select.ItemText>Category (unselected)</Select.ItemText>
                   </Select.Item>
                   {categoriesArray.map((c, i) => (

@@ -19,4 +19,4 @@ export const twCenteringBlock =
   "flex min-h-screen flex-col items-center justify-center p-6 ";
 
 export const twCustomSelectOption =
-  "cursor-pointer rounded px-7 py-1.5 text-base leading-[25px] hover:bg-blue-600 hover:text-white";
+  "cursor-pointer rounded px-7 py-1.5 text-base leading-[25px]  focus:bg-blue-600 focus:text-white";
