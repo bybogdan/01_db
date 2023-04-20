@@ -17,6 +17,12 @@ const Home: NextPage = () => {
         <title>Dialga</title>
         <meta name="description" content="Dialga" />
         <link rel="icon" href="/favicon.ico" />
+
+        <meta property="og:image" content="/icon-512x512.png" />
+        <meta property="og:title" content="Diagla" />
+        <meta property="og:description" content="Money tracker" />
+        <meta property="og:image:width" content="512" />
+        <meta property="og:image:height" content="512" />
       </Head>
       <div>
         {status === "loading" ? (
