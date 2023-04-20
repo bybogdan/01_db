@@ -2,8 +2,7 @@ import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import type { ReactNode } from "react";
-import { useCallback } from "react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Loader } from "../../components/Loader";
 import { RecordForm } from "../../components/RecordForm";
 import {
