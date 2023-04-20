@@ -10,14 +10,7 @@ interface IComp {
   userId: string;
 }
 
-let HIGHLIGHT_COLOR = "rgb(37 99 235";
-if (
-  typeof window !== "undefined" &&
-  window.matchMedia &&
-  window.matchMedia("(prefers-color-scheme: dark)").matches
-) {
-  HIGHLIGHT_COLOR = "rgb(96 165 250)";
-}
+const HIGHLIGHT_COLOR = "rgb(96 165 250)";
 
 const Comp: React.FC<IComp> = ({ homePageHref, userName, userId }) => {
   const router = useRouter();

@@ -17,9 +17,3 @@ export const twHeading = "mt-0 mb-2 text-3xl font-semibold leading-tight";
 
 export const twCenteringBlock =
   "flex min-h-screen flex-col items-center justify-center p-6 ";
-
-export const twCustomSelectOption =
-  "cursor-pointer rounded px-7 py-2 text-base leading-[25px]  focus:bg-blue-600 focus:text-white outline-none";
-
-export const twCustomSelectOptions =
-  "rounded max-h-64 overflow-y-scroll bg-gray-600 text-white";

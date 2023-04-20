@@ -1,22 +1,14 @@
 import type { Record } from "@prisma/client";
 import type { ReactNode } from "react";
-import { useCallback, useEffect, memo, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { useCallback, useEffect } from "react";
+import { memo, useState } from "react";
+import { useForm } from "react-hook-form";
 import { toast, Toaster } from "react-hot-toast";
-import * as Select from "@radix-ui/react-select";
-import { ChevronDownIcon, ChevronUpIcon } from "@radix-ui/react-icons";
-
 import type { RecordSchema } from "../../server/schema/post.schema";
 import { LoaderSize } from "../../types/misc";
-import { BASE_CURRENCY, getCurrencySymbol } from "../../utils/common";
+import { getCurrencySymbol } from "../../utils/common";
 import { trpc } from "../../utils/trpc";
-import {
-  twButton,
-  twCustomSelectOption,
-  twCustomSelectOptions,
-  twInput,
-  twSelect,
-} from "../../utils/twCommon";
+import { twButton, twInput, twSelect } from "../../utils/twCommon";
 import { Loader } from "../Loader";
 
 const FORM_ERRORS = {
@@ -35,8 +27,6 @@ const deafultCategories = [
   "UTILITY PAYMENT",
   "SALARY",
 ];
-
-const recordsTypes = ["EXPENSE", "INCOME"];
 
 interface IComp {
   sessionUserId: string;
@@ -96,7 +86,6 @@ const Comp: React.FC<IComp> = ({
     handleSubmit,
     reset,
     formState: { errors },
-    control,
   } = useForm<RecordSchema>({
     defaultValues,
   });
@@ -150,144 +139,6 @@ const Comp: React.FC<IComp> = ({
     }
   }, [errors, handleErrors]);
 
-  const CurrencySelect = () => (
-    <Controller
-      control={control}
-      name="currency"
-      defaultValue={BASE_CURRENCY}
-      render={({ field: { onChange, ...props } }) => (
-        <Select.Root onValueChange={onChange} defaultValue={props.value}>
-          <Select.Trigger
-            className={`absolute ${twSelect} right-0 flex w-fit items-center gap-2 bg-white text-base `}
-            style={{ top: "50%", transform: "translate(0, -50%)" }}
-            aria-label="Currency"
-          >
-            <Select.Value placeholder="Currency" />
-            <Select.Icon>
-              <ChevronDownIcon />
-            </Select.Icon>
-          </Select.Trigger>
-
-          <Select.Portal className="dark:bg-gray-100 dark:text-black">
-            <Select.Content className="rounded">
-              <Select.ScrollUpButton>
-                <ChevronUpIcon />
-              </Select.ScrollUpButton>
-              <Select.Viewport>
-                <Select.Group className={twCustomSelectOptions}>
-                  {currenciesData.map((currency) => (
-                    <Select.Item
-                      key={currency}
-                      value={currency}
-                      className={twCustomSelectOption}
-                    >
-                      <Select.ItemText>
-                        {currency} {getCurrencySymbol(currency)}
-                      </Select.ItemText>
-                    </Select.Item>
-                  ))}
-                </Select.Group>
-              </Select.Viewport>
-              <Select.ScrollDownButton />
-              <Select.Arrow />
-            </Select.Content>
-          </Select.Portal>
-        </Select.Root>
-      )}
-    />
-  );
-
-  const RecordTypeSelect = () => (
-    <Controller
-      control={control}
-      name="type"
-      defaultValue="EXPENSE"
-      render={({ field: { onChange, ...props } }) => (
-        <Select.Root onValueChange={onChange} defaultValue={props.value}>
-          <Select.Trigger
-            className={`${twSelect} flex w-full items-center gap-2 bg-white text-base `}
-            aria-label="Type"
-          >
-            <Select.Value placeholder="Type" />
-            <Select.Icon>
-              <ChevronDownIcon />
-            </Select.Icon>
-          </Select.Trigger>
-
-          <Select.Portal className="dark:bg-gray-100 dark:text-black">
-            <Select.Content className="rounded">
-              <Select.ScrollUpButton>
-                <ChevronUpIcon />
-              </Select.ScrollUpButton>
-              <Select.Viewport>
-                <Select.Group className={twCustomSelectOptions}>
-                  {recordsTypes.map((t) => (
-                    <Select.Item
-                      key={t}
-                      value={t}
-                      className={twCustomSelectOption}
-                    >
-                      <Select.ItemText>{t}</Select.ItemText>
-                    </Select.Item>
-                  ))}
-                </Select.Group>
-              </Select.Viewport>
-              <Select.ScrollDownButton />
-              <Select.Arrow />
-            </Select.Content>
-          </Select.Portal>
-        </Select.Root>
-      )}
-    />
-  );
-
-  const CategorySelect = () => (
-    <Controller
-      control={control}
-      name="category"
-      defaultValue=""
-      render={({ field: { onChange, ...props } }) => (
-        <Select.Root onValueChange={onChange} defaultValue={props.value ?? ""}>
-          <Select.Trigger
-            className={`${twSelect} flex w-full items-center gap-2  bg-white text-base `}
-            aria-label="Type"
-          >
-            <Select.Value placeholder="Type" />
-            <Select.Icon>
-              <ChevronDownIcon />
-            </Select.Icon>
-          </Select.Trigger>
-
-          <Select.Portal className="dark:bg-gray-100 dark:text-black ">
-            <Select.Content className="rounded">
-              <Select.ScrollUpButton>
-                <ChevronUpIcon />
-              </Select.ScrollUpButton>
-              <Select.Viewport>
-                <Select.Group className={twCustomSelectOptions}>
-                  <Select.Item className={twCustomSelectOption} value="">
-                    <Select.ItemText>Category (unselected)</Select.ItemText>
-                  </Select.Item>
-                  {categoriesArray.map((c, i) => (
-                    <Select.Item
-                      key={`category-${i}`}
-                      value={c}
-                      className={twCustomSelectOption}
-                    >
-                      <Select.ItemText>{c}</Select.ItemText>
-                    </Select.Item>
-                  ))}
-                </Select.Group>
-              </Select.Viewport>
-              <Select.ScrollDownButton />
-              <Select.Arrow />
-            </Select.Content>
-          </Select.Portal>
-        </Select.Root>
-      )}
-    />
-  );
-
   return (
     <>
       <Toaster
@@ -315,7 +166,21 @@ const Comp: React.FC<IComp> = ({
               required: FORM_ERRORS.amount,
             })}
           />
-          <CurrencySelect />
+          <select
+            className={`absolute ${twSelect} right-0 w-fit bg-gray-100`}
+            style={{ top: "50%", transform: "translate(0, -50%)" }}
+            placeholder="Currency"
+            defaultValue="USD"
+            {...register("currency", {
+              required: FORM_ERRORS.currency,
+            })}
+          >
+            {currenciesData.map((currency) => (
+              <option key={currency} value={currency}>
+                {currency} {getCurrencySymbol(currency)}
+              </option>
+            ))}
+          </select>
         </div>
 
         <input
@@ -325,8 +190,29 @@ const Comp: React.FC<IComp> = ({
           {...register("name", {})}
         />
 
-        <RecordTypeSelect />
-        <CategorySelect />
+        <select
+          className={`${twSelect}`}
+          placeholder="Type"
+          defaultValue="EXPENSE"
+          {...register("type", {
+            required: FORM_ERRORS.type,
+          })}
+        >
+          <option>EXPENSE</option>
+          <option>INCOME</option>
+        </select>
+
+        <select
+          className={`${twSelect}`}
+          placeholder="Category"
+          defaultValue=""
+          {...register("category", {})}
+        >
+          <option value="">Category (unselected)</option>
+          {categoriesArray.map((category, index) => (
+            <option key={`category-${index}`}>{category}</option>
+          ))}
+        </select>
         <div
           className={`flex gap-2 ${discardButton ? "flex-row-reverse" : ""}`}
         >
