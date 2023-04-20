@@ -16,7 +16,6 @@ const Home: NextPage = () => {
       <Head>
         <title>Dialga</title>
         <meta name="description" content="Dialga" />
-        <meta property="og:image" content="/icon-512x512.png" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div>
