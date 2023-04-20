@@ -17,13 +17,6 @@ const Home: NextPage = () => {
         <title>Dialga</title>
         <meta name="description" content="Dialga" />
         <link rel="icon" href="/favicon.ico" />
-
-        <meta
-          property="og:image"
-          content="https://dialga-lake.vercel.app/icon-512x512.png"
-        />
-        <meta property="og:title" content="Diagla" />
-        <meta property="og:description" content="Money tracker" />
       </Head>
       <div>
         {status === "loading" ? (
