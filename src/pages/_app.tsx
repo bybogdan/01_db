@@ -24,7 +24,16 @@ const MyApp: AppType<{ session: Session | null }> = ({
         />
         <meta property="og:title" content="Diagla" />
         <meta property="og:description" content="Money tracker" />
-        <meta name="theme-color" content="#ffffff" />
+        <meta
+          name="theme-color"
+          content="#ffffff"
+          media="(prefers-color-scheme: light)"
+        />
+        <meta
+          name="theme-color"
+          content="#1E293B"
+          media="(prefers-color-scheme: dark)"
+        />
       </Head>
       <SessionProvider session={session}>
         <Component {...pageProps} />
