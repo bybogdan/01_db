@@ -141,7 +141,7 @@ export const recordRouter = router({
     .input(z.object({ userId: z.string(), amount: z.number().nullish() }))
     .query(async ({ input, ctx }) => {
       const { userId, amount } = input;
-      const lastIndex = amount || (0 as number);
+      const lastIndex = amount || 0;
 
       const records: Record[] = await ctx.prisma.record.findMany({
         where: {

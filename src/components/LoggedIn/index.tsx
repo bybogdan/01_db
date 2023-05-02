@@ -37,6 +37,7 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
     isSuccess,
     isFetching,
     refetch: refetchGetData,
+    data: storedData,
   } = trpc.record.getData.useQuery(
     { userId: sessionUserId, amount },
     {
@@ -81,6 +82,15 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
     router.replace("");
     if (update) {
       setAwaitingFreshData(true);
+      return;
+    }
+    // set stored data from record.getData (if there is nothing changed)
+    if (!update && storedData) {
+      setStateData({
+        ...storedData,
+        categories: storedData?.categories as string[],
+      });
+      return;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
