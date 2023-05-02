@@ -132,7 +132,7 @@ const Stats = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
         <Header
           userId={(sessionData.user.id as string) || ""}
           userName={(sessionData.user.name as string) || ""}
-          homePageHref="/"
+          homePageHref={homePageHref}
         />
         <div className="flex flex-col gap-4">
           <UserCategories
