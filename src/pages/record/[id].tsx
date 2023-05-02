@@ -120,8 +120,8 @@ const RecordPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
 
   const handleRefetchData = useCallback(async () => {
     addQueryParamToRefetchDataOnHomePage();
-    toggleShowingForm();
     await refetchGetRecord();
+    toggleShowingForm();
   }, [
     refetchGetRecord,
     toggleShowingForm,
