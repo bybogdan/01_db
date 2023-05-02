@@ -10,12 +10,14 @@ interface IComp {
   categories: string[];
   userId: string;
   refetchGetUser: () => Promise<void>;
+  addQueryParamToRefetchDataOnHomePage: () => void;
 }
 
 export const Comp: React.FC<IComp> = ({
   categories,
   userId,
   refetchGetUser,
+  addQueryParamToRefetchDataOnHomePage,
 }) => {
   const [showCategories, setShowCategories] = useState(false);
   const [newCategory, setNewCategory] = useState("");
@@ -35,6 +37,7 @@ export const Comp: React.FC<IComp> = ({
       id: userId,
       categories: [...categories, newCategory.toUpperCase().trim()],
     });
+    addQueryParamToRefetchDataOnHomePage();
   };
 
   const deleteCategory = async (index: number) => {
@@ -43,6 +46,7 @@ export const Comp: React.FC<IComp> = ({
       id: userId,
       categories: categories,
     });
+    addQueryParamToRefetchDataOnHomePage();
   };
 
   return (

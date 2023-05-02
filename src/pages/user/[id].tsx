@@ -11,7 +11,7 @@ import { prisma } from "../../server/db/client";
 import { Loader } from "../../components/Loader";
 import { useRouter } from "next/router";
 import { Header } from "../../components/Header";
-import { useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { capitalizeString } from "../../utils/common";
 import { createProxySSGHelpers } from "@trpc/react-query/ssg";
 import { appRouter } from "../../server/trpc/router/_app";
@@ -69,6 +69,8 @@ export const getStaticPaths: GetStaticPaths = async () => {
 const Stats = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { userId, user: initialData } = props;
 
+  const [homePageHref, setHomePageHref] = useState("/");
+
   const categoriesArray: string[] =
     initialData.categories !== null
       ? (initialData.categories as string[])
@@ -92,6 +94,10 @@ const Stats = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
 
   const { data: sessionData, status } = useSession();
   const router = useRouter();
+
+  const addQueryParamToRefetchDataOnHomePage = useCallback(() => {
+    setHomePageHref("/?update=1");
+  }, []);
 
   useEffect(() => {
     if (status !== "loading" && sessionData?.user?.id !== userId) {
@@ -133,6 +139,9 @@ const Stats = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
             categories={categories}
             userId={userId}
             refetchGetUser={handleRefetchGetUser}
+            addQueryParamToRefetchDataOnHomePage={
+              addQueryParamToRefetchDataOnHomePage
+            }
           />
           <button className={twButton} onClick={() => signOut()}>
             {capitalizeString("sign out")}
