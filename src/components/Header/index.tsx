@@ -23,6 +23,10 @@ const Comp: React.FC<IComp> = ({ homePageHref, userName, userId }) => {
   const name = capitalizeString(userName ? (userName[0] as string) : "");
   const router = useRouter();
 
+  if (!userName) {
+    return null;
+  }
+
   return (
     <div className="flex items-center justify-between">
       <Link className="h-fit" href={homePageHref}>

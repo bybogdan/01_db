@@ -3,6 +3,8 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import type { ReactNode } from "react";
 import { useCallback, useEffect, useState } from "react";
+import superjson from "superjson";
+import { prisma } from "../../server/db/client";
 import { Loader } from "../../components/Loader";
 import { RecordForm } from "../../components/RecordForm";
 import {
@@ -14,8 +16,68 @@ import { trpc } from "../../utils/trpc";
 import { twHeading, twButton, twCenteringBlock } from "../../utils/twCommon";
 import { useSession } from "next-auth/react";
 import { Header } from "../../components/Header";
+import type {
+  GetStaticPaths,
+  GetStaticPropsContext,
+  InferGetStaticPropsType,
+} from "next";
+import { createProxySSGHelpers } from "@trpc/react-query/ssg";
+import { appRouter } from "../../server/trpc/router/_app";
+import { createContext } from "../../server/trpc/context";
 
-const RecordPage = () => {
+export const getStaticProps = async (
+  context: GetStaticPropsContext<{ id: string }>
+) => {
+  const recordId = context.params?.id as string;
+
+  const ssg = createProxySSGHelpers({
+    router: appRouter,
+    ctx: await createContext(),
+    transformer: superjson,
+  });
+
+  const record = await ssg.record.getRecord.fetch(recordId);
+  const userData = await ssg.user.getUser.fetch(record?.userId);
+  const currenciesData = await ssg.record.getCurrrency.fetch();
+
+  if (record) {
+    return {
+      props: {
+        record: {
+          ...record,
+          timestamp: +record?.timestamp,
+        },
+        userData,
+        currenciesData,
+      },
+    };
+  }
+};
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const records = await prisma.record.findMany({
+    select: {
+      id: true,
+    },
+  });
+  return {
+    paths: records.map((record) => ({
+      params: {
+        id: record.id,
+      },
+    })),
+    fallback: "blocking",
+  };
+};
+
+const RecordPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
+  const initialRecord = {
+    ...props.record,
+    timestamp: new Date(props.record.timestamp),
+  };
+
+  const { currenciesData, userData } = props;
+
   const router = useRouter();
 
   const { data: sessionData, status } = useSession();
@@ -29,32 +91,14 @@ const RecordPage = () => {
     data: record,
     refetch: refetchGetRecord,
     isLoading,
-    isFetching,
   } = trpc.record.getRecord.useQuery(router.query.id as string, {
     refetchInterval: false,
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
+    initialData: initialRecord,
   });
 
-  const { data: userData } = trpc.user.getUser.useQuery(
-    sessionData?.user?.id as string,
-    {
-      refetchInterval: false,
-      refetchOnReconnect: false,
-      refetchOnWindowFocus: false,
-    }
-  );
-
-  const { data: currenciesData } = trpc.record.getCurrrency.useQuery(
-    undefined,
-    {
-      refetchInterval: false,
-      refetchOnReconnect: false,
-      refetchOnWindowFocus: false,
-    }
-  );
-
-  const { mutate: deleteRecord, isSuccess: isDeleteRecordSuccess } =
+  const { mutate: deleteRecord, isSuccess: isDeletedRecordSuccessfully } =
     trpc.record.deleteRecord.useMutation();
 
   const toggleShowingForm = useCallback(() => {
@@ -86,17 +130,15 @@ const RecordPage = () => {
 
   const showLoader =
     isLoading ||
-    isFetching ||
     isDeletingRecord ||
     status === "loading" ||
-    userData?.id !== sessionData?.user?.id ||
-    !currenciesData;
+    record?.userId !== sessionData?.user?.id;
 
   const shouldRedirectToHomePage =
     (status !== "loading" &&
       record?.userId &&
       record?.userId !== sessionData?.user?.id) ||
-    isDeleteRecordSuccess;
+    isDeletedRecordSuccessfully;
 
   useEffect(() => {
     if (shouldRedirectToHomePage) {
