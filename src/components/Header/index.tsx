@@ -20,6 +20,7 @@ if (
 }
 
 const Comp: React.FC<IComp> = ({ homePageHref, userName, userId }) => {
+  const name = capitalizeString(userName ? (userName[0] as string) : "");
   const router = useRouter();
 
   return (
@@ -49,7 +50,7 @@ const Comp: React.FC<IComp> = ({ homePageHref, userName, userId }) => {
               ? HIGHLIGHT_COLOR
               : "currentColor"
           }
-          name={capitalizeString(userName[0] as string)}
+          name={name}
         />
       </Link>
     </div>

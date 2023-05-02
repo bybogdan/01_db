@@ -95,7 +95,6 @@ const RecordPage = () => {
   const shouldRedirectToHomePage =
     (status !== "loading" &&
       record?.userId &&
-      sessionData?.user?.id &&
       record?.userId !== sessionData?.user?.id) ||
     isDeleteRecordSuccess;
 
@@ -105,7 +104,7 @@ const RecordPage = () => {
     }
   }, [shouldRedirectToHomePage, homePageHref, router]);
 
-  if (showLoader) {
+  if (showLoader || shouldRedirectToHomePage) {
     return (
       <div className={`${twCenteringBlock}`}>
         <Loader />
