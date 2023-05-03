@@ -26,7 +26,6 @@ export const Comp: React.FC<IComp> = ({
   const { mutate: setCategories } = trpc.user.setCategories.useMutation({
     onSuccess: async () => {
       await refetchGetUser();
-      await fetch(`/api/revalidate?secret=revalidate&route=/stats/${userId}`);
       setNewCategory("");
       setShowCategoryLoader(false);
     },

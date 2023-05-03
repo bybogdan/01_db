@@ -69,9 +69,6 @@ const Comp: React.FC<IComp> = ({
     setShowLoader(false);
     reset();
     await fetch(`/api/revalidate?secret=revalidate&route=/record/${data?.id}`);
-    await fetch(
-      `/api/revalidate?secret=revalidate&route=/stats/${data?.userId}`
-    );
   };
 
   const { mutate: setRecord, isLoading: isSetRecordLoading } =

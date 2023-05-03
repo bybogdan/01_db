@@ -99,13 +99,7 @@ const RecordPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
   });
 
   const { mutate: deleteRecord, isSuccess: isDeletedRecordSuccessfully } =
-    trpc.record.deleteRecord.useMutation({
-      onSuccess: async (data) => {
-        await fetch(
-          `/api/revalidate?secret=revalidate&route=/stats/${data?.userId}`
-        );
-      },
-    });
+    trpc.record.deleteRecord.useMutation();
 
   const toggleShowingForm = useCallback(() => {
     setShowEditForm((prev) => !prev);
