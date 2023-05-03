@@ -12,14 +12,47 @@ import { useRouter } from "next/router";
 import { StatsMonth } from "../../components/StatsMonth";
 import { Header } from "../../components/Header";
 import { trpc } from "../../utils/trpc";
-
 import Link from "next/link";
+import { prisma } from "../../server/db/client";
 import { capitalizeString } from "../../utils/common";
 import { ArrowLeftIcon, ArrowRightIcon } from "../../components/icons";
+import type {
+  GetStaticPaths,
+  GetStaticPropsContext,
+  InferGetStaticPropsType,
+} from "next";
 
-const Stats = () => {
+export const getStaticProps = async (
+  context: GetStaticPropsContext<{ id: string }>
+) => {
+  const userId = context.params?.id as string;
+
+  return {
+    props: {
+      userId,
+    },
+  };
+};
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const users = await prisma.user.findMany({
+    select: {
+      id: true,
+    },
+  });
+  return {
+    paths: users.map((user) => ({
+      params: {
+        id: user.id,
+      },
+    })),
+    fallback: "blocking",
+  };
+};
+
+const Stats = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
   const router = useRouter();
-  const userId = router.query.id;
+  const userId = props.userId;
 
   const { data: sessionData, status } = useSession();
   const statsNodeRef = useRef<HTMLDivElement>(null);
