@@ -35,7 +35,7 @@ export type recordsByType = {
   };
 };
 
-type recordsDataByMonthsType = {
+export type recordsDataByMonthsType = {
   [key: string]: {
     records: Record[];
     income: number;

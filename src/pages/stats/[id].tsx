@@ -12,11 +12,61 @@ import { useRouter } from "next/router";
 import { StatsMonth } from "../../components/StatsMonth";
 import { Header } from "../../components/Header";
 import { trpc } from "../../utils/trpc";
+import superjson from "superjson";
 import Link from "next/link";
+import { prisma } from "../../server/db/client";
 import { capitalizeString } from "../../utils/common";
 import { ArrowLeftIcon, ArrowRightIcon } from "../../components/icons";
+import type {
+  GetStaticPaths,
+  GetStaticPropsContext,
+  InferGetStaticPropsType,
+} from "next";
+import { createProxySSGHelpers } from "@trpc/react-query/ssg";
+import { appRouter } from "../../server/trpc/router/_app";
+import { createContext } from "../../server/trpc/context";
+import type { recordsDataByMonthsType } from "../../server/trpc/router/record";
 
-const Stats = () => {
+export const getStaticProps = async (
+  context: GetStaticPropsContext<{ id: string }>
+) => {
+  const userId = context.params?.id as string;
+
+  const ssg = createProxySSGHelpers({
+    router: appRouter,
+    ctx: await createContext(),
+    transformer: superjson,
+  });
+
+  const stats = await ssg.record.getStats.fetch(userId as string);
+
+  if (stats) {
+    return {
+      props: {
+        stats: JSON.stringify(stats),
+      },
+    };
+  }
+};
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const users = await prisma.user.findMany({
+    select: {
+      id: true,
+    },
+  });
+  return {
+    paths: users.map((user) => ({
+      params: {
+        id: user.id,
+      },
+    })),
+    fallback: "blocking",
+  };
+};
+
+const Stats = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
+  const initialData = JSON.parse(props.stats) as recordsDataByMonthsType;
   const router = useRouter();
   const userId = router.query.id;
 
@@ -33,6 +83,7 @@ const Stats = () => {
     refetchInterval: false,
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
+    initialData: initialData,
   });
 
   const showNext = () => {
