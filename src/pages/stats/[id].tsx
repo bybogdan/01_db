@@ -45,6 +45,7 @@ export const getStaticProps = async (
       props: {
         stats: JSON.stringify(stats),
       },
+      revalida1te: 1,
     };
   }
 };
@@ -140,8 +141,8 @@ const Stats = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
     status === "loading" ||
     !sessionData?.user ||
     sessionData?.user?.id !== userId ||
-    dataIsLoading ||
-    dataIsFetching
+    dataIsLoading
+    // dataIsFetching
   ) {
     return (
       <div className={`${twCenteringBlock}`}>
