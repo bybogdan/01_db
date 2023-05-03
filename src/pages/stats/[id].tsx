@@ -21,6 +21,7 @@ import type {
   GetStaticPropsContext,
   InferGetStaticPropsType,
 } from "next";
+import { LoaderWithHeader } from "../../components/LoaderWIthHeader";
 
 export const getStaticProps = async (
   context: GetStaticPropsContext<{ id: string }>
@@ -137,18 +138,10 @@ const Stats = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
     dataIsFetching
   ) {
     return (
-      <div className="align-between flex min-h-screen flex-col gap-12 p-6 text-slate-900 dark:text-white">
-        <Header
-          userName={(sessionData.user.name as string) || ""}
-          userId={(sessionData.user.id as string) || ""}
-          homePageHref="/"
-        />
-        <div className="flex min-w-full flex-col gap-8">
-          <h5 className="text-center text-xl font-semibold leading-tight text-gray-900 dark:text-white">
-            ⏳ Data is loading
-          </h5>
-        </div>
-      </div>
+      <LoaderWithHeader
+        userName={(sessionData.user.name as string) ?? ""}
+        userId={sessionData.user.id}
+      />
     );
   }
 

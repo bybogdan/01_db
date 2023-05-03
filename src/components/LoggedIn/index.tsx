@@ -10,6 +10,7 @@ import { ArrowUp } from "../icons";
 import { Loader } from "../Loader";
 import { RecordForm } from "../RecordForm";
 import { RecordsList } from "../RecordsList";
+import { LoaderWithHeader } from "../LoaderWIthHeader";
 
 interface IComp {
   sessionUserName: string;
@@ -140,9 +141,7 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
 
   if (showLoader) {
     return (
-      <div className={`${twCenteringBlock}`}>
-        <Loader />
-      </div>
+      <LoaderWithHeader userName={sessionUserName} userId={sessionUserId} />
     );
   }
 
