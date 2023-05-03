@@ -24,6 +24,7 @@ import type {
 import { createProxySSGHelpers } from "@trpc/react-query/ssg";
 import { appRouter } from "../../server/trpc/router/_app";
 import { createContext } from "../../server/trpc/context";
+import { LoaderWithHeader } from "../../components/LoaderWIthHeader";
 
 export const getStaticProps = async (
   context: GetStaticPropsContext<{ id: string }>
@@ -148,9 +149,10 @@ const RecordPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
 
   if (showLoader || shouldRedirectToHomePage) {
     return (
-      <div className={`${twCenteringBlock}`}>
-        <Loader />
-      </div>
+      <LoaderWithHeader
+        userName={sessionData?.user?.name ?? ""}
+        userId={sessionData?.user?.id ?? ""}
+      />
     );
   }
 

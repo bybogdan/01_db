@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { LoaderSize } from "../../types/misc";
 import { trpc } from "../../utils/trpc";
-import { twButton, twCenteringBlock } from "../../utils/twCommon";
+import { twButton } from "../../utils/twCommon";
 import { BalanceAmount } from "../BalanceAmount";
 import { Header } from "../Header";
 import { ArrowUp } from "../icons";

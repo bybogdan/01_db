@@ -90,15 +90,18 @@ export const Comp: React.FC<IComp> = ({
                   onChange={(e) => setNewCategory(e.target.value)}
                 />
                 <button
-                  className={twButton}
+                  className={`${twButton}`}
                   onClick={saveNewCategory}
                   disabled={!newCategory.trim().length}
                 >
-                  {!showCategoryLoader ? (
-                    capitalizeString("Save")
-                  ) : (
-                    <Loader size={LoaderSize.SMALL} />
-                  )}
+                  <div className="w-8">
+                    {" "}
+                    {!showCategoryLoader ? (
+                      capitalizeString("Save")
+                    ) : (
+                      <Loader size={LoaderSize.SMALL} />
+                    )}
+                  </div>
                 </button>
               </form>
             </li>

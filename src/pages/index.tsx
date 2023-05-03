@@ -2,11 +2,11 @@ import { type NextPage } from "next";
 import Head from "next/head";
 import { signIn, useSession } from "next-auth/react";
 
-import { twBigButton, twCenteringBlock } from "../utils/twCommon";
-import { Loader } from "../components/Loader";
+import { twBigButton } from "../utils/twCommon";
 import { LoggedIn } from "../components/LoggedIn";
 import Image from "next/image";
 import logo from "../../public/icon-192x192.png";
+import { LoaderWithHeader } from "../components/LoaderWIthHeader";
 
 const Home: NextPage = () => {
   const { data: sessionData, status } = useSession();
@@ -19,11 +19,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div>
-        {status === "loading" ? (
-          <div className={`${twCenteringBlock}`}>
-            <Loader />
-          </div>
-        ) : null}
+        {status === "loading" ? <LoaderWithHeader /> : null}
 
         {status === "unauthenticated" ? (
           <div className="flex h-screen flex-col items-center justify-between p-6">
