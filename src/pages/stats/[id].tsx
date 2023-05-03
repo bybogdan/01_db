@@ -122,9 +122,7 @@ const Stats = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
   if (
     status === "loading" ||
     !sessionData?.user ||
-    sessionData?.user?.id !== userId ||
-    dataIsLoading ||
-    dataIsFetching
+    sessionData?.user?.id !== userId
   ) {
     return (
       <div className={`${twCenteringBlock}`}>
@@ -133,14 +131,42 @@ const Stats = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
     );
   }
 
+  if (
+    sessionData?.user?.id &&
+    sessionData?.user?.id === userId &&
+    dataIsFetching
+  ) {
+    return (
+      <div className="align-between flex min-h-screen flex-col gap-12 p-6 text-slate-900 dark:text-white">
+        <Header
+          userName={(sessionData.user.name as string) || ""}
+          userId={(sessionData.user.id as string) || ""}
+          homePageHref="/"
+        />
+        <div className="flex min-w-full flex-col gap-8">
+          <h5 className="text-center text-xl font-semibold leading-tight text-gray-900 dark:text-white">
+            ⏳ Data is loading
+          </h5>
+        </div>
+      </div>
+    );
+  }
+
   if (!recordsDataByMonths) {
     return (
-      <div className={`${twCenteringBlock}`}>
-        <div className="flex flex-col gap-2">
-          <div>Stats was not found</div>
-          <Link className={twButton} href="/">
-            {capitalizeString("back to home")}
-          </Link>
+      <div className="align-between flex min-h-screen flex-col gap-12 p-6 text-slate-900 dark:text-white">
+        <Header
+          userName={(sessionData.user.name as string) || ""}
+          userId={(sessionData.user.id as string) || ""}
+          homePageHref="/"
+        />
+        <div className={`${twCenteringBlock} -mt-20`}>
+          <div className="flex flex-col gap-2">
+            <div>Stats was not found</div>
+            <Link className={twButton} href="/">
+              {capitalizeString("back to home")}
+            </Link>
+          </div>
         </div>
       </div>
     );
