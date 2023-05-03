@@ -37,6 +37,7 @@ export const Comp: React.FC<IComp> = ({
       id: userId,
       categories: [...categories, newCategory.toUpperCase().trim()],
     });
+    await fetch(`/api/revalidate?secret=revalidate&route=/stats/${userId}`);
     addQueryParamToRefetchDataOnHomePage();
   };
 
@@ -46,6 +47,7 @@ export const Comp: React.FC<IComp> = ({
       id: userId,
       categories: categories,
     });
+    await fetch(`/api/revalidate?secret=revalidate&route=/stats/${userId}`);
     addQueryParamToRefetchDataOnHomePage();
   };
 
