@@ -66,12 +66,12 @@ const Comp: React.FC<IComp> = ({
 
   const handleOnSuccess = async (data: Record) => {
     await handleRefetchData();
+    setShowLoader(false);
+    reset();
     await fetch(`/api/revalidate?secret=revalidate&route=/record/${data?.id}`);
     await fetch(
       `/api/revalidate?secret=revalidate&route=/stats/${data?.userId}`
     );
-    setShowLoader(false);
-    reset();
   };
 
   const { mutate: setRecord, isLoading: isSetRecordLoading } =

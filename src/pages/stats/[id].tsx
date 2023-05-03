@@ -75,13 +75,16 @@ const Stats = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
   const [showNextBtn, setShowNextBtn] = useState(true);
   const [showPrevBtn, setShowPrevBtn] = useState(false);
 
-  const { data: recordsDataByMonths, isLoading: dataIsLoading } =
-    trpc.record.getStats.useQuery(userId as string, {
-      refetchInterval: false,
-      refetchOnReconnect: false,
-      refetchOnWindowFocus: false,
-      initialData: initialData,
-    });
+  const {
+    data: recordsDataByMonths,
+    isLoading: dataIsLoading,
+    isFetching: dataIsFetching,
+  } = trpc.record.getStats.useQuery(userId as string, {
+    refetchInterval: false,
+    refetchOnReconnect: false,
+    refetchOnWindowFocus: false,
+    initialData: initialData,
+  });
 
   const showNext = () => {
     const statsNode = statsNodeRef.current ? statsNodeRef.current : null;
@@ -137,7 +140,8 @@ const Stats = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
     status === "loading" ||
     !sessionData?.user ||
     sessionData?.user?.id !== userId ||
-    dataIsLoading
+    dataIsLoading ||
+    dataIsFetching
   ) {
     return (
       <div className={`${twCenteringBlock}`}>
