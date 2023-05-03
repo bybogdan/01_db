@@ -37,6 +37,9 @@ export const UserIcon = ({ name, color }: { name: string; color: string }) => (
       aria-hidden="true"
       focusable="false"
       role="img"
+      style={{
+        opacity: !name ? 0.2 : 1,
+      }}
     >
       <path
         fill={color}
@@ -46,7 +49,7 @@ export const UserIcon = ({ name, color }: { name: string; color: string }) => (
     <span
       className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transform text-lg"
       style={{
-        color: `${color}`,
+        color: color,
         fontWeight: 500,
       }}
     >
