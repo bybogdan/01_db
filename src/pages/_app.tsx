@@ -6,11 +6,19 @@ import { trpc } from "../utils/trpc";
 
 import "../styles/globals.css";
 import Head from "next/head";
+import { useEffect } from "react";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
   pageProps: { session, ...pageProps },
 }) => {
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const splashScreen = document.getElementById("splashScreen");
+      if (splashScreen) splashScreen.style.display = "none";
+    }
+  }, []);
+
   return (
     <>
       <Head>

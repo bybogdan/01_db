@@ -25,7 +25,6 @@ const Comp: React.FC<ILoader> = ({ size = LoaderSize.BASE }) => {
           fill="currentFill"
         />
       </svg>
-      <span className="sr-only">Loading...</span>
     </div>
   );
 };

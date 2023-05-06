@@ -1,4 +1,5 @@
 import Document, { Html, Head, Main, NextScript } from "next/document";
+import splashScreen from "../splashScreenStyles";
 
 class MyDocument extends Document {
   render() {
@@ -17,8 +18,14 @@ class MyDocument extends Document {
             content="#1E293B"
             media="(prefers-color-scheme: dark)"
           />
+          <style>
+            {splashScreen}
+          </style>
         </Head>
         <body>
+            <div id="splashScreen">
+              <div className="logo"/>
+            </div>
           <Main />
           <NextScript />
         </body>
