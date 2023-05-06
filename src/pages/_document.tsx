@@ -9,7 +9,7 @@ class MyDocument extends Document {
         <Head>
           <link rel="manifest" href="/manifest.json" />
           <meta name="apple-mobile-web-app-title" content="Dialga" />
-
+          <meta name="apple-mobile-web-app-capable" content="yes" />
           {/* test */}
           {/* <!-- iPhone SPLASHSCREEN--> */}
           <link
