@@ -24,6 +24,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
       <Head>
         <title>Dialga</title>
         <meta name="description" content="Dialga" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
         <link rel="icon" href="/favicon.ico" />
 
         <meta
