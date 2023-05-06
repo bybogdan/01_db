@@ -23,19 +23,10 @@ export const LoaderWithHeader = ({
 
       <div className="fixed top-0 left-0 h-full w-full ">
         <div className="absolute top-1/2 left-1/2 flex -translate-x-1/2 -translate-y-1/2  flex-col gap-2">
-          <div className="animate-fast-pulse dark:hidden">
+          <div className="animate-fast-pulse">
             <Image
               alt="icon"
-              src="/icon-192x192.png"
-              width={75}
-              height={75}
-              priority={true}
-            />
-          </div>
-          <div className="hidden animate-fast-pulse dark:block">
-            <Image
-              alt="icon"
-              src="/icon-192x192-dark.png"
+              src="/icon-192x192-transparent.png"
               width={75}
               height={75}
               priority={true}

@@ -94,19 +94,10 @@ class MyDocument extends Document {
         </Head>
         <body>
           <div id="splashScreen">
-            <div className="logo light">
+            <div className="logo">
               <Image
                 alt="icon"
-                src="/icon-192x192.png"
-                width={75}
-                height={75}
-                priority={true}
-              />
-            </div>
-            <div className="logo dark">
-              <Image
-                alt="icon"
-                src="/icon-192x192-dark.png"
+                src="/icon-192x192-transparent.png"
                 width={75}
                 height={75}
                 priority={true}

@@ -11,9 +11,6 @@ export default `
       --tw-text-opacity: 1;
       color: rgb(0 0 0 / var(--tw-text-opacity));
     }
-    .dark {
-      display: none
-    }
   }
 
   @media (prefers-color-scheme: dark) {
@@ -22,9 +19,6 @@ export default `
       background-color: rgb(30 41 59 / var(--tw-bg-opacity));
       --tw-text-opacity: 1;
       color: rgb(255 255 255 / var(--tw-text-opacity));
-    }
-    .light {
-      display: none
     }
   }
 
@@ -39,13 +33,13 @@ export default `
 
   @keyframes animation {
     0%    { opacity: 1; }
-    50%    { opacity: 0.8; }
+    50%    { opacity: 0.4; }
     100%  { opacity: 1; }
   }
 
   .logo {
     position: absolute;
-    animation: animation 1s infinite;
+    animation: fast-pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
