@@ -24,6 +24,7 @@
     "**/*.mjs",
     "currencyapi-js.d.ts",
     "next-pwa.d.ts",
+    "src/pages/_offline.js",
   ],
   "exclude": ["node_modules"]
 }

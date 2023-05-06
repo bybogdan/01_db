@@ -1,5 +1,5 @@
 import Head from "next/head";
-import splashScreen from "../splashScreenStyles";
+import splashScreen from "../splashScreenStyles"
 
 const OfflinePage = () => {
   return (
@@ -30,6 +30,7 @@ const OfflinePage = () => {
       <body>
         <div id="splashScreen">
           <div className="logo" />
+          Dialga : Money tracker
         </div>
       </body>
     </>
