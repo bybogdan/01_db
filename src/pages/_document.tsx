@@ -23,6 +23,7 @@ class MyDocument extends Document {
         <body>
           <div id="splashScreen">
             <div className="logo" />
+            Dialga : Money tracker
           </div>
           <Main />
           <NextScript />

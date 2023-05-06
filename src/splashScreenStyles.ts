@@ -10,7 +10,7 @@ export default `
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: #fff;
+    background-color: blue;
     display: flex;
     right: 0;
     width: 100%;
