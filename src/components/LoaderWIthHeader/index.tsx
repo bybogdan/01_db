@@ -5,7 +5,6 @@ import { Loader } from "../Loader";
 export const LoaderWithHeader = ({
   userName = "",
   userId = "",
-  message = "Data is loading ⏳",
   isHide,
 }: {
   userName?: string;

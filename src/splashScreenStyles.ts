@@ -1,5 +1,9 @@
 // eslint-disable-next-line import/no-anonymous-default-export
 export default `
+  body {
+    display: block
+  }
+
   #splashScreen {
     position: fixed;
     z-index: 1700;

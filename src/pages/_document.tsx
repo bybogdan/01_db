@@ -18,14 +18,12 @@ class MyDocument extends Document {
             content="#1E293B"
             media="(prefers-color-scheme: dark)"
           />
-          <style>
-            {splashScreen}
-          </style>
+          <style>{splashScreen}</style>
         </Head>
         <body>
-            <div id="splashScreen">
-              <div className="logo"/>
-            </div>
+          <div id="splashScreen">
+            <div className="logo" />
+          </div>
           <Main />
           <NextScript />
         </body>

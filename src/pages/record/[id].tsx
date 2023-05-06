@@ -5,7 +5,6 @@ import type { ReactNode } from "react";
 import { useCallback, useEffect, useState } from "react";
 import superjson from "superjson";
 import { prisma } from "../../server/db/client";
-import { Loader } from "../../components/Loader";
 import { RecordForm } from "../../components/RecordForm";
 import {
   getCurrencySymbol,
