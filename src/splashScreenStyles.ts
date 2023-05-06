@@ -31,17 +31,10 @@ export default `
   #splashScreen {
     position: fixed;
     z-index: 1700;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    display: flex;
-    right: 0;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    gap: 20px;
   }
 
   @keyframes animation {
@@ -51,7 +44,10 @@ export default `
   }
 
   .logo {
-    position: relative;
+    position: absolute;
     animation: animation 1s infinite;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
 `;

@@ -122,11 +122,7 @@ const Stats = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
     !sessionData?.user ||
     sessionData?.user?.id !== userId
   ) {
-    return (
-      <div className={`${twCenteringBlock}`}>
-        <Loader />
-      </div>
-    );
+    return <LoaderWithHeader />;
   }
 
   if (

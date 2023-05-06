@@ -98,8 +98,8 @@ class MyDocument extends Document {
               <Image
                 alt="icon"
                 src="/icon-192x192.png"
-                width={192}
-                height={192}
+                width={75}
+                height={75}
                 priority={true}
               />
             </div>
@@ -107,8 +107,8 @@ class MyDocument extends Document {
               <Image
                 alt="icon"
                 src="/icon-192x192-dark.png"
-                width={192}
-                height={192}
+                width={75}
+                height={75}
                 priority={true}
               />
             </div>

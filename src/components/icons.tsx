@@ -37,9 +37,6 @@ export const UserIcon = ({ name, color }: { name: string; color: string }) => (
       aria-hidden="true"
       focusable="false"
       role="img"
-      style={{
-        opacity: !name ? 0 : 1,
-      }}
     >
       <path
         fill={color}

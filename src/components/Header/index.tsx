@@ -30,7 +30,10 @@ const Comp: React.FC<IComp> = ({
         isHide ? "opacity-0" : ""
       }`}
     >
-      <Link className="h-fit" href={!isDisabled ? homePageHref : ""}>
+      <Link
+        className={`h-fit ${isDisabled ? "opacity-30" : ""}`}
+        href={!isDisabled ? homePageHref : ""}
+      >
         <HomeIcon
           color={
             homePageHref === router.asPath ? HIGHLIGHT_COLOR : "currentColor"
@@ -38,17 +41,24 @@ const Comp: React.FC<IComp> = ({
         />
       </Link>
 
-      <Link className="h-fit" href={!isDisabled ? `/stats/${userId}` : ""}>
+      <Link
+        className={`h-fit ${isDisabled ? "opacity-30" : ""}`}
+        href={!isDisabled ? `/stats/${userId}` : ""}
+      >
         <StatsIcon
           color={
-            `/stats/${userId}` === router.asPath
+            `/stats/${userId}` === router.asPath ||
+            router.asPath.includes("/stats/")
               ? HIGHLIGHT_COLOR
               : "currentColor"
           }
         />
       </Link>
 
-      <Link href={!isDisabled ? `/user/${userId}` : ""}>
+      <Link
+        className={`${isDisabled ? "opacity-30" : ""}`}
+        href={!isDisabled ? `/user/${userId}` : ""}
+      >
         <UserIcon
           color={
             `/user/${userId}` === router.asPath
