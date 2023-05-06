@@ -28,7 +28,7 @@ class MyDocument extends Document {
             sizes="144x144"
             href="touch-icons/apple-touch-icon-ipad-retina-152x152.png"
           />
-          {/* apple-touch-startup-image */}
+          {/* apple-touch-startup-image NOW WORKING */}
           <link
             href="splashscreens/iphone5_splash.png"
             media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)"
@@ -94,15 +94,22 @@ class MyDocument extends Document {
         </Head>
         <body>
           <div id="splashScreen">
-            <div className="logo">
+            <div className="logo light">
               <Image
                 alt="icon"
                 src="/icon-192x192.png"
                 width={192}
                 height={192}
                 priority={true}
-                placeholder="blur"
-                blurDataURL="/icon-192x192.svg"
+              />
+            </div>
+            <div className="logo dark">
+              <Image
+                alt="icon"
+                src="/icon-192x192-dark.png"
+                width={192}
+                height={192}
+                priority={true}
               />
             </div>
           </div>

@@ -4,13 +4,36 @@ export default `
     display: block
   }
 
+  @media (prefers-color-scheme: light) {
+    #splashScreen {
+      --tw-bg-opacity: 1;
+      background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+      --tw-text-opacity: 1;
+      color: rgb(0 0 0 / var(--tw-text-opacity));
+    }
+    .dark {
+      display: none
+    }
+  }
+
+  @media (prefers-color-scheme: dark) {
+    #splashScreen {
+      --tw-bg-opacity: 1;
+      background-color: rgb(30 41 59 / var(--tw-bg-opacity));
+      --tw-text-opacity: 1;
+      color: rgb(255 255 255 / var(--tw-text-opacity));
+    }
+    .light {
+      display: none
+    }
+  }
+
   #splashScreen {
     position: fixed;
     z-index: 1700;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: #fff;
     display: flex;
     right: 0;
     width: 100%;
