@@ -38,7 +38,7 @@ export const UserIcon = ({ name, color }: { name: string; color: string }) => (
       focusable="false"
       role="img"
       style={{
-        opacity: !name ? 0.2 : 1,
+        opacity: !name ? 0 : 1,
       }}
     >
       <path

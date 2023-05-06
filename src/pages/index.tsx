@@ -19,7 +19,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div>
-        {status === "loading" ? <LoaderWithHeader /> : null}
+        {status === "loading" ? <LoaderWithHeader isHide={true} /> : null}
 
         {status === "unauthenticated" ? (
           <div className="flex h-screen flex-col items-center justify-between p-6">
