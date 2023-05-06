@@ -1,5 +1,6 @@
 import Document, { Html, Head, Main, NextScript } from "next/document";
 import splashScreen from "../splashScreenStyles";
+import Image from "next/image";
 
 class MyDocument extends Document {
   render() {
@@ -22,8 +23,17 @@ class MyDocument extends Document {
         </Head>
         <body>
           <div id="splashScreen">
-            <div className="logo" />
-            Dialga : Money tracker
+            <div className="logo">
+              <Image
+                alt="icon"
+                src="/icon-192x192.png"
+                width={192}
+                height={192}
+                priority={true}
+                placeholder="blur"
+                blurDataURL="/icon-192x192.svg"
+              />
+            </div>
           </div>
           <Main />
           <NextScript />

@@ -1,5 +1,6 @@
 import Head from "next/head";
-import splashScreen from "../splashScreenStyles"
+import splashScreen from "../splashScreenStyles";
+import Image from "next/image";
 
 const OfflinePage = () => {
   return (
@@ -29,8 +30,17 @@ const OfflinePage = () => {
       </Head>
       <body>
         <div id="splashScreen">
-          <div className="logo" />
-          Dialga : Money tracker
+          <div className="logo">
+            <Image
+              alt="icon"
+              src="/icon-192x192.png"
+              width={192}
+              height={192}
+              priority={true}
+              placeholder="blur"
+              blurDataURL="/icon-192x192.svg"
+            />
+          </div>
         </div>
       </body>
     </>

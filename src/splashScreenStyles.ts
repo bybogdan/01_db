@@ -10,7 +10,7 @@ export default `
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: blue;
+    background-color: #fff;
     display: flex;
     right: 0;
     width: 100%;
@@ -28,12 +28,7 @@ export default `
   }
 
   .logo {
-    width: 192px;
-    height: 192px;
     position: relative;
-    background-image: url(/icon-192x192.png);
-    background-repeat: no-repeat;
-    background-size: 192px 192px;
     animation: animation 1s infinite;
   }
 `;
