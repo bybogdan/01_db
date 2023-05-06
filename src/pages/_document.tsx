@@ -8,6 +8,47 @@ class MyDocument extends Document {
       <Html>
         <Head>
           <link rel="manifest" href="/manifest.json" />
+          <meta name="apple-mobile-web-app-title" content="Dialga" />
+
+          {/* test */}
+          {/* <!-- iPhone SPLASHSCREEN--> */}
+          <link
+            href="apple-touch-startup-image-320x460.png"
+            media="(device-width: 320px)"
+            rel="apple-touch-startup-image"
+          />
+          {/* <!-- iPhone (Retina) SPLASHSCREEN--> */}
+          <link
+            href="apple-touch-startup-image-640x920.png"
+            media="(device-width: 320px) and (device-height: 460px) and (-webkit-device-pixel-ratio: 2)"
+            rel="apple-touch-startup-image"
+          />
+          {/* <!-- iPhone 5 (Retina) SPLASHSCREEN--> */}
+          <link
+            href="apple-touch-startup-image-640x1096.png"
+            media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)"
+            rel="apple-touch-startup-image"
+          />
+          {/* <!-- iPad (non-Retina) (Portrait) --> */}
+          {/* <link
+            href="apple-touch-startup-image-768x1004.png"
+            media="screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:portrait)"
+            rel="apple-touch-startup-image"
+          /> */}
+          {/* <!-- iPad (non-Retina) (Landscape) --> */}
+          {/* <link
+            href="apple-touch-startup-image-1024x748.png"
+            media="screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:landscape)"
+            rel="apple-touch-startup-image"
+          /> */}
+          {/* <!-- iPad (Retina) (Portrait) --> */}
+          {/* <link
+            href="apple-touch-startup-image-1536x2008.png"
+            media="screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:portrait) and (-webkit-min-device-pixel-ratio: 2)"
+            rel="apple-touch-startup-image"
+          /> */}
+          {/* test */}
+
           <link
             rel="apple-touch-icon"
             href="touch-icons/apple-touch-icon-iphone-60x60.png"
@@ -27,7 +68,7 @@ class MyDocument extends Document {
             sizes="144x144"
             href="touch-icons/apple-touch-icon-ipad-retina-152x152.png"
           />
-          <link
+          {/* <link
             rel="apple-touch-startup-image"
             media="screen and (device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)"
             href="splash_screens/iPhone_14_Pro_Max_landscape.png"
@@ -196,7 +237,7 @@ class MyDocument extends Document {
             rel="apple-touch-startup-image"
             media="screen and (device-width: 744px) and (device-height: 1133px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)"
             href="splash_screens/8.3__iPad_Mini_portrait.png"
-          />
+          /> */}
           <meta
             name="theme-color"
             content="#ffffff"
