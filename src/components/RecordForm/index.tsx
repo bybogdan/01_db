@@ -1,8 +1,10 @@
 import type { Record } from "@prisma/client";
 import type { ReactNode } from "react";
 import { useCallback, useEffect, memo, useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { toast, Toaster } from "react-hot-toast";
+import Select from "react-select";
+
 import type { RecordSchema } from "../../server/schema/post.schema";
 import { LoaderSize } from "../../types/misc";
 import { getCurrencySymbol } from "../../utils/common";
@@ -26,6 +28,13 @@ const deafultCategories = [
   "UTILITY PAYMENT",
   "SALARY",
 ];
+
+const preapreDataForSelect = (data: string[]) => {
+  return data.map((item) => ({
+    value: item,
+    label: item,
+  }));
+};
 
 interface IComp {
   sessionUserId: string;
@@ -86,6 +95,7 @@ const Comp: React.FC<IComp> = ({
     handleSubmit,
     reset,
     formState: { errors },
+    control,
   } = useForm<RecordSchema>({
     defaultValues,
   });
@@ -138,6 +148,9 @@ const Comp: React.FC<IComp> = ({
       handleErrors();
     }
   }, [errors, handleErrors]);
+
+  const categoriesOptions = preapreDataForSelect(categoriesArray);
+  categoriesOptions.unshift({ value: "", label: "Category (unselected)" });
 
   return (
     <>
@@ -202,17 +215,21 @@ const Comp: React.FC<IComp> = ({
           <option>INCOME</option>
         </select>
 
-        <select
-          className={`${twSelect}`}
-          placeholder="Category"
-          defaultValue=""
-          {...register("category", {})}
-        >
-          <option value="">Category (unselected)</option>
-          {categoriesArray.map((category, index) => (
-            <option key={`category-${index}`}>{category}</option>
-          ))}
-        </select>
+        <Controller
+          name="category"
+          control={control}
+          render={({ field: { onChange, value } }) => (
+            <Select
+              className="my-react-select-container"
+              classNamePrefix="my-react-select"
+              defaultValue={categoriesOptions[0]}
+              options={categoriesOptions}
+              value={categoriesOptions.find((c) => value === c.value)}
+              onChange={(val) => onChange(val?.value)}
+            />
+          )}
+        />
+
         <div
           className={`flex gap-2 ${discardButton ? "flex-row-reverse" : ""}`}
         >
