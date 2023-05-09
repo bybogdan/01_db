@@ -152,6 +152,8 @@ const Comp: React.FC<IComp> = ({
   const categoriesOptions = preapreDataForSelect(categoriesArray);
   categoriesOptions.unshift({ value: "", label: "Category (unselected)" });
 
+  const typesOptions = preapreDataForSelect(["EXPENSE", "INCOME"]);
+
   return (
     <>
       <Toaster
@@ -203,17 +205,21 @@ const Comp: React.FC<IComp> = ({
           {...register("name", {})}
         />
 
-        <select
-          className={`${twSelect}`}
-          placeholder="Type"
-          defaultValue="EXPENSE"
-          {...register("type", {
-            required: FORM_ERRORS.type,
-          })}
-        >
-          <option>EXPENSE</option>
-          <option>INCOME</option>
-        </select>
+        <Controller
+          name="type"
+          control={control}
+          render={({ field: { onChange, value } }) => (
+            <Select
+              className="my-react-select-container"
+              classNamePrefix="my-react-select"
+              options={typesOptions}
+              defaultValue={typesOptions[0]}
+              value={typesOptions.find((c) => value === c.value)}
+              onChange={(val) => onChange(val?.value)}
+              isSearchable={false}
+            />
+          )}
+        />
 
         <Controller
           name="category"
