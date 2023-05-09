@@ -27,6 +27,14 @@
     @apply border border-solid border-gray-300 bg-white text-base text-red-600;
   }
 
+  .my-react-select-container .my-react-select__indicator-separator {
+    display: none;
+  }
+
+  .my-react-select-container .my-react-select__single-value {
+    min-width: 4em;
+  }
+
   .my-react-select-container .my-react-select__option {
     @apply bg-white text-gray-700 hover:bg-blue-600 hover:text-white;
   }

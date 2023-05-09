@@ -63,7 +63,11 @@ const Comp: React.FC<IComp> = ({
         currency: currentRecord.currency,
         category: currentRecord.category,
       }
-    : {};
+    : {
+        type: "EXPENSE",
+        currency: "USD",
+        category: "",
+      };
 
   const categoriesArray = categories !== null ? categories : deafultCategories;
 
@@ -153,6 +157,10 @@ const Comp: React.FC<IComp> = ({
   categoriesOptions.unshift({ value: "", label: "Category (unselected)" });
 
   const typesOptions = preapreDataForSelect(["EXPENSE", "INCOME"]);
+  const currenciesOptions = currenciesData.map((c) => ({
+    value: c,
+    label: `${c} ${getCurrencySymbol(c)}`,
+  }));
 
   return (
     <>
@@ -181,21 +189,21 @@ const Comp: React.FC<IComp> = ({
               required: FORM_ERRORS.amount,
             })}
           />
-          <select
-            className={`absolute ${twSelect} right-0 w-fit bg-gray-100`}
-            style={{ top: "50%", transform: "translate(0, -50%)" }}
-            placeholder="Currency"
-            defaultValue="USD"
-            {...register("currency", {
-              required: FORM_ERRORS.currency,
-            })}
-          >
-            {currenciesData.map((currency) => (
-              <option key={currency} value={currency}>
-                {currency} {getCurrencySymbol(currency)}
-              </option>
-            ))}
-          </select>
+
+          <Controller
+            name="currency"
+            control={control}
+            render={({ field: { onChange, value } }) => (
+              <Select
+                className="my-react-select-container"
+                classNamePrefix="my-react-select"
+                options={currenciesOptions}
+                value={currenciesOptions.find((c) => value === c.value)}
+                onChange={(val) => onChange(val?.value)}
+                isSearchable={false}
+              />
+            )}
+          />
         </div>
 
         <input
@@ -213,7 +221,6 @@ const Comp: React.FC<IComp> = ({
               className="my-react-select-container"
               classNamePrefix="my-react-select"
               options={typesOptions}
-              defaultValue={typesOptions[0]}
               value={typesOptions.find((c) => value === c.value)}
               onChange={(val) => onChange(val?.value)}
               isSearchable={false}
@@ -228,7 +235,6 @@ const Comp: React.FC<IComp> = ({
             <Select
               className="my-react-select-container"
               classNamePrefix="my-react-select"
-              defaultValue={categoriesOptions[0]}
               options={categoriesOptions}
               value={categoriesOptions.find((c) => value === c.value)}
               onChange={(val) => onChange(val?.value)}
