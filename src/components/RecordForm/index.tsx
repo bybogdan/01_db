@@ -100,6 +100,8 @@ const Comp: React.FC<IComp> = ({
     reset,
     formState: { errors },
     control,
+    setValue,
+    watch,
   } = useForm<RecordSchema>({
     defaultValues,
   });
@@ -146,6 +148,14 @@ const Comp: React.FC<IComp> = ({
     setShowLoader(true);
   };
 
+  const amountField = watch("amount");
+
+  // handling the comma in the amount field on mobile devices
+  useEffect(() => {
+    const amount = amountField?.replace(",", ".");
+    setValue("amount", amount);
+  }, [amountField, setValue]);
+
   // handling the first submission attempt
   useEffect(() => {
     if (errors) {
@@ -182,7 +192,7 @@ const Comp: React.FC<IComp> = ({
             autoComplete="off"
             className={`${twInput}`}
             placeholder="Amount"
-            // inputMode="decimal"
+            inputMode="decimal"
             type="number"
             min="0.00"
             step="0.01"
