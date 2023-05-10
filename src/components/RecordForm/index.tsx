@@ -153,6 +153,9 @@ const Comp: React.FC<IComp> = ({
   // handling the comma in the amount field on mobile devices
   useEffect(() => {
     const amount = amountField?.replace(",", ".");
+    if (!amount) {
+      return;
+    }
     setValue("amount", amount);
   }, [amountField, setValue]);
 
