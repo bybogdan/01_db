@@ -4,9 +4,9 @@
   "display": "standalone",
   "scope": "/",
   "start_url": "/",
-  "name": "Dialga",
+  "name": "Diagla - money tracker",
   "short_name": "Dialga",
-  "description": "Money tracker",
+  "description": "Convenient way to control your finances",
   "icons": [
     {
       "src": "/icon-192x192-transparent.png",
