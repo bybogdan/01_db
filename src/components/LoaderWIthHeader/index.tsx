@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { twCenteringBlock } from "../../utils/twCommon";
 import { Header } from "../Header";
 
 export const LoaderWithHeader = ({

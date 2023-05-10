@@ -165,7 +165,7 @@ const Comp: React.FC<IComp> = ({
   return (
     <>
       <Toaster
-        position="bottom-center"
+        position="top-center"
         reverseOrder={false}
         toastOptions={{ duration: 1000 }}
       />
@@ -173,7 +173,6 @@ const Comp: React.FC<IComp> = ({
       <form
         className="flex flex-col gap-y-3 "
         onSubmit={(e) => {
-          e.preventDefault();
           handleSubmit(onSubmit)(e);
           handleErrors();
         }}
@@ -183,6 +182,7 @@ const Comp: React.FC<IComp> = ({
             autoComplete="off"
             className={`${twInput}`}
             placeholder="Amount"
+            inputMode="numeric"
             type="number"
             min="0.00"
             step="0.01"

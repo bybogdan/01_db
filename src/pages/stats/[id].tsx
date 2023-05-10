@@ -5,7 +5,6 @@ import {
   twCenteringBlock,
   twMinWidthButton,
 } from "../../utils/twCommon";
-import { Loader } from "../../components/Loader";
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
