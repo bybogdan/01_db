@@ -182,11 +182,10 @@ const Comp: React.FC<IComp> = ({
             autoComplete="off"
             className={`${twInput}`}
             placeholder="Amount"
-            inputMode="decimal"
+            // inputMode="decimal"
             type="number"
-            lang="en"
-            pattern="[0-9.,]*"
-            step="any"
+            min="0.00"
+            step="0.01"
             {...register("amount", {
               required: FORM_ERRORS.amount,
             })}
