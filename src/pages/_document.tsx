@@ -7,7 +7,18 @@ class MyDocument extends Document {
     return (
       <Html>
         <Head>
+          <meta name="mobile-web-app-capable" content="yes" />
           <link rel="manifest" href="/manifest.json" />
+          <meta name="apple-touch-fullscreen" content="yes" />
+          <meta
+            name="apple-mobile-web-app-title"
+            content="Diagla - money tracker"
+          />
+          <meta name="apple-mobile-web-app-capable" content="yes" />
+          <meta
+            name="apple-mobile-web-app-status-bar-style"
+            content="default"
+          />
           {/* apple-touch-icon */}
           <link
             rel="apple-touch-icon"
@@ -28,12 +39,8 @@ class MyDocument extends Document {
             sizes="144x144"
             href="touch-icons/apple-touch-icon-ipad-retina-152x152.png"
           />
-          {/* apple-touch-startup-image NOW WORKING */}
+          {/* apple-touch-startup-image */}
           <link
-            rel="apple-touch-startup-image"
-            href="/icon-512x512-transparent.png"
-          ></link>
-          {/* <link
             href="splashscreens/iphone5_splash.png"
             media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)"
             rel="apple-touch-startup-image"
@@ -82,8 +89,7 @@ class MyDocument extends Document {
             href="splashscreens/ipadpro2_splash.png"
             media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2)"
             rel="apple-touch-startup-image"
-          /> */}
-          <meta name="apple-mobile-web-app-capable" content="yes"></meta>
+          />
           <meta
             name="theme-color"
             content="#ffffff"

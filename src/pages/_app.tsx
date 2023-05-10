@@ -22,8 +22,11 @@ const MyApp: AppType<{ session: Session | null }> = ({
   return (
     <>
       <Head>
-        <title>Dialga</title>
-        <meta name="description" content="Dialga" />
+        <title>Diagla - money tracker</title>
+        <meta
+          name="description"
+          content="Convenient way to control your finances"
+        />
         <link rel="icon" href="/favicon.ico" />
 
         <meta
@@ -38,10 +41,13 @@ const MyApp: AppType<{ session: Session | null }> = ({
         <meta property="og:url" content="https://dialga-lake.vercel.app/" />
         <meta content="website" property="og:type" />
         <meta content="Diagla - money tracker" property="og:image:alt" />
-        <meta name="application-name" content="Diagla" />
+        <meta name="application-name" content="Diagla - money tracker" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content="Diagla" />
+        <meta
+          name="apple-mobile-web-app-title"
+          content="Diagla - money tracker"
+        />
         <meta name="mobile-web-app-capable" content="yes" />
 
         <meta
