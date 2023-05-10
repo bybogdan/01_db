@@ -100,8 +100,6 @@ const Comp: React.FC<IComp> = ({
     reset,
     formState: { errors },
     control,
-    setValue,
-    watch,
   } = useForm<RecordSchema>({
     defaultValues,
   });
@@ -126,6 +124,15 @@ const Comp: React.FC<IComp> = ({
   }, [errors]);
 
   const onSubmit = async (data: RecordSchema) => {
+    const formattedAmount = data.amount?.replace(",", ".");
+    if (Number.isNaN(+formattedAmount)) {
+      toast.error("Amount must be a number. Use [0-9], [.] or [,]", {
+        duration: 1000,
+      });
+      return;
+    }
+    data.amount = formattedAmount;
+
     if (!data.category && !data.name) {
       showToast(FORM_ERRORS.categoryAndName);
       return;
@@ -147,17 +154,6 @@ const Comp: React.FC<IComp> = ({
     }
     setShowLoader(true);
   };
-
-  const amountField = watch("amount");
-
-  // handling the comma in the amount field on mobile devices
-  useEffect(() => {
-    const amount = amountField?.replace(",", ".");
-    if (!amount) {
-      return;
-    }
-    setValue("amount", amount);
-  }, [amountField, setValue]);
 
   // handling the first submission attempt
   useEffect(() => {
@@ -196,9 +192,7 @@ const Comp: React.FC<IComp> = ({
             className={`${twInput}`}
             placeholder="Amount"
             inputMode="decimal"
-            type="number"
-            min="0.00"
-            step="0.01"
+            type="text"
             {...register("amount", {
               required: FORM_ERRORS.amount,
             })}
