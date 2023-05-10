@@ -30,6 +30,10 @@ class MyDocument extends Document {
           />
           {/* apple-touch-startup-image NOW WORKING */}
           <link
+            rel="apple-touch-startup-image"
+            href="/icon-512x512-transparent.png"
+          ></link>
+          {/* <link
             href="splashscreens/iphone5_splash.png"
             media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)"
             rel="apple-touch-startup-image"
@@ -78,7 +82,7 @@ class MyDocument extends Document {
             href="splashscreens/ipadpro2_splash.png"
             media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2)"
             rel="apple-touch-startup-image"
-          />
+          /> */}
           <meta name="apple-mobile-web-app-capable" content="yes"></meta>
           <meta
             name="theme-color"
