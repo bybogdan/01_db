@@ -32,7 +32,7 @@
   }
 
   .my-react-select-container .my-react-select__single-value {
-    min-width: 4em;
+    @apply min-w-[5em] sm:min-w-[4em];
   }
 
   .my-react-select-container .my-react-select__option {

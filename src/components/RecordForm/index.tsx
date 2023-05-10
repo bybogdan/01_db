@@ -9,7 +9,7 @@ import type { RecordSchema } from "../../server/schema/post.schema";
 import { LoaderSize } from "../../types/misc";
 import { getCurrencySymbol } from "../../utils/common";
 import { trpc } from "../../utils/trpc";
-import { twButton, twInput, twSelect } from "../../utils/twCommon";
+import { twButton, twInput } from "../../utils/twCommon";
 import { Loader } from "../Loader";
 
 const FORM_ERRORS = {
@@ -165,7 +165,7 @@ const Comp: React.FC<IComp> = ({
   return (
     <>
       <Toaster
-        position="top-center"
+        position="bottom-center"
         reverseOrder={false}
         toastOptions={{ duration: 1000 }}
       />
