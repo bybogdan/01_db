@@ -173,6 +173,7 @@ const Comp: React.FC<IComp> = ({
       <form
         className="flex flex-col gap-y-3 "
         onSubmit={(e) => {
+          e.preventDefault();
           handleSubmit(onSubmit)(e);
           handleErrors();
         }}
