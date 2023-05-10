@@ -184,8 +184,7 @@ const Comp: React.FC<IComp> = ({
             placeholder="Amount"
             inputMode="decimal"
             type="number"
-            min="0.00"
-            step="0.01"
+            step="any"
             {...register("amount", {
               required: FORM_ERRORS.amount,
             })}
