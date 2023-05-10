@@ -24,15 +24,26 @@ const MyApp: AppType<{ session: Session | null }> = ({
       <Head>
         <title>Dialga</title>
         <meta name="description" content="Dialga" />
-        <meta name="apple-mobile-web-app-capable" content="yes" />
         <link rel="icon" href="/favicon.ico" />
 
         <meta
           property="og:image"
           content="https://dialga-lake.vercel.app/icon-512x512.png"
         />
-        <meta property="og:title" content="Diagla" />
-        <meta property="og:description" content="Money tracker" />
+        <meta property="og:title" content="Diagla - money tracker" />
+        <meta
+          property="og:description"
+          content="Convenient way to control your finances"
+        />
+        <meta property="og:url" content="https://dialga-lake.vercel.app/" />
+        <meta content="website" property="og:type" />
+        <meta content="Diagla - money tracker" property="og:image:alt" />
+        <meta name="application-name" content="Diagla" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-title" content="Diagla" />
+        <meta name="mobile-web-app-capable" content="yes" />
+
         <meta
           name="theme-color"
           content="#ffffff"
