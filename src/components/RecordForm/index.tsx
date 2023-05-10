@@ -181,6 +181,7 @@ const Comp: React.FC<IComp> = ({
 
       <form
         className="flex flex-col gap-y-3 "
+        autoComplete="off"
         onSubmit={(e) => {
           handleSubmit(onSubmit)(e);
           handleErrors();
@@ -188,7 +189,6 @@ const Comp: React.FC<IComp> = ({
       >
         <div className="relative flex gap-2">
           <input
-            autoComplete="off"
             className={`${twInput}`}
             placeholder="Amount"
             inputMode="decimal"
@@ -215,7 +215,6 @@ const Comp: React.FC<IComp> = ({
         </div>
 
         <input
-          autoComplete="off"
           className={`${twInput}`}
           placeholder="Name"
           {...register("name", {})}
