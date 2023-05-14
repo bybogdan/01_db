@@ -33,7 +33,7 @@ export const Comp: React.FC<IComp> = ({ data, category }) => {
           >
             {showRecords
               ? `Hide ${capitalizeString(category)}`
-              : `${capitalizeString(category)}`}
+              : `${capitalizeString(category)}: ${data.records.length}`}
           </button>
           <p className="text-base text-gray-700 dark:text-slate-200">
             {data.expense > data.income
@@ -44,9 +44,6 @@ export const Comp: React.FC<IComp> = ({ data, category }) => {
         </div>
         {showRecords ? (
           <>
-            <h5 className=" text-xl leading-tight text-gray-900 dark:text-white">
-              {capitalizeString(category)}:
-            </h5>
             {data.records.map((record, index) => (
               <Link key={`record-${index}`} href={`/record/${record.id}`}>
                 <RecordCard record={record} />
