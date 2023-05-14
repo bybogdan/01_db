@@ -32,7 +32,7 @@ export const Comp: React.FC<IComp> = ({
     }))
   );
 
-  const { mutate: setCategories, isSuccess: isSuccessfullyCategories } =
+  const { mutate: setCategories, isLoading: isLoadingCategories } =
     trpc.user.setCategories.useMutation({
       onSuccess: async () => {
         await refetchGetUser();
@@ -72,26 +72,37 @@ export const Comp: React.FC<IComp> = ({
     addQueryParamToRefetchDataOnHomePage();
   };
 
+  const getIsCatsOrderChanged = (updCats: typeof sortableCategories) => {
+    return updCats.some(({ name }, index) => {
+      return name !== categories[index];
+    });
+  };
+
   return (
     <>
       {showCategories ? (
         <div className="flex flex-col gap-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <h5 className="text-xl leading-tight text-gray-900 dark:text-white">
-                {capitalizeString("Categories")}
-              </h5>
-              {!isSuccessfullyCategories ? (
-                <Loader size={LoaderSize.SMALL} />
-              ) : (
-                <CompleteIcon />
-              )}
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <h5 className="text-xl leading-tight text-gray-900 dark:text-white">
+                  {capitalizeString("Categories")}
+                </h5>
+                {isLoadingCategories ? (
+                  <Loader size={LoaderSize.SMALL} />
+                ) : (
+                  <CompleteIcon />
+                )}
+              </div>
+              {showCategories ? (
+                <button onClick={() => setShowCategories(false)}>
+                  <CloseIcon />
+                </button>
+              ) : null}
             </div>
-            {showCategories ? (
-              <button onClick={() => setShowCategories(false)}>
-                <CloseIcon />
-              </button>
-            ) : null}
+            <h5 className="text-sm leading-tight  text-slate-500 dark:text-slate-400 md:text-lg">
+              {capitalizeString("Can reorder by drag and drop, add, delete")}
+            </h5>
           </div>
           <ul className="flex flex-col gap-6">
             {sortableCategories ? (
@@ -103,6 +114,9 @@ export const Comp: React.FC<IComp> = ({
                 list={sortableCategories}
                 scrollSpeed={20}
                 setList={async (updCats) => {
+                  if (!getIsCatsOrderChanged(updCats)) {
+                    return;
+                  }
                   setSortableCategories(updCats);
                   setCategories({
                     id: userId,
