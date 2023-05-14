@@ -2,7 +2,7 @@ import { memo, useState } from "react";
 import { ReactSortable } from "react-sortablejs";
 
 import { LoaderSize } from "../../types/misc";
-import { capitalizeString } from "../../utils/common";
+import { capitalizeString, showError } from "../../utils/common";
 import { trpc } from "../../utils/trpc";
 import { twButton, twInput } from "../../utils/twCommon";
 import { CloseIcon, CompleteIcon, DeleteIcon, MoveIcon } from "../icons";
@@ -34,22 +34,32 @@ export const Comp: React.FC<IComp> = ({
 
   const { mutate: setCategories, isLoading: isLoadingCategories } =
     trpc.user.setCategories.useMutation({
-      onSuccess: async () => {
+      onSuccess: async ({ categories }) => {
+        if (!categories.length) {
+          return;
+        }
         await refetchGetUser();
         setNewCategory("");
+        setSortableCategories(
+          categories.map((category, i) => ({
+            id: i,
+            name: category,
+          }))
+        );
         setShowCategoryLoader(false);
       },
     });
 
   const saveNewCategory = async () => {
+    const newCategoryName = newCategory.toUpperCase().trim();
+    if (categories.includes(newCategoryName)) {
+      showError(`This category already exists [${newCategoryName}]`);
+      return;
+    }
+
     setShowCategoryLoader(true);
-    const newCategories = [...categories, newCategory.toUpperCase().trim()];
-    setSortableCategories(
-      newCategories.map((category, i) => ({
-        id: i,
-        name: category,
-      }))
-    );
+    const newCategories = [...categories, newCategoryName];
+    setNewCategory("");
     setCategories({
       id: userId,
       categories: newCategories,
@@ -104,6 +114,37 @@ export const Comp: React.FC<IComp> = ({
               {capitalizeString("Can reorder by moving ≡, add, delete")}
             </h5>
           </div>
+          <form
+            className="flex gap-2"
+            onSubmit={(e: React.FormEvent<HTMLFormElement>) =>
+              e.preventDefault()
+            }
+          >
+            <input
+              type="text"
+              autoComplete="off"
+              className={`${twInput}`}
+              placeholder="Add new category"
+              value={newCategory}
+              onChange={(e) => setNewCategory(e.target.value)}
+            />
+            <button
+              className={`${twButton} ${
+                isLoadingCategories ? "opacity-50" : ""
+              }`}
+              onClick={saveNewCategory}
+              disabled={isLoadingCategories}
+            >
+              <div className="w-8">
+                {" "}
+                {!showCategoryLoader ? (
+                  capitalizeString("Save")
+                ) : (
+                  <Loader size={LoaderSize.SMALL} />
+                )}
+              </div>
+            </button>
+          </form>
           <ul className="flex flex-col gap-6">
             {sortableCategories ? (
               <ReactSortable
@@ -138,7 +179,11 @@ export const Comp: React.FC<IComp> = ({
                       <span>{index + 1}.</span>
                       {name}
                     </div>
-                    <button onClick={() => deleteCategory(index)}>
+                    <button
+                      disabled={isLoadingCategories}
+                      className={`${isLoadingCategories ? "opacity-50" : ""}`}
+                      onClick={() => deleteCategory(index)}
+                    >
                       <DeleteIcon />
                     </button>
                   </li>
@@ -149,37 +194,6 @@ export const Comp: React.FC<IComp> = ({
                 <Loader />
               </li>
             )}
-            <li>
-              <form
-                className="flex gap-2"
-                onSubmit={(e: React.FormEvent<HTMLFormElement>) =>
-                  e.preventDefault()
-                }
-              >
-                <input
-                  type="text"
-                  autoComplete="off"
-                  className={`${twInput}`}
-                  placeholder="Add new category"
-                  value={newCategory}
-                  onChange={(e) => setNewCategory(e.target.value)}
-                />
-                <button
-                  className={`${twButton}`}
-                  onClick={saveNewCategory}
-                  disabled={!newCategory.trim().length}
-                >
-                  <div className="w-8">
-                    {" "}
-                    {!showCategoryLoader ? (
-                      capitalizeString("Save")
-                    ) : (
-                      <Loader size={LoaderSize.SMALL} />
-                    )}
-                  </div>
-                </button>
-              </form>
-            </li>
           </ul>
         </div>
       ) : null}

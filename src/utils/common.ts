@@ -1,4 +1,5 @@
 import getSymbolFromCurrency from "currency-symbol-map";
+import { toast } from "react-hot-toast";
 
 export const funcPlaceholder = () => {
   return;
@@ -82,3 +83,9 @@ export const INCLUDED_CURRENCIES = [
   "RUB",
   "UAH",
 ];
+
+export const showError = (message: string) => {
+  toast.error(message, {
+    duration: 1000,
+  });
+};

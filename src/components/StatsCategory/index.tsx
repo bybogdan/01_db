@@ -26,7 +26,7 @@ export const Comp: React.FC<IComp> = ({ data, category }) => {
   return (
     <>
       <div key={`stats-${category}`} className="flex flex-col gap-4">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between gap-2">
           <button
             className={` ${twMinWidthButton}`}
             onClick={() => setShowRecords((prev) => !prev)}
@@ -35,7 +35,7 @@ export const Comp: React.FC<IComp> = ({ data, category }) => {
               ? `Hide ${capitalizeString(category)}`
               : `${capitalizeString(category)}: ${data.records.length}`}
           </button>
-          <p className="text-base text-gray-700 dark:text-slate-200">
+          <p className="whitespace-nowrap text-base text-gray-700 dark:text-slate-200">
             {data.expense > data.income
               ? numToFloat(data.expense)
               : numToFloat(data.income)}{" "}

@@ -2,12 +2,11 @@ import type { Record } from "@prisma/client";
 import type { ReactNode } from "react";
 import { useCallback, useEffect, memo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { toast, Toaster } from "react-hot-toast";
 import Select from "react-select";
 
 import type { RecordSchema } from "../../server/schema/post.schema";
 import { LoaderSize } from "../../types/misc";
-import { getCurrencySymbol } from "../../utils/common";
+import { getCurrencySymbol, showError } from "../../utils/common";
 import { trpc } from "../../utils/trpc";
 import { twButton, twInput } from "../../utils/twCommon";
 import { Loader } from "../Loader";
@@ -71,12 +70,6 @@ const Comp: React.FC<IComp> = ({
 
   const categoriesArray = categories !== null ? categories : deafultCategories;
 
-  const showToast = (message: string) => {
-    toast.error(message, {
-      duration: 1000,
-    });
-  };
-
   const handleOnSuccess = async (data: Record) => {
     await handleRefetchData();
     setShowLoader(false);
@@ -115,26 +108,24 @@ const Comp: React.FC<IComp> = ({
       Object.keys(errors).length === 1 && errors.amount?.message;
 
     if (isOnlyAmountError) {
-      showToast(FORM_ERRORS.categoryAndName);
+      showError(FORM_ERRORS.categoryAndName);
     }
 
     Object.entries(errors).forEach(([, value]) => {
-      showToast(value.message as string);
+      showError(value.message as string);
     });
   }, [errors]);
 
   const onSubmit = async (data: RecordSchema) => {
     const formattedAmount = data.amount?.replace(",", ".");
     if (Number.isNaN(+formattedAmount)) {
-      toast.error("Amount must be a number. Use [0-9], [.] or [,]", {
-        duration: 1000,
-      });
+      showError("Amount must be a number. Use [0-9], [.] or [,]");
       return;
     }
     data.amount = formattedAmount;
 
     if (!data.category && !data.name) {
-      showToast(FORM_ERRORS.categoryAndName);
+      showError(FORM_ERRORS.categoryAndName);
       return;
     }
 
@@ -173,12 +164,6 @@ const Comp: React.FC<IComp> = ({
 
   return (
     <>
-      <Toaster
-        position="top-center"
-        reverseOrder={false}
-        toastOptions={{ duration: 1000 }}
-      />
-
       <form
         className="flex flex-col gap-y-3 "
         autoComplete="off"
@@ -245,7 +230,7 @@ const Comp: React.FC<IComp> = ({
               options={categoriesOptions}
               value={categoriesOptions.find((c) => value === c.value)}
               onChange={(val) => onChange(val?.value)}
-              isSearchable={false}
+              // isSearchable={false}
             />
           )}
         />
