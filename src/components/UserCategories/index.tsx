@@ -5,7 +5,7 @@ import { LoaderSize } from "../../types/misc";
 import { capitalizeString } from "../../utils/common";
 import { trpc } from "../../utils/trpc";
 import { twButton, twInput } from "../../utils/twCommon";
-import { CloseIcon, CompleteIcon, DeleteIcon } from "../icons";
+import { CloseIcon, CompleteIcon, DeleteIcon, MoveIcon } from "../icons";
 import { Loader } from "../Loader";
 
 interface IComp {
@@ -84,7 +84,7 @@ export const Comp: React.FC<IComp> = ({
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-2">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2">
                 <h5 className="text-xl leading-tight text-gray-900 dark:text-white">
                   {capitalizeString("Categories")}
                 </h5>
@@ -100,8 +100,8 @@ export const Comp: React.FC<IComp> = ({
                 </button>
               ) : null}
             </div>
-            <h5 className="text-sm leading-tight  text-slate-500 dark:text-slate-400 md:text-lg">
-              {capitalizeString("Can reorder by drag and drop, add, delete")}
+            <h5 className="text-sm leading-tight  opacity-50 md:text-lg">
+              {capitalizeString("Can reorder by moving ≡, add, delete")}
             </h5>
           </div>
           <ul className="flex flex-col gap-6">
@@ -113,6 +113,7 @@ export const Comp: React.FC<IComp> = ({
                 delay={2}
                 list={sortableCategories}
                 scrollSpeed={20}
+                handle=".order-handle"
                 setList={async (updCats) => {
                   if (!getIsCatsOrderChanged(updCats)) {
                     return;
@@ -127,13 +128,16 @@ export const Comp: React.FC<IComp> = ({
               >
                 {sortableCategories.map(({ name, id }, index) => (
                   <li
-                    className="-mx-2 flex justify-between gap-2 rounded px-2 active:bg-slate-100 dark:active:bg-slate-700"
+                    className="-mx-2 flex select-none justify-between gap-2 rounded px-2 active:bg-slate-100 dark:active:bg-slate-700"
                     key={id}
                   >
-                    <p className="w-full	cursor-move py-3 [&>*]:active:opacity-0">
-                      <span className="active:opacity-0">{index + 1}.</span>{" "}
+                    <div className="flex w-full gap-2 py-3">
+                      <div className="order-handle cursor-move">
+                        <MoveIcon />
+                      </div>
+                      <span>{index + 1}.</span>
                       {name}
-                    </p>
+                    </div>
                     <button onClick={() => deleteCategory(index)}>
                       <DeleteIcon />
                     </button>
