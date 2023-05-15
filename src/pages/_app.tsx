@@ -63,12 +63,14 @@ const MyApp: AppType<{ session: Session | null }> = ({
         />
       </Head>
       <SessionProvider session={session}>
-        <Toaster
-          position="top-center"
-          reverseOrder={false}
-          toastOptions={{ duration: 1000 }}
-        />
-        <Component {...pageProps} />
+        <div className="overflow-x-auto">
+          <Toaster
+            position="top-center"
+            reverseOrder={false}
+            toastOptions={{ duration: 1000 }}
+          />
+          <Component {...pageProps} />
+        </div>
       </SessionProvider>
     </>
   );

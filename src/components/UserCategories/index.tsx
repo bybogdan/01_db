@@ -169,7 +169,7 @@ export const Comp: React.FC<IComp> = ({
               >
                 {sortableCategories.map(({ name, id }, index) => (
                   <li
-                    className="-mx-2 flex max-w-[120%] select-none justify-between gap-2 rounded bg-white px-2 dark:bg-slate-800"
+                    className="-mx-2 flex select-none justify-between gap-2 rounded bg-white px-2 dark:bg-slate-800"
                     key={id}
                   >
                     <div className="flex w-full gap-2 py-3">
