@@ -175,7 +175,9 @@ export const Comp: React.FC<IComp> = ({
                     <div className="flex w-full gap-2 py-3">
                       <div
                         className={`order-handle ${
-                          isLoadingCategories ? "opacity-50" : "cursor-move"
+                          isLoadingCategories
+                            ? "pointer-events-none opacity-50"
+                            : "cursor-move"
                         }`}
                       >
                         <MoveIcon />
