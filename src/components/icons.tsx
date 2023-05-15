@@ -149,7 +149,7 @@ export const MoveIcon = () => (
   <svg
     aria-hidden="true"
     focusable="false"
-    className="h-6 w-6 opacity-50"
+    className="h-6 w-6"
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 24 24"
   >
