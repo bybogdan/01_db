@@ -63,7 +63,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
         />
       </Head>
       <SessionProvider session={session}>
-        <div className="overflow-x-auto">
+        <div className="w-full overflow-x-hidden">
           <Toaster
             position="top-center"
             reverseOrder={false}
