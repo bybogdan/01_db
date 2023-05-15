@@ -154,7 +154,7 @@ export const Comp: React.FC<IComp> = ({
                 delay={2}
                 list={sortableCategories}
                 scrollSpeed={20}
-                handle=".order-handle"
+                handle={!isLoadingCategories ? ".order-handle" : ""}
                 setList={async (updCats) => {
                   if (!getIsCatsOrderChanged(updCats)) {
                     return;
@@ -169,11 +169,15 @@ export const Comp: React.FC<IComp> = ({
               >
                 {sortableCategories.map(({ name, id }, index) => (
                   <li
-                    className="-mx-2 flex select-none justify-between gap-2 rounded px-2 active:bg-slate-100 dark:active:bg-slate-700"
+                    className="-mx-2 flex select-none justify-between gap-2 rounded bg-white px-2 dark:bg-slate-800"
                     key={id}
                   >
                     <div className="flex w-full gap-2 py-3">
-                      <div className="order-handle cursor-move">
+                      <div
+                        className={`order-handle ${
+                          isLoadingCategories ? "opacity-70" : "cursor-move"
+                        }`}
+                      >
                         <MoveIcon />
                       </div>
                       <span>{index + 1}.</span>
