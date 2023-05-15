@@ -8,7 +8,7 @@ export const twButton =
   "inline-block rounded bg-blue-600 px-6 py-2.5 text-xs font-semibold text-center font-medium uppercase leading-tight text-white shadow-md transition duration-150 ease-in-out hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg  focus:ring-0 active:bg-blue-800 active:shadow-lg";
 
 export const twMinWidthButton =
-  "inline-block rounded min-w-[150px] md:min-w-[200px] bg-blue-600 px-6 py-2.5 text-xs font-semibold text-center font-medium uppercase leading-tight text-white shadow-md transition duration-150 ease-in-out hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg  focus:ring-0 active:bg-blue-800 active:shadow-lg";
+  "inline-block rounded w-[150px] sm:w-[200px] bg-blue-600 px-6 py-2.5 text-xs font-semibold text-center font-medium uppercase leading-tight text-white shadow-md transition duration-150 ease-in-out hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg  focus:ring-0 active:bg-blue-800 active:shadow-lg";
 
 export const twBigButton =
   "inline-block px-8 py-4 bg-blue-600 text-white font-medium text-sm font-semibold leading-snug uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out";
