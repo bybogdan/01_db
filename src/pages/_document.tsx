@@ -40,7 +40,7 @@ class MyDocument extends Document {
             href="touch-icons/apple-touch-icon-ipad-retina-152x152.png"
           />
           {/* apple-touch-startup-image TEST */}
-          <link
+          {/* <link
             rel="apple-touch-startup-image"
             href="images/splash/launch-640x1136.png"
             media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)"
@@ -74,7 +74,7 @@ class MyDocument extends Document {
             rel="apple-touch-startup-image"
             href="images/splash/launch-2048x2732.png"
             media="(min-device-width: 1024px) and (max-device-width: 1024px) and (-webkit-min-device-pixel-ratio: 2) and (orientation: portrait)"
-          ></link>
+          ></link> */}
           {/* apple-touch-startup-image */}
           {/* <link
             href="splashscreens/iphone5_splash.png"
