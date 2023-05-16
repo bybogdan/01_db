@@ -39,8 +39,44 @@ class MyDocument extends Document {
             sizes="144x144"
             href="touch-icons/apple-touch-icon-ipad-retina-152x152.png"
           />
-          {/* apple-touch-startup-image */}
+          {/* apple-touch-startup-image TEST */}
           <link
+            rel="apple-touch-startup-image"
+            href="images/splash/launch-640x1136.png"
+            media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)"
+          ></link>
+          <link
+            rel="apple-touch-startup-image"
+            href="images/splash/launch-750x1294.png"
+            media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)"
+          ></link>
+          <link
+            rel="apple-touch-startup-image"
+            href="images/splash/launch-1242x2148.png"
+            media="(device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)"
+          ></link>
+          <link
+            rel="apple-touch-startup-image"
+            href="images/splash/launch-1125x2436.png"
+            media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)"
+          ></link>
+          <link
+            rel="apple-touch-startup-image"
+            href="images/splash/launch-1536x2048.png"
+            media="(min-device-width: 768px) and (max-device-width: 1024px) and (-webkit-min-device-pixel-ratio: 2) and (orientation: portrait)"
+          ></link>
+          <link
+            rel="apple-touch-startup-image"
+            href="images/splash/launch-1668x2224.png"
+            media="(min-device-width: 834px) and (max-device-width: 834px) and (-webkit-min-device-pixel-ratio: 2) and (orientation: portrait)"
+          ></link>
+          <link
+            rel="apple-touch-startup-image"
+            href="images/splash/launch-2048x2732.png"
+            media="(min-device-width: 1024px) and (max-device-width: 1024px) and (-webkit-min-device-pixel-ratio: 2) and (orientation: portrait)"
+          ></link>
+          {/* apple-touch-startup-image */}
+          {/* <link
             href="splashscreens/iphone5_splash.png"
             media="screen and (device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)"
             rel="apple-touch-startup-image"
@@ -89,7 +125,7 @@ class MyDocument extends Document {
             href="splashscreens/ipadpro2_splash.png"
             media="screen and (device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)"
             rel="apple-touch-startup-image"
-          />
+          /> */}
           <meta
             name="theme-color"
             content="#ffffff"
