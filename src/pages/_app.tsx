@@ -44,7 +44,10 @@ const MyApp: AppType<{ session: Session | null }> = ({
         <meta content="Diagla - money tracker" property="og:image:alt" />
         <meta name="application-name" content="Diagla - money tracker" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta
+          name="apple-mobile-web-app-status-bar-style"
+          content="black-translucent"
+        />
         <meta
           name="apple-mobile-web-app-title"
           content="Diagla - money tracker"
@@ -53,37 +56,37 @@ const MyApp: AppType<{ session: Session | null }> = ({
         {/* apple-touch-startup-image TEST */}
         <link
           rel="apple-touch-startup-image"
-          href="images/splash/launch-640x1136.png"
+          href="splashsIos/launch-640x1136.png"
           media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)"
         ></link>
         <link
           rel="apple-touch-startup-image"
-          href="images/splash/launch-750x1294.png"
+          href="splashsIos/launch-750x1294.png"
           media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)"
         ></link>
         <link
           rel="apple-touch-startup-image"
-          href="images/splash/launch-1242x2148.png"
+          href="splashsIos/launch-1242x2148.png"
           media="(device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)"
         ></link>
         <link
           rel="apple-touch-startup-image"
-          href="images/splash/launch-1125x2436.png"
+          href="splashsIos/launch-1125x2436.png"
           media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)"
         ></link>
         <link
           rel="apple-touch-startup-image"
-          href="images/splash/launch-1536x2048.png"
+          href="splashsIos/launch-1536x2048.png"
           media="(min-device-width: 768px) and (max-device-width: 1024px) and (-webkit-min-device-pixel-ratio: 2) and (orientation: portrait)"
         ></link>
         <link
           rel="apple-touch-startup-image"
-          href="images/splash/launch-1668x2224.png"
+          href="splashsIos/launch-1668x2224.png"
           media="(min-device-width: 834px) and (max-device-width: 834px) and (-webkit-min-device-pixel-ratio: 2) and (orientation: portrait)"
         ></link>
         <link
           rel="apple-touch-startup-image"
-          href="images/splash/launch-2048x2732.png"
+          href="splashsIos/launch-2048x2732.png"
           media="(min-device-width: 1024px) and (max-device-width: 1024px) and (-webkit-min-device-pixel-ratio: 2) and (orientation: portrait)"
         ></link>
         {/* apple-touch-startup-image */}
