@@ -117,7 +117,7 @@ const Comp: React.FC<IComp> = ({
   }, [errors]);
 
   const onSubmit = async (data: RecordSchema) => {
-    const formattedAmount = data.amount?.replace(",", ".");
+    const formattedAmount = data.amount?.replace(",", ".")?.replaceAll(" ", "");
     if (Number.isNaN(+formattedAmount)) {
       showError("Amount must be a number. Use [0-9], [.] or [,]");
       return;
