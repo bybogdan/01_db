@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+  overscroll-behavior: none;
+}
+
 @media (prefers-color-scheme: light) {
   body,
   html {
