@@ -93,6 +93,7 @@ const Comp: React.FC<IComp> = ({
     reset,
     formState: { errors },
     control,
+    getValues,
   } = useForm<RecordSchema>({
     defaultValues,
   });
@@ -107,7 +108,7 @@ const Comp: React.FC<IComp> = ({
     const isOnlyAmountError =
       Object.keys(errors).length === 1 && errors.amount?.message;
 
-    if (isOnlyAmountError) {
+    if (isOnlyAmountError && !getValues("category") && !getValues("name")) {
       showError(FORM_ERRORS.categoryAndName);
     }
 
