@@ -32,15 +32,13 @@ export const Comp: React.FC<IComp> = ({ data, checkScroll }) => {
   useEffect(() => {
     const rect = wrapperRef.current?.getBoundingClientRect();
     if (rect) {
-      const { top, height, left, width } = rect;
-      if (left > 0 && left + width < window.innerWidth) {
-        if (window.innerHeight > top + height) {
-          document.body.style.maxHeight = `${top + height}px`;
-          document.body.style.overflowY = "hidden";
-        } else {
-          document.body.style.overflowY = "";
-          document.body.style.maxHeight = "";
-        }
+      const { height, left, width } = rect;
+      if (
+        wrapperRef.current?.parentElement &&
+        left > 0 &&
+        left + width < window.innerWidth
+      ) {
+        wrapperRef.current.parentElement.style.height = `${height}px`;
       }
     }
   }, [checkScroll]);
