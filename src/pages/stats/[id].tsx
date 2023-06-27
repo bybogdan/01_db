@@ -59,6 +59,8 @@ const Stats = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
   const [showNextBtn, setShowNextBtn] = useState(true);
   const [showPrevBtn, setShowPrevBtn] = useState(false);
 
+  const [checkScroll, setCheckScroll] = useState(1);
+
   const { data: recordsDataByMonths, isFetching: dataIsFetching } =
     trpc.record.getStats.useQuery(userId as string, {
       refetchInterval: false,
@@ -86,6 +88,7 @@ const Stats = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
     }
 
     statsNode.scrollLeft += step;
+    setCheckScroll((prev) => (prev += 1));
   };
 
   const showPrev = () => {
@@ -108,6 +111,7 @@ const Stats = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
     }
 
     statsNode.scrollLeft -= step;
+    setCheckScroll((prev) => (prev += 1));
   };
 
   useEffect(() => {
@@ -180,6 +184,7 @@ const Stats = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
                   <StatsMonth
                     key={`stats-month-${index}`}
                     data={recordDataByMonth}
+                    checkScroll={checkScroll}
                   />
                 )
               )}

@@ -1,6 +1,6 @@
 import type { Record } from "@prisma/client";
 import Link from "next/link";
-import { memo, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import type { recordsByType } from "../../server/trpc/router/record";
 import { capitalizeString, getMonthName } from "../../utils/common";
 import { twMinWidthButton } from "../../utils/twCommon";
@@ -18,17 +18,33 @@ interface IComp {
       recordsByType: recordsByType;
     }
   ];
+  checkScroll: number;
 }
 
-export const Comp: React.FC<IComp> = ({ data }) => {
+export const Comp: React.FC<IComp> = ({ data, checkScroll }) => {
+  const wrapperRef = useRef<HTMLDivElement>(null);
   const [month, recordData] = data;
 
   const [showRecords, setShowRecords] = useState(false);
 
   const balance = +(recordData.income - recordData.expense || 0);
 
+  useEffect(() => {
+    const rect = wrapperRef.current?.getBoundingClientRect();
+    if (rect) {
+      const { top, height, left, width } = rect;
+      if (left > 0 && left + width < window.innerWidth) {
+        if (window.innerHeight > top + height) {
+          document.body.style.overflowY = "hidden";
+        } else {
+          document.body.style.overflowY = "";
+        }
+      }
+    }
+  }, [checkScroll]);
+
   return (
-    <div className="flex min-w-full flex-col gap-8">
+    <div ref={wrapperRef} className="flex h-fit min-w-full flex-col gap-8">
       <h5 className="text-center text-xl font-semibold leading-tight text-gray-900 dark:text-white">
         Stats for: {getMonthName(month)}
       </h5>
