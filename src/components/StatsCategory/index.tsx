@@ -18,9 +18,14 @@ interface IComp {
     expense: number;
   };
   category: string;
+  handleCheckScroll: () => void;
 }
 
-export const Comp: React.FC<IComp> = ({ data, category }) => {
+export const Comp: React.FC<IComp> = ({
+  data,
+  category,
+  handleCheckScroll,
+}) => {
   const [showRecords, setShowRecords] = useState(false);
 
   return (
@@ -29,7 +34,10 @@ export const Comp: React.FC<IComp> = ({ data, category }) => {
         <div className="flex items-center justify-between gap-2">
           <button
             className={` ${twMinWidthButton}`}
-            onClick={() => setShowRecords((prev) => !prev)}
+            onClick={() => {
+              setShowRecords((prev) => !prev);
+              handleCheckScroll();
+            }}
           >
             {showRecords
               ? `Hide ${capitalizeString(category)}`

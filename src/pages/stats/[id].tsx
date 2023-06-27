@@ -61,6 +61,10 @@ const Stats = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
 
   const [checkScroll, setCheckScroll] = useState(1);
 
+  const handleCheckScroll = () => {
+    setCheckScroll((prev) => (prev += 1));
+  };
+
   const { data: recordsDataByMonths, isFetching: dataIsFetching } =
     trpc.record.getStats.useQuery(userId as string, {
       refetchInterval: false,
@@ -185,6 +189,7 @@ const Stats = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
                     key={`stats-month-${index}`}
                     data={recordDataByMonth}
                     checkScroll={checkScroll}
+                    handleCheckScroll={handleCheckScroll}
                   />
                 )
               )}

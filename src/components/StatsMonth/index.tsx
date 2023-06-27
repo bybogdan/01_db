@@ -19,9 +19,14 @@ interface IComp {
     }
   ];
   checkScroll: number;
+  handleCheckScroll: () => void;
 }
 
-export const Comp: React.FC<IComp> = ({ data, checkScroll }) => {
+export const Comp: React.FC<IComp> = ({
+  data,
+  checkScroll,
+  handleCheckScroll,
+}) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [month, recordData] = data;
 
@@ -57,7 +62,10 @@ export const Comp: React.FC<IComp> = ({ data, checkScroll }) => {
           <div>
             <button
               className={`${twMinWidthButton}`}
-              onClick={() => setShowRecords((prev) => !prev)}
+              onClick={() => {
+                setShowRecords((prev) => !prev);
+                handleCheckScroll();
+              }}
             >
               {showRecords
                 ? "Hide all records"
@@ -85,6 +93,7 @@ export const Comp: React.FC<IComp> = ({ data, checkScroll }) => {
                   type={type}
                   data={data.recordsByCategories}
                   totalAmount={data.amount}
+                  handleCheckScroll={handleCheckScroll}
                 />
               ))}
           </div>

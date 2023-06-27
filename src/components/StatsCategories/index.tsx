@@ -12,9 +12,15 @@ interface IComp {
   data: recordsByCategroriesType;
   totalAmount: number;
   type: string;
+  handleCheckScroll: () => void;
 }
 
-export const Comp: React.FC<IComp> = ({ data, totalAmount, type }) => {
+export const Comp: React.FC<IComp> = ({
+  data,
+  totalAmount,
+  type,
+  handleCheckScroll,
+}) => {
   const sortedData = Object.entries(data).sort(([, data1], [, data2]) => {
     const value1 = data1.income > data1.expense ? data1.income : data1.expense;
     const value2 = data2.income > data2.expense ? data2.income : data2.expense;
@@ -40,6 +46,7 @@ export const Comp: React.FC<IComp> = ({ data, totalAmount, type }) => {
           key={`category-${index}`}
           category={category}
           data={data}
+          handleCheckScroll={handleCheckScroll}
         />
       ))}
     </>
