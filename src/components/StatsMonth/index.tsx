@@ -35,9 +35,11 @@ export const Comp: React.FC<IComp> = ({ data, checkScroll }) => {
       const { top, height, left, width } = rect;
       if (left > 0 && left + width < window.innerWidth) {
         if (window.innerHeight > top + height) {
+          document.body.style.maxHeight = `${top + height}px`;
           document.body.style.overflowY = "hidden";
         } else {
           document.body.style.overflowY = "";
+          document.body.style.maxHeight = "";
         }
       }
     }
