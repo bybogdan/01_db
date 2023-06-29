@@ -20,6 +20,8 @@ import { createContext } from "../../server/trpc/context";
 import { trpc } from "../../utils/trpc";
 import type { User } from "@prisma/client";
 import { UserCategories } from "../../components/UserCategories";
+import Link from "next/link";
+import { InstallIcon } from "../../components/icons";
 
 const deafultCategories = [
   "FOOD",
@@ -135,7 +137,15 @@ const Stats = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
           userName={(sessionData.user.name as string) || ""}
           homePageHref={homePageHref}
         />
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-8">
+          <button className={twButton}>
+            <Link
+              href={`/install`}
+              className="flex w-full items-center justify-center gap-2"
+            >
+              <InstallIcon /> How to install
+            </Link>
+          </button>
           <UserCategories
             categories={categories}
             userId={userId}

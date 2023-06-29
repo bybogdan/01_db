@@ -2,11 +2,13 @@ import { type NextPage } from "next";
 import Head from "next/head";
 import { signIn, useSession } from "next-auth/react";
 
-import { twBigButton } from "../utils/twCommon";
+import { twBigButton, twButton } from "../utils/twCommon";
 import { LoggedIn } from "../components/LoggedIn";
 import Image from "next/image";
 import logo from "../../public/icon-192x192.png";
 import { LoaderWithHeader } from "../components/LoaderWIthHeader";
+import Link from "next/link";
+import { InstallIcon } from "../components/icons";
 
 const Home: NextPage = () => {
   const { data: sessionData, status } = useSession();
@@ -35,10 +37,21 @@ const Home: NextPage = () => {
                 Dialga : Money tracker
               </h5>
             </div>
-            <button className={`${twBigButton}`} onClick={() => signIn()}>
+
+            <button
+              className={`${twBigButton} min-w-[18rem]`}
+              onClick={() => signIn()}
+            >
               sign in
             </button>
-            <div />
+            <button className={`${twButton} min-w-[18rem]`}>
+              <Link
+                href={`/install`}
+                className="flex w-full items-center justify-center gap-2"
+              >
+                <InstallIcon /> How to install
+              </Link>
+            </button>
           </div>
         ) : null}
 
