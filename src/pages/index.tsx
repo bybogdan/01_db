@@ -37,21 +37,23 @@ const Home: NextPage = () => {
                 Dialga : Money tracker
               </h5>
             </div>
-
-            <button
-              className={`${twBigButton} min-w-[18rem]`}
-              onClick={() => signIn()}
-            >
-              sign in
-            </button>
-            <button className={`${twButton} min-w-[18rem]`}>
-              <Link
-                href={`/install`}
-                className="flex w-full items-center justify-center gap-2"
+            <div className="flex flex-col items-center gap-10">
+              <button
+                className={`${twBigButton} min-w-[18rem]`}
+                onClick={() => signIn()}
               >
-                <InstallIcon /> How to install
-              </Link>
-            </button>
+                sign in
+              </button>
+              <button className={`${twBigButton} min-w-[18rem]`}>
+                <Link
+                  href={`/install`}
+                  className="flex w-full items-center justify-center gap-2"
+                >
+                  <InstallIcon /> How to install
+                </Link>
+              </button>
+            </div>
+            <div />
           </div>
         ) : null}
 
