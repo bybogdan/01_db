@@ -64,7 +64,7 @@ const Comp: React.FC<IComp> = ({
       }
     : {
         type: "EXPENSE",
-        currency: "USD",
+        currency: currenciesData[0] ?? "USD",
         category: "",
       };
 
