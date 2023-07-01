@@ -232,11 +232,23 @@ export const recordRouter = router({
         },
       });
 
+      if (!userData?.currencies) {
+        await ctx.prisma.user.update({
+          where: {
+            id: userId,
+          },
+          data: {
+            currencies: INCLUDED_CURRENCIES,
+          },
+        });
+      }
+
       return {
         records: records.slice(0, lastIndex),
         totalRecordsAmount,
         balance,
         categories: userData?.categories || null,
+        currencies: userData?.currencies || INCLUDED_CURRENCIES,
       };
     }),
   getRecord: publicProcedure

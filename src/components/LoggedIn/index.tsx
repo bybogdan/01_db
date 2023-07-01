@@ -28,6 +28,7 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
     totalRecordsAmount: number;
     balance: number;
     categories: string[];
+    currencies: string[];
   }>();
   const [isShowBackToStart, setShowBackToStart] = useState(false);
 
@@ -49,18 +50,10 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
         setStateData({
           ...data,
           categories: data.categories as string[],
+          currencies: data.currencies as string[],
         });
         setIsLoadingMore(false);
       },
-    }
-  );
-
-  const { data: currenciesData } = trpc.record.getCurrrency.useQuery(
-    undefined,
-    {
-      refetchInterval: false,
-      refetchOnReconnect: false,
-      refetchOnWindowFocus: false,
     }
   );
 
@@ -90,6 +83,7 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
       setStateData({
         ...storedData,
         categories: storedData?.categories as string[],
+        currencies: storedData?.currencies as string[],
       });
       return;
     }
@@ -134,10 +128,7 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
   }, [isLoadingMore, refetchGetData]);
 
   const showLoader =
-    !stateData ||
-    !currenciesData ||
-    (!isSuccess && !isLoadingMore) ||
-    isAwaitingFreshData;
+    !stateData || (!isSuccess && !isLoadingMore) || isAwaitingFreshData;
 
   if (showLoader) {
     return (
@@ -145,7 +136,8 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
     );
   }
 
-  const { records, totalRecordsAmount, balance, categories } = stateData;
+  const { records, totalRecordsAmount, balance, categories, currencies } =
+    stateData;
 
   return (
     <div className="align-between relative flex min-h-screen flex-col text-slate-900 dark:text-white">
@@ -168,7 +160,7 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
             sessionUserId={sessionUserId}
             handleRefetchData={handleRefetchData}
             categories={categories as string[]}
-            currenciesData={currenciesData}
+            currenciesData={currencies}
           />
         </div>
         <RecordsList records={records} />

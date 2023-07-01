@@ -38,7 +38,6 @@ export const getStaticProps = async (
 
   const record = await ssg.record.getRecord.fetch(recordId);
   const userData = await ssg.user.getUser.fetch(record?.userId);
-  const currenciesData = await ssg.record.getCurrrency.fetch();
 
   if (record) {
     return {
@@ -48,7 +47,6 @@ export const getStaticProps = async (
           timestamp: +record?.timestamp,
         },
         userData,
-        currenciesData,
       },
     };
   }
@@ -76,7 +74,7 @@ const RecordPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
     timestamp: new Date(props.record.timestamp),
   };
 
-  const { currenciesData, userData } = props;
+  const { userData } = props;
 
   const router = useRouter();
 
@@ -239,7 +237,7 @@ const RecordPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
               currentRecord={record}
               discardButton={DiscardButton}
               categories={userData?.categories as string[]}
-              currenciesData={currenciesData}
+              currenciesData={userData?.currencies as string[]}
             />
           ) : null}
         </div>
@@ -251,7 +249,7 @@ const RecordPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
             </button>
           ) : null}
           <button
-            className={twButton}
+            className={`${twButton} mt-10`}
             onClick={() => handleDeleteRecord(record.id)}
           >
             delete

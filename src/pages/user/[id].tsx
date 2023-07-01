@@ -22,6 +22,7 @@ import type { User } from "@prisma/client";
 import { UserCategories } from "../../components/UserCategories";
 import Link from "next/link";
 import { InstallIcon } from "../../components/icons";
+import { UserCurrencies } from "../../components/UserCurrencies";
 
 const deafultCategories = [
   "FOOD",
@@ -94,6 +95,7 @@ const Stats = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
   });
 
   const categories = (userData?.categories as string[]) || categoriesArray;
+  const currencies = userData?.currencies as string[];
 
   const { data: sessionData, status } = useSession();
   const router = useRouter();
@@ -154,6 +156,16 @@ const Stats = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
               addQueryParamToRefetchDataOnHomePage
             }
           />
+
+          <UserCurrencies
+            currencies={currencies}
+            userId={userId}
+            refetchGetUser={handleRefetchGetUser}
+            addQueryParamToRefetchDataOnHomePage={
+              addQueryParamToRefetchDataOnHomePage
+            }
+          />
+
           <button className={twButton} onClick={() => signOut()}>
             {capitalizeString("sign out")}
           </button>

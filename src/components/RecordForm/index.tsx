@@ -231,7 +231,6 @@ const Comp: React.FC<IComp> = ({
               options={categoriesOptions}
               value={categoriesOptions.find((c) => value === c.value)}
               onChange={(val) => onChange(val?.value)}
-              // isSearchable={false}
             />
           )}
         />

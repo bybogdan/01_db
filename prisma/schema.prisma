@@ -65,6 +65,7 @@ model User {
   sessions      Session[]
   records       Record[]
   categories    Json?
+  currencies    Json?
 }
 
 model VerificationToken {

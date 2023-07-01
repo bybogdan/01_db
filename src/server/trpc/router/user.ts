@@ -35,4 +35,23 @@ export const userRouter = router({
       });
       return { categories };
     }),
+  setCurrencies: publicProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        currencies: z.array(z.string()),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const { id, currencies } = input;
+      await ctx.prisma.user.update({
+        where: {
+          id,
+        },
+        data: {
+          currencies,
+        },
+      });
+      return { currencies };
+    }),
 });
