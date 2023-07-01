@@ -78,9 +78,9 @@ export const INCLUDED_CURRENCIES = [
   "USD",
   "EUR",
   "GEL",
+  "RUB",
   "TRY",
   // "GBR",
-  "RUB",
   // "UAH",
 ];
 

@@ -23,10 +23,9 @@ export const Comp: React.FC<IComp> = ({ record, showCategory }) => {
       </p>
       <div className="flex justify-between">
         <h5 className="mb-2 max-w-[50%] break-words text-xl font-medium leading-tight text-gray-900 dark:text-white">
-          {record.name ||
-            (!!record.category
-              ? capitalizeString(record.category as string)
-              : "")}
+          {(!!record.category
+            ? capitalizeString(record.category as string)
+            : "") || record.name}
         </h5>
 
         <p
