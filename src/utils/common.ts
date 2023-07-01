@@ -79,9 +79,9 @@ export const INCLUDED_CURRENCIES = [
   "EUR",
   "GEL",
   "TRY",
-  "GBR",
+  // "GBR",
   "RUB",
-  "UAH",
+  // "UAH",
 ];
 
 export const showError = (message: string) => {

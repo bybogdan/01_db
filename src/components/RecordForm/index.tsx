@@ -202,7 +202,7 @@ const Comp: React.FC<IComp> = ({
 
         <input
           className={`${twInput}`}
-          placeholder="Name"
+          placeholder="Description"
           {...register("name", {})}
         />
 

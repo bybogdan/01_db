@@ -2,7 +2,7 @@ import { type NextPage } from "next";
 import Head from "next/head";
 import { signIn, useSession } from "next-auth/react";
 
-import { twBigButton, twButton } from "../utils/twCommon";
+import { twBigButton } from "../utils/twCommon";
 import { LoggedIn } from "../components/LoggedIn";
 import Image from "next/image";
 import logo from "../../public/icon-192x192.png";
