@@ -231,14 +231,16 @@ const RecordPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
           </div>
 
           {isShowEditForm ? (
-            <RecordForm
-              sessionUserId={userData?.id as string}
-              handleRefetchData={handleRefetchData}
-              currentRecord={record}
-              discardButton={DiscardButton}
-              categories={userData?.categories as string[]}
-              currenciesData={userData?.currencies as string[]}
-            />
+            <div className="mb-3">
+              <RecordForm
+                sessionUserId={userData?.id as string}
+                handleRefetchData={handleRefetchData}
+                currentRecord={record}
+                discardButton={DiscardButton}
+                categories={userData?.categories as string[]}
+                currenciesData={userData?.currencies as string[]}
+              />
+            </div>
           ) : null}
         </div>
 
@@ -249,7 +251,7 @@ const RecordPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
             </button>
           ) : null}
           <button
-            className={`${twButton} mt-10`}
+            className={twButton}
             onClick={() => handleDeleteRecord(record.id)}
           >
             delete
