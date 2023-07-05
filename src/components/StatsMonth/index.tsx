@@ -77,7 +77,11 @@ export const Comp: React.FC<IComp> = ({
               <ul className="flex flex-col gap-4">
                 {recordData.records.map((record, index) => (
                   <Link key={`record-${index}`} href={`/record/${record.id}`}>
-                    <RecordCard showCategory record={record} />
+                    <RecordCard
+                      showCategory
+                      record={record}
+                      isShowRecordName={true}
+                    />
                   </Link>
                 ))}
               </ul>

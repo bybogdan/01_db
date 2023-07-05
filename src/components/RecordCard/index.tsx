@@ -9,9 +9,16 @@ import {
 interface IComp {
   record: Record;
   showCategory?: boolean;
+  isShowRecordName?: boolean;
 }
 
-export const Comp: React.FC<IComp> = ({ record, showCategory }) => {
+export const Comp: React.FC<IComp> = ({
+  record,
+  showCategory,
+  isShowRecordName = false,
+}) => {
+  const text = isShowRecordName && record.name ? record.name : record.category;
+
   return (
     <li
       className="flex flex-col justify-center gap-1 text-slate-900 dark:text-white"
@@ -23,9 +30,7 @@ export const Comp: React.FC<IComp> = ({ record, showCategory }) => {
       </p>
       <div className="flex justify-between">
         <h5 className="mb-2 max-w-[50%] break-words text-xl font-medium leading-tight text-gray-900 dark:text-white">
-          {(!!record.category
-            ? capitalizeString(record.category as string)
-            : "") || record.name}
+          {capitalizeString(text as string)}
         </h5>
 
         <p

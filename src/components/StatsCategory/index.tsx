@@ -54,7 +54,7 @@ export const Comp: React.FC<IComp> = ({
           <>
             {data.records.map((record, index) => (
               <Link key={`record-${index}`} href={`/record/${record.id}`}>
-                <RecordCard record={record} />
+                <RecordCard record={record} isShowRecordName={true} />
               </Link>
             ))}
           </>
