@@ -251,6 +251,31 @@ export const recordRouter = router({
         currencies: userData?.currencies || INCLUDED_CURRENCIES,
       };
     }),
+  getRecordsCategories: publicProcedure
+    .input(z.string())
+    .query(async ({ input: userId, ctx }) => {
+      const recordsCategories: (string | null)[] = (
+        await ctx.prisma.record.findMany({
+          where: {
+            userId: userId,
+          },
+          select: {
+            category: true,
+          },
+          orderBy: [
+            {
+              timestamp: "desc",
+            },
+          ],
+        })
+      )
+        .map((record) => record.category)
+        .filter((category) => !!category);
+
+      const categories = new Set(recordsCategories);
+      return Array.from(categories) as string[];
+    }),
+
   getRecord: publicProcedure
     .input(z.string().nullish())
     .query(async ({ input: id, ctx }) => {
