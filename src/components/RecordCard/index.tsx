@@ -17,7 +17,12 @@ export const Comp: React.FC<IComp> = ({
   showCategory,
   isShowRecordName = false,
 }) => {
-  const text = isShowRecordName && record.name ? record.name : record.category;
+  const text =
+    isShowRecordName && record.name
+      ? record.name
+      : record.category?.length
+      ? record.category
+      : record.name;
 
   return (
     <li
