@@ -8,7 +8,7 @@ export default function Install() {
         <h1 className="font-heading leading-tighter flex flex-col justify-between text-4xl font-bold tracking-tighter md:text-5xl ">
           <a
             target="_blank"
-            href="https://dialga-lake.vercel.app/"
+            href="https://dialgamoney.bgdn.one//"
             rel="noreferrer"
           >
             <span className="flex gap-4">
@@ -41,9 +41,9 @@ export default function Install() {
                 Go to:{" "}
                 <a
                   className="text-blue-500"
-                  href="https://dialga-lake.vercel.app/"
+                  href="https://dialgamoney.bgdn.one//"
                 >
-                  https://dialga-lake.vercel.app/
+                  https://dialgamoney.bgdn.one//
                 </a>{" "}
                 on Chrome
               </li>
@@ -76,9 +76,9 @@ export default function Install() {
                 Go to:{" "}
                 <a
                   className="text-blue-500"
-                  href="https://dialga-lake.vercel.app/"
+                  href="https://dialgamoney.bgdn.one//"
                 >
-                  https://dialga-lake.vercel.app/
+                  https://dialgamoney.bgdn.one//
                 </a>{" "}
                 on Safari
               </li>
@@ -108,8 +108,8 @@ export default function Install() {
             <ol>
               <li>
                 Go to:{" "}
-                <a href="https://dialga-lake.vercel.app/">
-                  https://dialga-lake.vercel.app/
+                <a href="https://dialgamoney.bgdn.one//">
+                  https://dialgamoney.bgdn.one//
                 </a>{" "}
                 on Chrome
               </li>
@@ -137,8 +137,8 @@ export default function Install() {
             <ol>
               <li>
                 Go to:{" "}
-                <a href="https://dialga-lake.vercel.app/">
-                  https://dialga-lake.vercel.app/
+                <a href="https://dialgamoney.bgdn.one//">
+                  https://dialgamoney.bgdn.one//
                 </a>{" "}
                 on Edge
               </li>

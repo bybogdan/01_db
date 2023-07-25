@@ -32,14 +32,14 @@ const MyApp: AppType<{ session: Session | null }> = ({
 
         <meta
           property="og:image"
-          content="https://dialga-lake.vercel.app/icon-512x512.png"
+          content="https://dialgamoney.bgdn.one//icon-512x512.png"
         />
         <meta property="og:title" content="Diagla - money tracker" />
         <meta
           property="og:description"
           content="Convenient way to control your finances"
         />
-        <meta property="og:url" content="https://dialga-lake.vercel.app/" />
+        <meta property="og:url" content="https://dialgamoney.bgdn.one//" />
         <meta content="website" property="og:type" />
         <meta content="Diagla - money tracker" property="og:image:alt" />
         <meta name="application-name" content="Diagla - money tracker" />
