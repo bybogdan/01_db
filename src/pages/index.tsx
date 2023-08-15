@@ -25,17 +25,22 @@ const Home: NextPage = () => {
 
         {status === "unauthenticated" ? (
           <div className="flex h-screen flex-col items-center justify-between p-6">
-            <div className="flex items-center justify-center gap-2">
-              <Image
-                className="rounded-xl"
-                priority={true}
-                width={50}
-                src={logo}
-                alt="Logo"
-              />
-              <h5 className=" font-boldtext-gray-900 max-w-2xl text-xl dark:text-white sm:text-3xl">
-                Dialga : Money tracker
-              </h5>
+            <div className="flex flex-col  justify-center gap-6">
+              <div className="flex items-center gap-2">
+                <Image
+                  className="rounded-xl"
+                  priority={true}
+                  width={50}
+                  src={logo}
+                  alt="Logo"
+                />
+                <h5 className=" font-boldtext-gray-900 max-w-2xl text-xl dark:text-white sm:text-3xl">
+                  Dialga : Money tracker
+                </h5>
+              </div>
+              <p className="text-gray-700 dark:text-slate-200 sm:text-lg">
+                Convenient way to control your finances.
+              </p>
             </div>
             <div className="flex flex-col items-center gap-10">
               <button
