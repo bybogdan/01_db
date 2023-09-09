@@ -224,6 +224,11 @@ const RecordPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
                 Category: {record.category}
               </h5>
             ) : null}
+            {((record.tags as string[]) || null)?.length > 0 ? (
+              <h5 className="mb-2 text-xl leading-tight text-gray-900 dark:text-white">
+                Tags: {(record.tags as string[]).join(", ")}
+              </h5>
+            ) : null}
 
             <h5 className="mb-2 text-xl leading-tight text-gray-900 dark:text-white">
               Date: {date.getDate()}.{date.getMonth() + 1}.{date.getFullYear()}
@@ -238,6 +243,7 @@ const RecordPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
                 currentRecord={record}
                 discardButton={DiscardButton}
                 categories={userData?.categories as string[]}
+                tags={userData?.tags as string[] | null}
                 currenciesData={userData?.currencies as string[]}
               />
             </div>

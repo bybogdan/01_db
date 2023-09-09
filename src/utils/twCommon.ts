@@ -7,6 +7,9 @@ export const twSelect =
 export const twButton =
   "inline-block rounded bg-blue-600 px-6 py-2.5 text-xs font-semibold text-center font-medium uppercase leading-tight text-white shadow-md transition duration-150 ease-in-out hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg  focus:ring-0 active:bg-blue-800 active:shadow-lg";
 
+export const twAddTagButton =
+  "text-black inline-block rounded dark:bg-slate-300 bg-slate-200 px-3 py-1.5 uppercase leading-tight text-white shadow-md transition duration-150 ease-in-out  dark:hover:bg-slate-400 hover:bg-slate-300 hover:shadow-lg focus:bg-slate-300 dark:focus:bg-slate-400 focus:shadow-lg  focus:ring-0 active:bg-slate-500 dark:active:bg-slate-500 active:shadow-lg";
+
 export const twMinWidthButton =
   "inline-block rounded w-[150px] sm:w-[200px] bg-blue-600 px-6 py-2.5 text-xs font-semibold text-center font-medium uppercase leading-tight text-white shadow-md transition duration-150 ease-in-out hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg  focus:ring-0 active:bg-blue-800 active:shadow-lg";
 

@@ -6,9 +6,10 @@ import { twBigButton } from "../utils/twCommon";
 import { LoggedIn } from "../components/LoggedIn";
 import Image from "next/image";
 import logo from "../../public/icon-192x192.png";
-import { LoaderWithHeader } from "../components/LoaderWIthHeader";
+
 import Link from "next/link";
 import { InstallIcon } from "../components/icons";
+import { LoaderWithHeader } from "../components/LoaderWIthHeader";
 
 const Home: NextPage = () => {
   const { data: sessionData, status } = useSession();

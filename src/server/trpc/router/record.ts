@@ -248,6 +248,7 @@ export const recordRouter = router({
         totalRecordsAmount,
         balance,
         categories: userData?.categories || null,
+        tags: userData?.tags || null,
         currencies: userData?.currencies || INCLUDED_CURRENCIES,
       };
     }),
@@ -284,6 +285,7 @@ export const recordRouter = router({
           ...recordData,
           name: capitalizeString(recordData.name || ""),
           message: capitalizeString(recordData.message || ""),
+          tags: recordData.tags || [],
           amountUSD,
         },
       });
@@ -339,6 +341,7 @@ export const recordRouter = router({
           ...updRecordData,
           name: capitalizeString(updRecordData.name || ""),
           message: capitalizeString(updRecordData.message || ""),
+          tags: updRecordData.tags || [],
           amountUSD,
         },
       });

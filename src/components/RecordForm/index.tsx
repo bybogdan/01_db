@@ -3,12 +3,18 @@ import type { ReactNode } from "react";
 import { useCallback, useEffect, memo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import Select from "react-select";
+import Link from "next/link";
 
 import type { RecordSchema } from "../../server/schema/post.schema";
 import { LoaderSize } from "../../types/misc";
-import { getCurrencySymbol, showError } from "../../utils/common";
+import {
+  defaultCategories,
+  defaultTags,
+  getCurrencySymbol,
+  showError,
+} from "../../utils/common";
 import { trpc } from "../../utils/trpc";
-import { twButton, twInput } from "../../utils/twCommon";
+import { twButton, twAddTagButton, twInput } from "../../utils/twCommon";
 import { Loader } from "../Loader";
 
 const FORM_ERRORS = {
@@ -20,13 +26,10 @@ const FORM_ERRORS = {
   categoryAndName: "Fill name or category",
 };
 
-const deafultCategories = [
-  "FOOD",
-  "TRANSPORT",
-  "RENT",
-  "UTILITY PAYMENT",
-  "SALARY",
-];
+interface ISelectOption {
+  value: string;
+  label: string;
+}
 
 const preapreDataForSelect = (data: string[]) => {
   return data.map((item) => ({
@@ -42,6 +45,7 @@ interface IComp {
   currentRecord?: Record;
   discardButton?: ReactNode;
   categories: string[] | null;
+  tags: string[] | null;
   currenciesData: string[];
 }
 
@@ -51,6 +55,7 @@ const Comp: React.FC<IComp> = ({
   currentRecord,
   discardButton,
   categories,
+  tags,
   currenciesData,
 }) => {
   const defaultValues: RecordSchema | object = currentRecord
@@ -61,14 +66,17 @@ const Comp: React.FC<IComp> = ({
         type: currentRecord.type,
         currency: currentRecord.currency,
         category: currentRecord.category,
+        tags: currentRecord.tags,
       }
     : {
         type: "EXPENSE",
         currency: currenciesData[0] ?? "USD",
         category: "",
+        tags: [],
       };
 
-  const categoriesArray = categories !== null ? categories : deafultCategories;
+  const categoriesArray = categories !== null ? categories : defaultCategories;
+  const tagsArray = tags ?? defaultTags;
 
   const handleOnSuccess = async (data: Record) => {
     await handleRefetchData();
@@ -157,6 +165,9 @@ const Comp: React.FC<IComp> = ({
   const categoriesOptions = preapreDataForSelect(categoriesArray);
   categoriesOptions.unshift({ value: "", label: "Category (unselected)" });
 
+  const tagsOptions = preapreDataForSelect(tagsArray);
+  const hasTags = tagsOptions.length > 0;
+
   const typesOptions = preapreDataForSelect(["EXPENSE", "INCOME"]);
   const currenciesOptions = currenciesData.map((c) => ({
     value: c,
@@ -235,8 +246,37 @@ const Comp: React.FC<IComp> = ({
           )}
         />
 
+        {hasTags ? (
+          <Controller
+            name="tags"
+            control={control}
+            render={({ field: { onChange, value } }) => (
+              <Select
+                placeholder="Select tags"
+                className="my-react-select-container"
+                classNamePrefix="my-react-select"
+                options={tagsOptions}
+                value={tagsOptions.filter((c) => value?.includes(c.value))}
+                onChange={(val) =>
+                  onChange(val?.map((v: ISelectOption) => v.value))
+                }
+                isMulti
+              />
+            )}
+          />
+        ) : (
+          <Link
+            className={twAddTagButton}
+            href={`/user/${sessionUserId}?addTags=true`}
+          >
+            Add your first tag
+          </Link>
+        )}
+
         <div
-          className={`flex gap-2 ${discardButton ? "flex-row-reverse" : ""}`}
+          className={`mt-6 flex gap-2 ${
+            discardButton ? "flex-row-reverse" : ""
+          }`}
         >
           <button
             disabled={isSetRecordLoading || isUpdateRecordLoading}

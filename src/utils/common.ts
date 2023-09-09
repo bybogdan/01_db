@@ -22,6 +22,15 @@ export const numToFloat = (num: number) => {
   return num.toFixed(2);
 };
 
+export const defaultCategories = [
+  "FOOD",
+  "TRANSPORT",
+  "RENT",
+  "UTILITY PAYMENT",
+  "SALARY",
+];
+export const defaultTags: string[] = [];
+
 export const BASE_CURRENCY = "USD";
 
 export const getMonthName = (date: string) => {

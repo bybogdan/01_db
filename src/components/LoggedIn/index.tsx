@@ -28,6 +28,7 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
     totalRecordsAmount: number;
     balance: number;
     categories: string[];
+    tags: string[] | null;
     currencies: string[];
   }>();
   const [isShowBackToStart, setShowBackToStart] = useState(false);
@@ -50,6 +51,7 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
         setStateData({
           ...data,
           categories: data.categories as string[],
+          tags: data?.tags as string[] | null,
           currencies: data.currencies as string[],
         });
         setIsLoadingMore(false);
@@ -83,6 +85,7 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
       setStateData({
         ...storedData,
         categories: storedData?.categories as string[],
+        tags: storedData?.tags as string[],
         currencies: storedData?.currencies as string[],
       });
       return;
@@ -136,7 +139,7 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
     );
   }
 
-  const { records, totalRecordsAmount, balance, categories, currencies } =
+  const { records, totalRecordsAmount, balance, categories, tags, currencies } =
     stateData;
 
   return (
@@ -160,6 +163,7 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
             sessionUserId={sessionUserId}
             handleRefetchData={handleRefetchData}
             categories={categories as string[]}
+            tags={tags}
             currenciesData={currencies}
           />
         </div>

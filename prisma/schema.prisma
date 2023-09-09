@@ -45,6 +45,7 @@ model Record {
   id        String     @id @default(cuid())
   type      RecordType @default(EXPENSE)
   category  String?
+  tags      Json?
   name      String
   message   String?
   amount    String
@@ -65,6 +66,7 @@ model User {
   sessions      Session[]
   records       Record[]
   categories    Json?
+  tags          Json?
   currencies    Json?
 }
 

@@ -13,7 +13,11 @@ import { Loader } from "../../components/Loader";
 import { useRouter } from "next/router";
 import { Header } from "../../components/Header";
 import { useCallback, useEffect, useState } from "react";
-import { capitalizeString } from "../../utils/common";
+import {
+  capitalizeString,
+  defaultCategories,
+  defaultTags,
+} from "../../utils/common";
 import { createProxySSGHelpers } from "@trpc/react-query/ssg";
 import { appRouter } from "../../server/trpc/router/_app";
 import { createContext } from "../../server/trpc/context";
@@ -23,14 +27,7 @@ import { UserCategories } from "../../components/UserCategories";
 import Link from "next/link";
 import { InstallIcon } from "../../components/icons";
 import { UserCurrencies } from "../../components/UserCurrencies";
-
-const deafultCategories = [
-  "FOOD",
-  "TRANSPORT",
-  "RENT",
-  "UTILITY PAYMENT",
-  "SALARY",
-];
+import { UserTags } from "../../components/UserTags";
 
 export const getStaticProps = async (
   context: GetStaticPropsContext<{ id: string }>
@@ -74,11 +71,15 @@ const Stats = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { userId, user: initialData } = props;
 
   const [homePageHref, setHomePageHref] = useState("/");
+  const [isHighlitedTags, setIsHighlitedTags] = useState(false);
 
   const categoriesArray: string[] =
     initialData.categories !== null
       ? (initialData.categories as string[])
-      : deafultCategories;
+      : defaultCategories;
+
+  const tagsArray: string[] =
+    initialData.tags !== null ? (initialData.tags as string[]) : defaultTags;
 
   const {
     data: userData,
@@ -91,10 +92,12 @@ const Stats = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
     initialData: {
       ...initialData,
       categories: categoriesArray,
+      tags: tagsArray,
     },
   });
 
   const categories = (userData?.categories as string[]) || categoriesArray;
+  const tags = (userData?.tags as string[]) || tagsArray;
   const currencies = userData?.currencies as string[];
 
   const { data: sessionData, status } = useSession();
@@ -102,6 +105,14 @@ const Stats = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
 
   const addQueryParamToRefetchDataOnHomePage = useCallback(() => {
     setHomePageHref("/?update=1");
+  }, []);
+
+  useEffect(() => {
+    const { addTags } = router.query;
+    if (addTags) {
+      setIsHighlitedTags(true);
+    }
+    router.replace(`/user/${userId}`, undefined, { shallow: true });
   }, []);
 
   useEffect(() => {
@@ -155,6 +166,17 @@ const Stats = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
             addQueryParamToRefetchDataOnHomePage={
               addQueryParamToRefetchDataOnHomePage
             }
+          />
+
+          <UserTags
+            tags={tags}
+            userId={userId}
+            refetchGetUser={handleRefetchGetUser}
+            addQueryParamToRefetchDataOnHomePage={
+              addQueryParamToRefetchDataOnHomePage
+            }
+            isHighlited={isHighlitedTags}
+            setIsHighlited={setIsHighlitedTags}
           />
 
           <UserCurrencies
