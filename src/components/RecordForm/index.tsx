@@ -246,7 +246,6 @@ const Comp: React.FC<IComp> = ({
           )}
         />
 
-        {`now we have: ${JSON.stringify(tagsOptions)}`}
         {hasTags ? (
           <Controller
             name="tags"
