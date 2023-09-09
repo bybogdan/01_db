@@ -74,7 +74,7 @@ const RecordPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
     timestamp: new Date(props.record.timestamp),
   };
 
-  const { userData } = props;
+  const { userData: userDataDefault } = props;
 
   const router = useRouter();
 
@@ -84,6 +84,16 @@ const RecordPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
   const [isDeletingRecord, setDeletingRecord] = useState(false);
 
   const [homePageHref, setHomePageHref] = useState("/");
+
+  const { data: userData } = trpc.user.getUser.useQuery(
+    userDataDefault?.id as string,
+    {
+      refetchInterval: false,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+      initialData: userDataDefault,
+    }
+  );
 
   const {
     data: record,

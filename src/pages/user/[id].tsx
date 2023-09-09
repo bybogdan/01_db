@@ -135,7 +135,6 @@ const Stats = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
 
   const handleRefetchGetUser = async () => {
     await refetchGetUser();
-    await fetch(`/api/revalidate?secret=revalidate&route=/record/${userId}`);
   };
 
   return (
