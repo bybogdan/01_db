@@ -166,7 +166,7 @@ const Comp: React.FC<IComp> = ({
   categoriesOptions.unshift({ value: "", label: "Category (unselected)" });
 
   const tagsOptions = preapreDataForSelect(tagsArray);
-  const hasTags = true; //tagsOptions.length > 0;
+  const hasTags = tagsOptions.length > 0;
 
   const typesOptions = preapreDataForSelect(["EXPENSE", "INCOME"]);
   const currenciesOptions = currenciesData.map((c) => ({
