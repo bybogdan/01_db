@@ -80,10 +80,6 @@ export const Comp: React.FC<IComp> = ({
       currencies: newCurrencies,
     });
 
-    await Promise.allSettled([
-      fetch(`/api/revalidate?secret=revalidate&route=/user/${userId}`),
-      fetch(`/api/revalidate?secret=revalidate&route=/search/${userId}`),
-    ]);
     addQueryParamToRefetchDataOnHomePage();
   };
 
@@ -100,10 +96,6 @@ export const Comp: React.FC<IComp> = ({
       currencies: currencies,
     });
 
-    await Promise.allSettled([
-      fetch(`/api/revalidate?secret=revalidate&route=/user/${userId}`),
-      fetch(`/api/revalidate?secret=revalidate&route=/search/${userId}`),
-    ]);
     addQueryParamToRefetchDataOnHomePage();
   };
 

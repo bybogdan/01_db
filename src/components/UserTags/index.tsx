@@ -69,10 +69,6 @@ export const Comp: React.FC<IComp> = ({
       tags: newTags,
     });
 
-    await Promise.allSettled([
-      fetch(`/api/revalidate?secret=revalidate&route=/user/${userId}`),
-      fetch(`/api/revalidate?secret=revalidate&route=/search/${userId}`),
-    ]);
     addQueryParamToRefetchDataOnHomePage();
   };
 
@@ -89,10 +85,6 @@ export const Comp: React.FC<IComp> = ({
       tags: tags,
     });
 
-    await Promise.allSettled([
-      fetch(`/api/revalidate?secret=revalidate&route=/user/${userId}`),
-      fetch(`/api/revalidate?secret=revalidate&route=/search/${userId}`),
-    ]);
     addQueryParamToRefetchDataOnHomePage();
   };
 

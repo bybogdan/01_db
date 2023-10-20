@@ -67,7 +67,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
   };
 };
 
-const Stats = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
+const UserPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { userId, user: initialData } = props;
 
   const [homePageHref, setHomePageHref] = useState("/");
@@ -150,6 +150,7 @@ const Stats = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
           userName={(sessionData.user.name as string) || ""}
           homePageHref={homePageHref}
         />
+        {`userData?.currencies: ${JSON.stringify(userData?.currencies)}`}
         <div className="flex flex-col gap-8">
           <button className={twButton}>
             <Link
@@ -197,4 +198,4 @@ const Stats = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
   );
 };
 
-export default Stats;
+export default UserPage;
