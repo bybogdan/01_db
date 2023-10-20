@@ -19,6 +19,8 @@ import {
 } from "../../utils/common";
 import { trpc } from "../../utils/trpc";
 import { StatsCategory } from "../../components/StatsCategory";
+import { Loader } from "../../components/Loader";
+import { LoaderSize } from "../../types/misc";
 
 export const getStaticProps = async (
   context: GetStaticPropsContext<{ id: string }>
@@ -35,8 +37,9 @@ export const getStaticProps = async (
 
   return {
     props: {
-      userData,
+      defaultUserData: userData,
     },
+    revalidate: 1,
   };
 };
 
@@ -57,9 +60,20 @@ export const getStaticPaths: GetStaticPaths = async () => {
 };
 
 const SearchPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { userData } = props;
+  const { defaultUserData } = props;
 
   const homePageHref = "/";
+
+  const { data: userData } = trpc.user.getUser.useQuery(
+    defaultUserData?.id as string,
+    {
+      refetchInterval: false,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+      initialData: defaultUserData,
+    }
+  );
+
   const tagsArray = (userData?.tags as string[]) ?? defaultTags;
   const tagsOptions = preapreDataForSelect(tagsArray);
 
@@ -69,23 +83,22 @@ const SearchPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
 
   const { tag: currentTag } = searchData;
 
-  const { data, isFetching, isInitialLoading } =
-    trpc.record.getRecordsBySearch.useQuery(
-      { userId: userData?.id as string, data: { tag: currentTag } },
-      {
-        refetchInterval: false,
-        refetchOnReconnect: false,
-        refetchOnWindowFocus: false,
-        initialData: {
-          records: [],
-          sum: 0,
-        },
-      }
-    );
+  const { data, isFetching } = trpc.record.getRecordsBySearch.useQuery(
+    { userId: userData?.id as string, data: { tag: currentTag } },
+    {
+      refetchInterval: false,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+      initialData: {
+        records: [],
+        sum: 0,
+      },
+    }
+  );
 
   const { records, sum } = data!;
 
-  const isLoading = !isInitialLoading && isFetching;
+  const isLoading = isFetching;
 
   return (
     <>
@@ -127,9 +140,13 @@ const SearchPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
                   handleCheckScroll={voidFunction}
                 />
               </>
-            ) : currentTag && !isFetching ? (
+            ) : null}
+
+            {!records?.length && currentTag && !isFetching ? (
               <h4 className="text-3xl ">No records</h4>
             ) : null}
+
+            {isLoading && currentTag ? <Loader size={LoaderSize.BASE} /> : null}
           </div>
         </div>
       </div>
