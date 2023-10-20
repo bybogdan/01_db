@@ -1,4 +1,4 @@
-import { memo, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { ReactSortable } from "react-sortablejs";
 import Select from "react-select";
 
@@ -111,10 +111,24 @@ export const Comp: React.FC<IComp> = ({
     ({ value }) => !currencies.includes(value)
   );
 
+  const currenciesAsString = JSON.stringify(currencies);
+
+  useEffect(() => {
+    setSortableCurrencies(
+      currencies.map((currency, i) => ({
+        id: i,
+        name: currency,
+      }))
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currenciesAsString]);
+  console.log("sortableCurrencies", sortableCurrencies);
   return (
     <>
-      {`currencies in comp:: ${currencies}`}
-      {`sortableCurrencies in comp:: ${sortableCurrencies}`}
+      <div>{`currencies in comp:: ${currencies}`}</div>
+      <div>{`sortableCurrencies in comp:: ${JSON.stringify(
+        sortableCurrencies.map((i: any) => i.name)
+      )}`}</div>
       {showCurrencies ? (
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-2">
