@@ -64,6 +64,11 @@ export const Comp: React.FC<IComp> = ({
       id: userId,
       categories: newCategories,
     });
+
+    Promise.allSettled([
+      fetch(`/api/revalidate?secret=revalidate&route=/user/${userId}`),
+      fetch(`/api/revalidate?secret=revalidate&route=/search/${userId}`),
+    ]);
     addQueryParamToRefetchDataOnHomePage();
   };
 
@@ -79,6 +84,11 @@ export const Comp: React.FC<IComp> = ({
       id: userId,
       categories: categories,
     });
+
+    Promise.allSettled([
+      fetch(`/api/revalidate?secret=revalidate&route=/user/${userId}`),
+      fetch(`/api/revalidate?secret=revalidate&route=/search/${userId}`),
+    ]);
     addQueryParamToRefetchDataOnHomePage();
   };
 

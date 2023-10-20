@@ -2,7 +2,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { memo } from "react";
 import { capitalizeString } from "../../utils/common";
-import { HomeIcon, StatsIcon, UserIcon } from "../icons";
+import { HomeIcon, SearchIcon, StatsIcon, UserIcon } from "../icons";
 
 interface IComp {
   homePageHref?: string;
@@ -49,6 +49,20 @@ const Comp: React.FC<IComp> = ({
           color={
             `/stats/${userId}` === router.asPath ||
             router.asPath.includes("/stats/")
+              ? HIGHLIGHT_COLOR
+              : "currentColor"
+          }
+        />
+      </Link>
+
+      <Link
+        className={`h-fit ${isDisabled ? "opacity-30" : ""}`}
+        href={!isDisabled ? `/search/${userId}` : ""}
+      >
+        <SearchIcon
+          color={
+            `/search/${userId}` === router.asPath ||
+            router.asPath.includes("/search/")
               ? HIGHLIGHT_COLOR
               : "currentColor"
           }

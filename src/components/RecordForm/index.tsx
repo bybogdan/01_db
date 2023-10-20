@@ -7,10 +7,12 @@ import Link from "next/link";
 
 import type { RecordSchema } from "../../server/schema/post.schema";
 import { LoaderSize } from "../../types/misc";
+import type { ISelectOption } from "../../utils/common";
 import {
   defaultCategories,
   defaultTags,
   getCurrencySymbol,
+  preapreDataForSelect,
   showError,
 } from "../../utils/common";
 import { trpc } from "../../utils/trpc";
@@ -24,18 +26,6 @@ const FORM_ERRORS = {
   type: "Please enter type of transaction",
   category: "Fill category",
   categoryAndName: "Fill name or category",
-};
-
-interface ISelectOption {
-  value: string;
-  label: string;
-}
-
-const preapreDataForSelect = (data: string[]) => {
-  return data.map((item) => ({
-    value: item,
-    label: item,
-  }));
 };
 
 interface IComp {

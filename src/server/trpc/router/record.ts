@@ -379,4 +379,46 @@ export const recordRouter = router({
 
       return getRecordsDataByMonths(records) as recordsDataByMonthsType;
     }),
+
+  getRecordsBySearch: publicProcedure
+    .input(
+      z.object({
+        userId: z.string().nullish(),
+        data: z.object({
+          tag: z.string().nullish(),
+        }),
+      })
+    )
+    .query(async ({ input: { userId, data }, ctx }) => {
+      if (!userId || !data.tag) {
+        return {
+          records: [],
+          sum: 0,
+        };
+      }
+
+      const { tag } = data;
+      const records = await ctx.prisma.record.findMany({
+        where: {
+          userId,
+          tags: {
+            array_contains: tag,
+          },
+        },
+        orderBy: [
+          {
+            timestamp: "desc",
+          },
+        ],
+      });
+
+      const sum = records.reduce((acc, record) => {
+        return (acc += +record.amountUSD);
+      }, 0);
+
+      return {
+        records,
+        sum,
+      };
+    }),
 });

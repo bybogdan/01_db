@@ -1,8 +1,24 @@
 import getSymbolFromCurrency from "currency-symbol-map";
 import { toast } from "react-hot-toast";
 
+export interface ISelectOption {
+  value: string;
+  label: string;
+}
+
+export const voidFunction = () => {
+  return;
+};
+
 export const funcPlaceholder = () => {
   return;
+};
+
+export const preapreDataForSelect = (data: string[]) => {
+  return data.map((item) => ({
+    value: item,
+    label: item,
+  }));
 };
 
 export const capitalizeString = (string: string) => {
