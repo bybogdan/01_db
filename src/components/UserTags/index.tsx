@@ -69,7 +69,7 @@ export const Comp: React.FC<IComp> = ({
       tags: newTags,
     });
 
-    Promise.allSettled([
+    await Promise.allSettled([
       fetch(`/api/revalidate?secret=revalidate&route=/user/${userId}`),
       fetch(`/api/revalidate?secret=revalidate&route=/search/${userId}`),
     ]);
@@ -89,7 +89,7 @@ export const Comp: React.FC<IComp> = ({
       tags: tags,
     });
 
-    Promise.allSettled([
+    await Promise.allSettled([
       fetch(`/api/revalidate?secret=revalidate&route=/user/${userId}`),
       fetch(`/api/revalidate?secret=revalidate&route=/search/${userId}`),
     ]);

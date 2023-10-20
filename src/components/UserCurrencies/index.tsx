@@ -80,7 +80,7 @@ export const Comp: React.FC<IComp> = ({
       currencies: newCurrencies,
     });
 
-    Promise.allSettled([
+    await Promise.allSettled([
       fetch(`/api/revalidate?secret=revalidate&route=/user/${userId}`),
       fetch(`/api/revalidate?secret=revalidate&route=/search/${userId}`),
     ]);
@@ -100,7 +100,7 @@ export const Comp: React.FC<IComp> = ({
       currencies: currencies,
     });
 
-    Promise.allSettled([
+    await Promise.allSettled([
       fetch(`/api/revalidate?secret=revalidate&route=/user/${userId}`),
       fetch(`/api/revalidate?secret=revalidate&route=/search/${userId}`),
     ]);
