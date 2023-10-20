@@ -114,6 +114,7 @@ export const Comp: React.FC<IComp> = ({
   return (
     <>
       {`currencies in comp:: ${currencies}`}
+      {`sortableCurrencies in comp:: ${sortableCurrencies}`}
       {showCurrencies ? (
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-2">
