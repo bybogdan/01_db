@@ -1,4 +1,4 @@
-import { memo, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { ReactSortable } from "react-sortablejs";
 
 import { LoaderSize } from "../../types/misc";
@@ -97,6 +97,18 @@ export const Comp: React.FC<IComp> = ({
       return name !== categories[index];
     });
   };
+
+  const categoriesAsString = JSON.stringify(categories);
+
+  useEffect(() => {
+    setSortableCategories(
+      categories.map((tag, i) => ({
+        id: i,
+        name: tag,
+      }))
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [categoriesAsString]);
 
   return (
     <>

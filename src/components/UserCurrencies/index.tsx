@@ -122,13 +122,9 @@ export const Comp: React.FC<IComp> = ({
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currenciesAsString]);
-  console.log("sortableCurrencies", sortableCurrencies);
+
   return (
     <>
-      <div>{`currencies in comp:: ${currencies}`}</div>
-      <div>{`sortableCurrencies in comp:: ${JSON.stringify(
-        sortableCurrencies.map((i: any) => i.name)
-      )}`}</div>
       {showCurrencies ? (
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-2">

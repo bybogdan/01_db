@@ -150,7 +150,7 @@ const UserPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
           userName={(sessionData.user.name as string) || ""}
           homePageHref={homePageHref}
         />
-        {`userData?.currencies: ${JSON.stringify(userData?.currencies)}`}
+
         <div className="flex flex-col gap-8">
           <button className={twButton}>
             <Link
