@@ -28,6 +28,11 @@ export const Comp: React.FC<IComp> = ({
 }) => {
   const [showRecords, setShowRecords] = useState(false);
 
+  // from biggest transaction to smallest
+  const sortedRecords = data.records.sort((a, b) => {
+    return +b.amountUSD - +a.amountUSD;
+  });
+
   return (
     <>
       <div key={`stats-${category}`} className="flex flex-col gap-4">
@@ -52,7 +57,7 @@ export const Comp: React.FC<IComp> = ({
         </div>
         {showRecords ? (
           <>
-            {data.records.map((record, index) => (
+            {sortedRecords.map((record, index) => (
               <Link key={`record-${index}`} href={`/record/${record.id}`}>
                 <RecordCard record={record} isShowRecordName={true} />
               </Link>

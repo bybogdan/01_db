@@ -159,6 +159,7 @@ export const Comp: React.FC<IComp> = ({
               className={`my-react-select-container grow`}
               classNamePrefix="my-react-select"
               options={currenicesOptions}
+              isSearchable={false}
               onChange={(val) => val?.value && setNewCurrency(val?.value)}
             />
 
