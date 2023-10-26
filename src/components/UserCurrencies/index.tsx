@@ -123,6 +123,8 @@ export const Comp: React.FC<IComp> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currenciesAsString]);
 
+  const isDisableButton = isLoadingCurrencies || !newCurrency;
+
   return (
     <>
       {showCurrencies ? (
@@ -159,16 +161,13 @@ export const Comp: React.FC<IComp> = ({
               className={`my-react-select-container grow`}
               classNamePrefix="my-react-select"
               options={currenicesOptions}
-              isSearchable={false}
               onChange={(val) => val?.value && setNewCurrency(val?.value)}
             />
 
             <button
-              className={`${twButton} ${
-                isLoadingCurrencies ? "opacity-50" : ""
-              }`}
+              className={`${twButton} ${isDisableButton ? "opacity-50" : ""}`}
               onClick={saveNewCurrency}
-              disabled={isLoadingCurrencies}
+              disabled={isDisableButton}
             >
               <div className="w-8">
                 {" "}
