@@ -29,7 +29,7 @@ export const Comp: React.FC<IComp> = ({
       className="flex flex-col justify-center gap-1 text-slate-900 dark:text-white"
       key={record.id}
     >
-      <p className="text-base text-gray-700 dark:text-slate-200">
+      <p className="text-base text-gray-700 dark:text-slate-200 ">
         {record.timestamp.getDate()}.{record.timestamp.getMonth() + 1}.
         {record.timestamp.getFullYear()}
       </p>
@@ -38,14 +38,21 @@ export const Comp: React.FC<IComp> = ({
           {capitalizeString(text as string)}
         </h5>
 
-        <p
-          className={`flex gap-2 break-words ${
-            record.type === "INCOME" ? "text-green-500" : ""
-          }`}
-        >
-          {record.type === "EXPENSE" ? "- " : "+ "}
-          {numToFloat(+record.amount)} {getCurrencySymbol(record.currency)}
-        </p>
+        <div className="flex flex-col items-end">
+          <p
+            className={`flex gap-2 break-words ${
+              record.type === "INCOME" ? "text-green-500" : ""
+            }`}
+          >
+            {record.type === "EXPENSE" ? "- " : "+ "}
+            {numToFloat(+record.amount)} {getCurrencySymbol(record.currency)}
+          </p>
+          {record.currency !== "USD" ? (
+            <p className="flex gap-2 break-words text-slate-500 dark:text-slate-400">
+              {numToFloat(+record.amountUSD)} {getCurrencySymbol("USD")}
+            </p>
+          ) : null}
+        </div>
       </div>
       {showCategory && record.category && (
         <p>Category: {capitalizeString(record.category)}</p>
