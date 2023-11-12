@@ -189,8 +189,8 @@ const RecordPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
   return (
     <>
       <Head>
-        <title>Plutus:Record</title>
-
+        <title>Dialga:Record</title>
+        <meta name="description" content="Dialga" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div

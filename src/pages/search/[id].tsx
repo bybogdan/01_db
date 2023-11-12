@@ -103,8 +103,8 @@ const SearchPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
   return (
     <>
       <Head>
-        <title>Plutus:Search</title>
-
+        <title>Dialga:Search</title>
+        <meta name="description" content="Dialga" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 

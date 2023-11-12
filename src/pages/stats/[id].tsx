@@ -170,8 +170,8 @@ const Stats = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
   return (
     <>
       <Head>
-        <title>Plutus:Stats</title>
-
+        <title>Dialga:Stats</title>
+        <meta name="description" content="Dialga" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="align-between flex min-h-screen flex-col gap-12 p-6 text-slate-900 dark:text-white">
