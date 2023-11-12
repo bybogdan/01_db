@@ -12,15 +12,16 @@ export default function Install() {
             rel="noreferrer"
           >
             <span className="flex gap-4">
-              Dialga: Money tracker{" "}
-              <Image
-                className="animate-reverse-spin"
-                alt="icon"
-                src="/icon-512x512-transparent.png"
-                width={80}
-                height={60}
-                priority={true}
-              />
+              Plutus: Money tracker{" "}
+              <div className="relative h-[80px] w-[80px]">
+                <Image
+                  className="animate-reverse-spin object-contain	"
+                  alt="icon"
+                  src="/icon-512x512-transparent.png"
+                  fill
+                  priority={true}
+                />
+              </div>
             </span>
           </a>
           <span>Installation Steps</span>{" "}
@@ -28,7 +29,7 @@ export default function Install() {
 
         <div className="mx-auto mt-10 flex flex-col gap-10">
           <span>
-            Dialga : Money tracker is a web application, but it can be installed
+            Plutus : Money tracker is a web application, but it can be installed
             on your device from browsers. The way to install th app is different
             from browsers:
           </span>

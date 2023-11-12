@@ -5,7 +5,7 @@ import { signIn, useSession } from "next-auth/react";
 import { twBigButton } from "../utils/twCommon";
 import { LoggedIn } from "../components/LoggedIn";
 import Image from "next/image";
-import logo from "../../public/icon-192x192.png";
+import logo from "../../public/icon-192x192-transparent.png";
 
 import Link from "next/link";
 import { InstallIcon } from "../components/icons";
@@ -17,8 +17,8 @@ const Home: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Dialga</title>
-        <meta name="description" content="Dialga" />
+        <title>Plutus: Money tracker</title>
+
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div>
@@ -36,7 +36,7 @@ const Home: NextPage = () => {
                   alt="Logo"
                 />
                 <h5 className=" font-boldtext-gray-900 max-w-2xl text-xl dark:text-white sm:text-3xl">
-                  Dialga : Money tracker
+                  Plutus: Money tracker
                 </h5>
               </div>
               <p className="text-gray-700 dark:text-slate-200 sm:text-lg">
