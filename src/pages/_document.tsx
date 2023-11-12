@@ -12,7 +12,7 @@ class MyDocument extends Document {
           <meta name="apple-touch-fullscreen" content="yes" />
           <meta
             name="apple-mobile-web-app-title"
-            content="Diagla - money tracker"
+            content="Plutus: money tracker"
           />
           <meta name="apple-mobile-web-app-capable" content="yes" />
           <meta

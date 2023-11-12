@@ -1,3 +1,3 @@
-# Dialga
+# Plutus
 
 App for money tracker

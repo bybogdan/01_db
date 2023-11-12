@@ -23,7 +23,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
   return (
     <>
       <Head>
-        <title>Diagla - money tracker</title>
+        <title>Plutus - money tracker</title>
         <meta
           name="description"
           content="Convenient way to control your finances"
@@ -34,15 +34,15 @@ const MyApp: AppType<{ session: Session | null }> = ({
           property="og:image"
           content="https://dialgamoney.bgdn.one//icon-512x512.png"
         />
-        <meta property="og:title" content="Diagla - money tracker" />
+        <meta property="og:title" content="Plutus - money tracker" />
         <meta
           property="og:description"
           content="Convenient way to control your finances"
         />
         <meta property="og:url" content="https://dialgamoney.bgdn.one//" />
         <meta content="website" property="og:type" />
-        <meta content="Diagla - money tracker" property="og:image:alt" />
-        <meta name="application-name" content="Diagla - money tracker" />
+        <meta content="Plutus - money tracker" property="og:image:alt" />
+        <meta name="application-name" content="Plutus - money tracker" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta
           name="apple-mobile-web-app-status-bar-style"
@@ -50,7 +50,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
         />
         <meta
           name="apple-mobile-web-app-title"
-          content="Diagla - money tracker"
+          content="Plutus - money tracker"
         />
         <meta name="mobile-web-app-capable" content="yes" />
 

@@ -140,8 +140,8 @@ const UserPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
   return (
     <>
       <Head>
-        <title>Dialga:User</title>
-        <meta name="description" content="Dialga" />
+        <title>Plutus:User</title>
+
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="align-between flex min-h-screen flex-col gap-12 p-6 text-slate-900 dark:text-white">

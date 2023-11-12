@@ -4,8 +4,8 @@
   "display": "standalone",
   "scope": "/",
   "start_url": "/",
-  "name": "Diagla - money tracker",
-  "short_name": "Dialga",
+  "name": "Plutus - money tracker",
+  "short_name": "Plutus",
   "description": "Convenient way to control your finances",
   "icons": [
     {
