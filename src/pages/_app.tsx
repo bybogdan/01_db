@@ -32,14 +32,14 @@ const MyApp: AppType<{ session: Session | null }> = ({
 
         <meta
           property="og:image"
-          content="https://dialgamoney.bgdn.one//icon-512x512.png"
+          content="https://www.plutus.im/icon-512x512.png"
         />
         <meta property="og:title" content="Plutus - money tracker" />
         <meta
           property="og:description"
           content="Convenient way to control your finances"
         />
-        <meta property="og:url" content="https://dialgamoney.bgdn.one//" />
+        <meta property="og:url" content="https://www.plutus.im/" />
         <meta content="website" property="og:type" />
         <meta content="Plutus - money tracker" property="og:image:alt" />
         <meta name="application-name" content="Plutus - money tracker" />

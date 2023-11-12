@@ -6,11 +6,7 @@ export default function Install() {
     <div className="mx-auto flex flex-col items-center justify-start py-6 px-6 md:w-6/12">
       <section className="mx-auto">
         <h1 className="font-heading leading-tighter flex flex-col justify-between text-4xl font-bold tracking-tighter md:text-5xl ">
-          <a
-            target="_blank"
-            href="https://dialgamoney.bgdn.one//"
-            rel="noreferrer"
-          >
+          <a target="_blank" href="https://www.plutus.im/" rel="noreferrer">
             <span className="flex gap-4">
               Plutus: Money tracker{" "}
               <div className="relative h-[80px] w-[80px]">
@@ -40,11 +36,8 @@ export default function Install() {
             <ol>
               <li>
                 Go to:{" "}
-                <a
-                  className="text-blue-500"
-                  href="https://dialgamoney.bgdn.one//"
-                >
-                  https://dialgamoney.bgdn.one//
+                <a className="text-blue-500" href="https://www.plutus.im/">
+                  https://www.plutus.im
                 </a>{" "}
                 on Chrome
               </li>
@@ -75,11 +68,8 @@ export default function Install() {
             <ol>
               <li>
                 Go to:{" "}
-                <a
-                  className="text-blue-500"
-                  href="https://dialgamoney.bgdn.one//"
-                >
-                  https://dialgamoney.bgdn.one//
+                <a className="text-blue-500" href="https://www.plutus.im/">
+                  https://www.plutus.im/
                 </a>{" "}
                 on Safari
               </li>
@@ -109,10 +99,8 @@ export default function Install() {
             <ol>
               <li>
                 Go to:{" "}
-                <a href="https://dialgamoney.bgdn.one//">
-                  https://dialgamoney.bgdn.one//
-                </a>{" "}
-                on Chrome
+                <a href="https://www.plutus.im/">https://www.plutus.im/</a> on
+                Chrome
               </li>
               <li>
                 At the top right of the address bar, click the install icon
@@ -138,10 +126,8 @@ export default function Install() {
             <ol>
               <li>
                 Go to:{" "}
-                <a href="https://dialgamoney.bgdn.one//">
-                  https://dialgamoney.bgdn.one//
-                </a>{" "}
-                on Edge
+                <a href="https://www.plutus.im/">https://www.plutus.im/</a> on
+                Edge
               </li>
               <li>
                 At the top right of the address bar, click the app available
