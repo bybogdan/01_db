@@ -13,14 +13,15 @@ export default function Install() {
           >
             <span className="flex gap-4">
               Dialga: Money tracker{" "}
-              <Image
-                className="animate-reverse-spin"
-                alt="icon"
-                src="/icon-512x512-transparent.png"
-                width={80}
-                height={60}
-                priority={true}
-              />
+              <div className="relative h-[80px] w-[80px]">
+                <Image
+                  className="animate-reverse-spin object-contain"
+                  alt="icon"
+                  src="/icon-512x512-transparent.png"
+                  fill
+                  priority={true}
+                />
+              </div>
             </span>
           </a>
           <span>Installation Steps</span>{" "}
