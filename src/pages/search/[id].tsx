@@ -128,7 +128,7 @@ const SearchPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
               />
             ) : null}
 
-            {records?.length ? (
+            {!isFetching && records?.length ? (
               <>
                 <StatsCategory
                   category={currentTag}
