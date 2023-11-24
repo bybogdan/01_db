@@ -11,7 +11,7 @@ import type { ISelectOption } from "../../utils/common";
 import {
   defaultCategories,
   defaultTags,
-  getCurrencySymbol,
+  getCurrencySymbolOrNothing,
   preapreDataForSelect,
   showError,
 } from "../../utils/common";
@@ -161,7 +161,7 @@ const Comp: React.FC<IComp> = ({
   const typesOptions = preapreDataForSelect(["EXPENSE", "INCOME"]);
   const currenciesOptions = currenciesData.map((c) => ({
     value: c,
-    label: `${c} ${getCurrencySymbol(c)}`,
+    label: `${c} ${getCurrencySymbolOrNothing(c)}`,
   }));
 
   return (

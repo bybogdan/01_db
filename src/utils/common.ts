@@ -832,4 +832,16 @@ export const ALL_CURRENCIES = [
     code: "ZWL",
     name: "Zimbabwean Dollar",
   },
+  {
+    code: "BUSD",
+    name: "Binance USD",
+  },
+  {
+    code: "USDC",
+    name: "USD Coin",
+  },
+  {
+    code: "USDT",
+    name: "Tether",
+  },
 ];

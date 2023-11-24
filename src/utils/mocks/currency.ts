@@ -177,5 +177,8 @@ export const currencyResponseMock = {
     ZMK: { code: "ZMK", value: 9001.2 },
     ZMW: { code: "ZMW", value: 19.28267 },
     ZWL: { code: "ZWL", value: 321.999592 },
+    BUSD: { code: "BUSD", value: 0.9997060646 },
+    USDC: { code: "USDC", value: 1.0004991642 },
+    USDT: { code: "USDT", value: 0.9999918055 },
   },
 };
