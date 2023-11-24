@@ -181,7 +181,7 @@ const Stats = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
           homePageHref="/"
         />
         {amountOfMonths ? (
-          <div className="relative">
+          <div className="relative w-full max-w-5xl self-center">
             <div className="relative flex overflow-hidden" ref={statsNodeRef}>
               {Object.entries(recordsDataByMonths).map(
                 (recordDataByMonth, index) => (

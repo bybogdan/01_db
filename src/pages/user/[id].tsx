@@ -151,7 +151,7 @@ const UserPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
           homePageHref={homePageHref}
         />
 
-        <div className="flex flex-col gap-8">
+        <div className="flex w-full max-w-5xl flex-col gap-8 self-center">
           <button className={twButton}>
             <Link
               href={`/install`}

@@ -203,7 +203,7 @@ const RecordPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
             userId={userData?.id as string}
             homePageHref={homePageHref}
           />
-          <div className="flex flex-col gap-4">
+          <div className="flex w-full max-w-5xl flex-col gap-4 self-center">
             <div
               className={`flex gap-2 ${
                 record.type === "INCOME" ? "text-green-500" : ""
@@ -246,7 +246,7 @@ const RecordPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
           </div>
 
           {isShowEditForm ? (
-            <div className="mb-3">
+            <div className="mb-3 w-full max-w-5xl self-center">
               <RecordForm
                 sessionUserId={userData?.id as string}
                 handleRefetchData={handleRefetchData}
@@ -260,7 +260,11 @@ const RecordPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
           ) : null}
         </div>
 
-        <div className={`flex flex-col gap-6 ${!isStandalone ? "pb-14" : ""}`}>
+        <div
+          className={`flex w-full max-w-5xl flex-col gap-6 self-center ${
+            !isStandalone ? "pb-14" : ""
+          }`}
+        >
           {!isShowEditForm ? (
             <button className={twButton} onClick={toggleShowingForm}>
               edit

@@ -116,7 +116,7 @@ const SearchPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
             homePageHref={homePageHref}
           />
 
-          <div className="flex flex-col gap-8">
+          <div className="flex w-full max-w-5xl flex-col gap-8 self-center">
             {tagsOptions.length ? (
               <Select
                 placeholder="Select tags"
