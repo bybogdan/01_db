@@ -106,8 +106,14 @@ const UserPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { data: sessionData, status } = useSession();
   const router = useRouter();
 
-  const { mutate: setIsShowCurrentMonthBalance } =
-    trpc.user.setIsShowCurrentMonthBalance.useMutation();
+  const {
+    mutate: setIsShowCurrentMonthBalance,
+    isLoading: isLoadingShowCurrentMonthBalance,
+  } = trpc.user.setIsShowCurrentMonthBalance.useMutation({
+    onSuccess: async () => {
+      await refetchGetUser();
+    },
+  });
 
   const addQueryParamToRefetchDataOnHomePage = useCallback(() => {
     setHomePageHref("/?update=1");
@@ -155,6 +161,7 @@ const UserPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
       id: userId,
       isShowCurrentMonthBalance: checked,
     });
+    addQueryParamToRefetchDataOnHomePage();
   };
 
   return (
@@ -213,7 +220,7 @@ const UserPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
                 className="relative h-[30px] w-[46px] cursor-pointer rounded-full border-2 border-solid border-blue-600 outline-none data-[state=checked]:bg-blue-600"
                 id="balance-type-switch"
                 onCheckedChange={handleSwitchChange}
-                defaultChecked={isShowCurrentMonthBalanceClient}
+                checked={isShowCurrentMonthBalanceClient}
               >
                 <Switch.Thumb className="shadow-blackA4 block h-[21px] w-[21px] translate-x-0.5 rounded-full bg-white shadow-[0_2px_2px] transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[19px]" />
               </Switch.Root>
@@ -225,6 +232,7 @@ const UserPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
                   ? "Show current month balance on home page"
                   : "Show last 30 days balance on home page"}
               </label>
+              {isLoadingShowCurrentMonthBalance ? <Loader /> : null}
             </div>
           </div>
           <button className={twButton} onClick={() => signOut()}>
