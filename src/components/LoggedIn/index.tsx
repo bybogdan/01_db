@@ -166,7 +166,11 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
         />
         <div className="flex max-w-5xl flex-col gap-2 self-center	">
           <div className=" flex  flex-col items-center justify-center  gap-2 text-2xl font-semibold">
-            <span>Balance from last 30 days:</span>
+            <span>
+              {isShowCurrentMonthBalance
+                ? "Current month balance:"
+                : "Balance from last 30 days:"}
+            </span>
             <BalanceAmount balance={showBalanceForPeriod} />
           </div>
         </div>
