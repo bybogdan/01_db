@@ -226,6 +226,23 @@ export const recordRouter = router({
 
       const balance = +numToFloat(+income - +expense);
 
+      const currentMonthRecords = records.filter(
+        (record) =>
+          record.timestamp.getMonth() === new Date().getMonth() &&
+          record.timestamp.getFullYear() === new Date().getFullYear()
+      );
+
+      const currentMonthBalance = +(currentMonthRecords.length
+        ? numToFloat(
+            currentMonthRecords
+              .filter((record) => record.type === "INCOME")
+              .reduce((acc, record) => (acc += +record.amountUSD), 0) -
+              currentMonthRecords
+                .filter((record) => record.type === "EXPENSE")
+                .reduce((acc, record) => (acc += +record.amountUSD), 0)
+          )
+        : "0.00");
+
       const userData: User | null = await ctx.prisma.user.findFirst({
         where: {
           id: userId,
@@ -247,6 +264,8 @@ export const recordRouter = router({
         records: records.slice(0, lastIndex),
         totalRecordsAmount,
         balance,
+        currentMonthBalance,
+        isShowCurrentMonthBalance: userData?.isShowCurrentMonthBalance || false,
         categories: userData?.categories || null,
         tags: userData?.tags || null,
         currencies: userData?.currencies || INCLUDED_CURRENCIES,
