@@ -6,6 +6,7 @@ import type {
 import Head from "next/head";
 import { signOut, useSession } from "next-auth/react";
 import superjson from "superjson";
+import * as Switch from "@radix-ui/react-switch";
 
 import { twButton, twCenteringBlock } from "../../utils/twCommon";
 import { prisma } from "../../server/db/client";
@@ -72,6 +73,8 @@ const UserPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
 
   const [homePageHref, setHomePageHref] = useState("/");
   const [isHighlitedTags, setIsHighlitedTags] = useState(false);
+  const [isShowCurrentMonthBalanceClient, setIsShowCurrentMonthBalanceClient] =
+    useState(false);
 
   const categoriesArray: string[] =
     initialData.categories !== null
@@ -103,6 +106,9 @@ const UserPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { data: sessionData, status } = useSession();
   const router = useRouter();
 
+  const { mutate: setIsShowCurrentMonthBalance } =
+    trpc.user.setIsShowCurrentMonthBalance.useMutation();
+
   const addQueryParamToRefetchDataOnHomePage = useCallback(() => {
     setHomePageHref("/?update=1");
   }, []);
@@ -114,6 +120,12 @@ const UserPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
     }
     router.replace(`/user/${userId}`, undefined, { shallow: true });
   }, []);
+
+  useEffect(() => {
+    if (userData?.isShowCurrentMonthBalance) {
+      setIsShowCurrentMonthBalanceClient(true);
+    }
+  }, [userData?.isShowCurrentMonthBalance]);
 
   useEffect(() => {
     if (status !== "loading" && sessionData?.user?.id !== userId) {
@@ -137,6 +149,14 @@ const UserPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
     await refetchGetUser();
   };
 
+  const handleSwitchChange = (checked: boolean) => {
+    setIsShowCurrentMonthBalanceClient(checked);
+    setIsShowCurrentMonthBalance({
+      id: userId,
+      isShowCurrentMonthBalance: checked,
+    });
+  };
+
   return (
     <>
       <Head>
@@ -144,14 +164,14 @@ const UserPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
 
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div className="align-between flex min-h-screen flex-col gap-12 p-6 text-slate-900 dark:text-white">
+      <div className="align-between flex min-h-screen flex-col gap-14 p-6 text-slate-900 dark:text-white">
         <Header
           userId={(sessionData.user.id as string) || ""}
           userName={(sessionData.user.name as string) || ""}
           homePageHref={homePageHref}
         />
 
-        <div className="flex w-full max-w-5xl flex-col gap-8 self-center">
+        <div className="flex w-full max-w-5xl flex-col gap-10 self-center">
           <button className={twButton}>
             <Link
               href={`/install`}
@@ -168,7 +188,6 @@ const UserPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
               addQueryParamToRefetchDataOnHomePage
             }
           />
-
           <UserTags
             tags={tags}
             userId={userId}
@@ -179,7 +198,6 @@ const UserPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
             isHighlited={isHighlitedTags}
             setIsHighlited={setIsHighlitedTags}
           />
-
           <UserCurrencies
             currencies={currencies}
             userId={userId}
@@ -189,6 +207,26 @@ const UserPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
             }
           />
 
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center gap-6">
+              <Switch.Root
+                className="relative h-[30px] w-[46px] cursor-pointer rounded-full border-2 border-solid border-blue-600 outline-none data-[state=checked]:bg-blue-600"
+                id="balance-type-switch"
+                onCheckedChange={handleSwitchChange}
+                defaultChecked={isShowCurrentMonthBalanceClient}
+              >
+                <Switch.Thumb className="shadow-blackA4 block h-[21px] w-[21px] translate-x-0.5 rounded-full bg-white shadow-[0_2px_2px] transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[19px]" />
+              </Switch.Root>
+              <label
+                className="max-w-[50%] cursor-pointer break-words text-xl font-medium leading-tight text-gray-900 dark:text-white"
+                htmlFor="balance-type-switch"
+              >
+                {isShowCurrentMonthBalanceClient
+                  ? "Show current month balance on home page"
+                  : "Show last 30 days balance on home page"}
+              </label>
+            </div>
+          </div>
           <button className={twButton} onClick={() => signOut()}>
             {capitalizeString("sign out")}
           </button>

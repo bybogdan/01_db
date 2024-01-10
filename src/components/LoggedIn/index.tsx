@@ -27,6 +27,8 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
     records: Record[];
     totalRecordsAmount: number;
     balance: number;
+    currentMonthBalance: number;
+    isShowCurrentMonthBalance: boolean;
     categories: string[];
     tags: string[] | null;
     currencies: string[];
@@ -139,8 +141,20 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
     );
   }
 
-  const { records, totalRecordsAmount, balance, categories, tags, currencies } =
-    stateData;
+  const {
+    records,
+    totalRecordsAmount,
+    balance,
+    currentMonthBalance,
+    isShowCurrentMonthBalance,
+    categories,
+    tags,
+    currencies,
+  } = stateData;
+
+  const showBalanceForPeriod = isShowCurrentMonthBalance
+    ? currentMonthBalance
+    : balance;
 
   return (
     <div className="align-between relative flex min-h-screen flex-col text-slate-900 dark:text-white">
@@ -153,7 +167,7 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
         <div className="flex max-w-5xl flex-col gap-2 self-center	">
           <div className=" flex  flex-col items-center justify-center  gap-2 text-2xl font-semibold">
             <span>Balance from last 30 days:</span>
-            <BalanceAmount balance={balance} />
+            <BalanceAmount balance={showBalanceForPeriod} />
           </div>
         </div>
       </div>

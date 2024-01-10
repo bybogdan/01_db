@@ -73,4 +73,23 @@ export const userRouter = router({
       });
       return { currencies };
     }),
+  setIsShowCurrentMonthBalance: publicProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        isShowCurrentMonthBalance: z.boolean(),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const { id, isShowCurrentMonthBalance } = input;
+      await ctx.prisma.user.update({
+        where: {
+          id,
+        },
+        data: {
+          isShowCurrentMonthBalance,
+        },
+      });
+      return { isShowCurrentMonthBalance };
+    }),
 });
