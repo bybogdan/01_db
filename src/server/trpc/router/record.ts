@@ -260,7 +260,7 @@ export const recordRouter = router({
         });
       }
 
-      const homePageCategory = userData?.homePageCategory || null;
+      const homePageCategory = userData?.homePageCategory || "";
       const homePageCategoryRecords = homePageCategory
         ? records.filter((record) => record.category === homePageCategory)
         : null;
