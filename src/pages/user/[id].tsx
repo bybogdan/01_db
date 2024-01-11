@@ -75,6 +75,8 @@ const UserPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
   const [isHighlitedTags, setIsHighlitedTags] = useState(false);
   const [isShowCurrentMonthBalanceClient, setIsShowCurrentMonthBalanceClient] =
     useState(false);
+  const [isAddTypeToHomeCategoryClient, setAddTypeToHomeCategoryClient] =
+    useState(false);
 
   const categoriesArray: string[] =
     initialData.categories !== null
@@ -103,6 +105,7 @@ const UserPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
   const homePageCategory = userData?.homePageCategory as string;
   const tags = (userData?.tags as string[]) || tagsArray;
   const currencies = userData?.currencies as string[];
+  const isAddTypeToHomeCategory = userData?.isAddTypeToHomeCategory as boolean;
 
   const { data: sessionData, status } = useSession();
   const router = useRouter();
@@ -111,6 +114,15 @@ const UserPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
     mutate: setIsShowCurrentMonthBalance,
     isLoading: isLoadingShowCurrentMonthBalance,
   } = trpc.user.setIsShowCurrentMonthBalance.useMutation({
+    onSuccess: async () => {
+      await refetchGetUser();
+    },
+  });
+
+  const {
+    mutate: setAddTypeToHomeCategory,
+    isLoading: isLoadingAddTypeToHomeCategory,
+  } = trpc.user.setAddTypeToHomeCategory.useMutation({
     onSuccess: async () => {
       await refetchGetUser();
     },
@@ -133,6 +145,12 @@ const UserPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
       setIsShowCurrentMonthBalanceClient(true);
     }
   }, [userData?.isShowCurrentMonthBalance]);
+
+  useEffect(() => {
+    if (userData?.isAddTypeToHomeCategory) {
+      setAddTypeToHomeCategoryClient(true);
+    }
+  }, [userData?.isAddTypeToHomeCategory]);
 
   useEffect(() => {
     if (status !== "loading" && sessionData?.user?.id !== userId) {
@@ -165,6 +183,15 @@ const UserPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
     addQueryParamToRefetchDataOnHomePage();
   };
 
+  const handleAddTypeToHomeCategory = (checked: boolean) => {
+    setAddTypeToHomeCategoryClient(checked);
+    setAddTypeToHomeCategory({
+      id: userId,
+      isAddTypeToHomeCategory: checked,
+    });
+    addQueryParamToRefetchDataOnHomePage();
+  };
+
   return (
     <>
       <Head>
@@ -179,7 +206,7 @@ const UserPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
           homePageHref={homePageHref}
         />
 
-        <div className="flex w-full max-w-5xl flex-col gap-10 self-center">
+        <div className="flex w-full max-w-5xl flex-col gap-8 self-center">
           <button className={twButton}>
             <Link
               href={`/install`}
@@ -216,27 +243,44 @@ const UserPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
             }
           />
 
-          <div className="flex flex-col gap-2">
-            <div className="flex items-center gap-6">
-              <Switch.Root
-                className="relative h-[30px] w-[46px] cursor-pointer rounded-full border-2 border-solid border-blue-600 outline-none data-[state=checked]:bg-blue-600"
-                id="balance-type-switch"
-                onCheckedChange={handleSwitchChange}
-                checked={isShowCurrentMonthBalanceClient}
-              >
-                <Switch.Thumb className="shadow-blackA4 block h-[21px] w-[21px] translate-x-0.5 rounded-full bg-white shadow-[0_2px_2px] transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[19px]" />
-              </Switch.Root>
-              <label
-                className="max-w-[50%] cursor-pointer break-words text-xl font-medium leading-tight text-gray-900 dark:text-white"
-                htmlFor="balance-type-switch"
-              >
-                {isShowCurrentMonthBalanceClient
-                  ? "Show current month balance on home page"
-                  : "Show last 30 days balance on home page"}
-              </label>
-              {isLoadingShowCurrentMonthBalance ? <Loader /> : null}
-            </div>
+          <div className="flex items-center gap-6">
+            <Switch.Root
+              className="relative h-[30px] w-[46px] cursor-pointer rounded-full border-2 border-solid border-blue-600 outline-none data-[state=checked]:bg-blue-600"
+              id="balance-type-switch"
+              onCheckedChange={handleSwitchChange}
+              checked={isShowCurrentMonthBalanceClient}
+            >
+              <Switch.Thumb className="shadow-blackA4 block h-[21px] w-[21px] translate-x-0.5 rounded-full bg-white shadow-[0_2px_2px] transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[19px]" />
+            </Switch.Root>
+            <label
+              className="max-w-[50%] cursor-pointer break-words text-xl font-medium leading-tight text-gray-900 dark:text-white"
+              htmlFor="balance-type-switch"
+            >
+              {isShowCurrentMonthBalanceClient
+                ? "Show current month balance on home page"
+                : "Show last 30 days balance on home page"}
+            </label>
+            {isLoadingShowCurrentMonthBalance ? <Loader /> : null}
           </div>
+
+          <div className="flex items-center gap-6">
+            <Switch.Root
+              className="relative h-[30px] w-[46px] cursor-pointer rounded-full border-2 border-solid border-blue-600 outline-none data-[state=checked]:bg-blue-600"
+              id="balance-type-switch"
+              onCheckedChange={handleAddTypeToHomeCategory}
+              checked={isAddTypeToHomeCategoryClient}
+            >
+              <Switch.Thumb className="shadow-blackA4 block h-[21px] w-[21px] translate-x-0.5 rounded-full bg-white shadow-[0_2px_2px] transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[19px]" />
+            </Switch.Root>
+            <label
+              className="max-w-[50%] cursor-pointer break-words text-xl font-medium leading-tight text-gray-900 dark:text-white"
+              htmlFor="balance-type-switch"
+            >
+              Use normal types for home page category
+            </label>
+            {isLoadingAddTypeToHomeCategory ? <Loader /> : null}
+          </div>
+
           <button className={twButton} onClick={() => signOut()}>
             {capitalizeString("sign out")}
           </button>

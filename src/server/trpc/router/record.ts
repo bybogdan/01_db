@@ -261,13 +261,16 @@ export const recordRouter = router({
       }
 
       const homePageCategory = userData?.homePageCategory || "";
+
       const homePageCategoryRecords = homePageCategory
         ? records.filter((record) => record.category === homePageCategory)
         : null;
 
       const homePageCategoryIncome = homePageCategoryRecords
         ? homePageCategoryRecords
-            .filter((record) => record.type === "INCOME")
+            .filter(
+              (record) => record.type == "INCOME" || record.type === "OTHER"
+            )
             .reduce((acc, record) => (acc += +record.amountUSD), 0)
         : 0;
 
@@ -291,6 +294,10 @@ export const recordRouter = router({
         currencies: userData?.currencies || INCLUDED_CURRENCIES,
         homePageCategory,
         homePageCategoryBalance,
+        isAddTypeToHomeCategory:
+          typeof userData?.isAddTypeToHomeCategory !== "boolean"
+            ? true
+            : userData?.isAddTypeToHomeCategory,
       };
     }),
   getRecord: publicProcedure

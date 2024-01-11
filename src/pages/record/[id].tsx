@@ -210,7 +210,11 @@ const RecordPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
               }`}
             >
               <h3 className={twHeading}>
-                {record.type === "EXPENSE" ? "- " : "+ "}
+                {record.type === "EXPENSE"
+                  ? "- "
+                  : record.type === "INCOME"
+                  ? "+ "
+                  : ""}
                 {numToFloat(+record.amount)}
               </h3>
               <h3 className={twHeading}>
@@ -249,6 +253,12 @@ const RecordPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
             <div className="mb-3 w-full max-w-5xl self-center">
               <RecordForm
                 sessionUserId={userData?.id as string}
+                homePageCategory={userData?.homePageCategory || ""}
+                isAddTypeToHomeCategory={
+                  typeof userData?.isAddTypeToHomeCategory !== "boolean"
+                    ? true
+                    : userData?.isAddTypeToHomeCategory
+                }
                 handleRefetchData={handleRefetchData}
                 currentRecord={record}
                 discardButton={DiscardButton}

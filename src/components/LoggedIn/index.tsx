@@ -34,6 +34,7 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
     currencies: string[];
     homePageCategory: string;
     homePageCategoryBalance: number;
+    isAddTypeToHomeCategory: boolean;
   }>();
   const [isShowBackToStart, setShowBackToStart] = useState(false);
 
@@ -154,6 +155,7 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
     currencies,
     homePageCategory,
     homePageCategoryBalance,
+    isAddTypeToHomeCategory,
   } = stateData;
 
   const showBalanceForPeriod = isShowCurrentMonthBalance
@@ -193,6 +195,8 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
         <div ref={formWrapperRef}>
           <RecordForm
             sessionUserId={sessionUserId}
+            homePageCategory={homePageCategory}
+            isAddTypeToHomeCategory={isAddTypeToHomeCategory}
             handleRefetchData={handleRefetchData}
             categories={categories as string[]}
             tags={tags}

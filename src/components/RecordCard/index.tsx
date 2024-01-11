@@ -44,7 +44,11 @@ export const Comp: React.FC<IComp> = ({
               record.type === "INCOME" ? "text-green-500" : ""
             }`}
           >
-            {record.type === "EXPENSE" ? "- " : "+ "}
+            {record.type === "EXPENSE"
+              ? "- "
+              : record.type === "INCOME"
+              ? "+ "
+              : ""}
             {numToFloat(+record.amount)} {getCurrencySymbol(record.currency)}
           </p>
           {record.currency !== "USD" ? (

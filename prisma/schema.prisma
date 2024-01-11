@@ -39,6 +39,7 @@ model Session {
 enum RecordType {
   INCOME
   EXPENSE
+  OTHER
 }
 
 model Record {
@@ -70,6 +71,7 @@ model User {
   currencies                Json?
   isShowCurrentMonthBalance Boolean?  @default(false)
   homePageCategory          String?   @default("")
+  isAddTypeToHomeCategory   Boolean?  @default(true)
 }
 
 model VerificationToken {

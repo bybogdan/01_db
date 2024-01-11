@@ -30,6 +30,8 @@ const FORM_ERRORS = {
 
 interface IComp {
   sessionUserId: string;
+  homePageCategory: string;
+  isAddTypeToHomeCategory: boolean;
   handleRefetchData: () => Promise<void>;
   isFetchingInParentComp?: boolean;
   currentRecord?: Record;
@@ -41,6 +43,8 @@ interface IComp {
 
 const Comp: React.FC<IComp> = ({
   sessionUserId,
+  homePageCategory,
+  isAddTypeToHomeCategory,
   handleRefetchData,
   currentRecord,
   discardButton,
@@ -92,11 +96,13 @@ const Comp: React.FC<IComp> = ({
     formState: { errors },
     control,
     getValues,
+    setValue,
   } = useForm<RecordSchema>({
     defaultValues,
   });
 
   const [isShowLoader, setShowLoader] = useState(false);
+  const [isOtherType, setOtherType] = useState(false);
 
   const handleErrors = useCallback(() => {
     if (!Object.keys(errors).length) {
@@ -158,7 +164,7 @@ const Comp: React.FC<IComp> = ({
   const tagsOptions = preapreDataForSelect(tagsArray);
   const hasTags = tagsOptions.length > 0;
 
-  const typesOptions = preapreDataForSelect(["EXPENSE", "INCOME"]);
+  const typesOptions = preapreDataForSelect(["EXPENSE", "INCOME", "OTHER"]);
   const currenciesOptions = currenciesData.map((c) => ({
     value: c,
     label: `${c} ${getCurrencySymbolOrNothing(c)}`,
@@ -215,7 +221,12 @@ const Comp: React.FC<IComp> = ({
               className="my-react-select-container"
               classNamePrefix="my-react-select"
               options={typesOptions}
-              value={typesOptions.find((c) => value === c.value)}
+              isDisabled={isOtherType}
+              value={
+                isOtherType
+                  ? typesOptions.find((c) => "OTHER" === c.value)
+                  : typesOptions.find((c) => value === c.value)
+              }
               onChange={(val) => onChange(val?.value)}
               isSearchable={false}
             />
@@ -231,7 +242,19 @@ const Comp: React.FC<IComp> = ({
               classNamePrefix="my-react-select"
               options={categoriesOptions}
               value={categoriesOptions.find((c) => value === c.value)}
-              onChange={(val) => onChange(val?.value)}
+              onChange={(val) => {
+                if (
+                  val?.value !== "" &&
+                  val?.value === homePageCategory &&
+                  !isAddTypeToHomeCategory
+                ) {
+                  setOtherType(true);
+                  setValue("type", "OTHER");
+                } else {
+                  setOtherType(false);
+                }
+                onChange(val?.value);
+              }}
             />
           )}
         />
