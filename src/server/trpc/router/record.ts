@@ -260,6 +260,26 @@ export const recordRouter = router({
         });
       }
 
+      const homePageCategory = userData?.homePageCategory || null;
+      const homePageCategoryRecords = homePageCategory
+        ? records.filter((record) => record.category === homePageCategory)
+        : null;
+
+      const homePageCategoryIncome = homePageCategoryRecords
+        ? homePageCategoryRecords
+            .filter((record) => record.type === "INCOME")
+            .reduce((acc, record) => (acc += +record.amountUSD), 0)
+        : 0;
+
+      const homePageCategoryExpense = homePageCategoryRecords
+        ? homePageCategoryRecords
+            .filter((record) => record.type === "EXPENSE")
+            .reduce((acc, record) => (acc += +record.amountUSD), 0)
+        : 0;
+
+      const homePageCategoryBalance =
+        homePageCategoryIncome - homePageCategoryExpense;
+
       return {
         records: records.slice(0, lastIndex),
         totalRecordsAmount,
@@ -269,6 +289,8 @@ export const recordRouter = router({
         categories: userData?.categories || null,
         tags: userData?.tags || null,
         currencies: userData?.currencies || INCLUDED_CURRENCIES,
+        homePageCategory,
+        homePageCategoryBalance,
       };
     }),
   getRecord: publicProcedure

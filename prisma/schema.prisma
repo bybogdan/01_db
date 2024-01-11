@@ -69,6 +69,7 @@ model User {
   tags                      Json?
   currencies                Json?
   isShowCurrentMonthBalance Boolean?  @default(false)
+  homePageCategory          String?   @default("")
 }
 
 model VerificationToken {

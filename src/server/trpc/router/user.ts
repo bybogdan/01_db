@@ -92,4 +92,23 @@ export const userRouter = router({
       });
       return { isShowCurrentMonthBalance };
     }),
+  setHomePageCategory: publicProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        homePageCategory: z.string(),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const { id, homePageCategory } = input;
+      await ctx.prisma.user.update({
+        where: {
+          id,
+        },
+        data: {
+          homePageCategory,
+        },
+      });
+      return { homePageCategory };
+    }),
 });
