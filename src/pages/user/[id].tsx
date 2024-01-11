@@ -100,6 +100,7 @@ const UserPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
   });
 
   const categories = (userData?.categories as string[]) || categoriesArray;
+  const homePageCategory = userData?.homePageCategory as string;
   const tags = (userData?.tags as string[]) || tagsArray;
   const currencies = userData?.currencies as string[];
 
@@ -189,6 +190,7 @@ const UserPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
           </button>
           <UserCategories
             categories={categories}
+            homePageCategory={homePageCategory}
             userId={userId}
             refetchGetUser={handleRefetchGetUser}
             addQueryParamToRefetchDataOnHomePage={

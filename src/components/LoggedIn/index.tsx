@@ -169,7 +169,9 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
           homePageHref="/"
         />
         <div className="flex max-w-5xl flex-col items-center gap-2 self-center	">
-          <div className=" flex items-center justify-center gap-2 text-2xl font-semibold">
+          <div
+            className={`flex flex-col items-center justify-center gap-2 text-2xl  font-semibold`}
+          >
             <span>
               {isShowCurrentMonthBalance
                 ? "Current month balance:"
