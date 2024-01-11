@@ -111,4 +111,23 @@ export const userRouter = router({
       });
       return { homePageCategory };
     }),
+  setAddTypeToHomeCategory: publicProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        isAddTypeToHomeCategory: z.boolean(),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const { id, isAddTypeToHomeCategory } = input;
+      await ctx.prisma.user.update({
+        where: {
+          id,
+        },
+        data: {
+          isAddTypeToHomeCategory,
+        },
+      });
+      return { isAddTypeToHomeCategory };
+    }),
 });

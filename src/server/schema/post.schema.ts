@@ -2,7 +2,7 @@ import type { TypeOf } from "zod";
 import { z } from "zod";
 
 export const createRecordSchema = z.object({
-  type: z.enum(["INCOME", "EXPENSE"]),
+  type: z.enum(["INCOME", "EXPENSE", "OTHER"]),
   name: z.string().nullish(),
   message: z.string().nullish(),
   category: z.string().nullish(),
