@@ -32,6 +32,8 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
     categories: string[];
     tags: string[] | null;
     currencies: string[];
+    homePageCategory: string;
+    homePageCategoryBalance: number;
   }>();
   const [isShowBackToStart, setShowBackToStart] = useState(false);
 
@@ -150,6 +152,8 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
     categories,
     tags,
     currencies,
+    homePageCategory,
+    homePageCategoryBalance,
   } = stateData;
 
   const showBalanceForPeriod = isShowCurrentMonthBalance
@@ -164,8 +168,8 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
           userId={sessionUserId}
           homePageHref="/"
         />
-        <div className="flex max-w-5xl flex-col gap-2 self-center	">
-          <div className=" flex  flex-col items-center justify-center  gap-2 text-2xl font-semibold">
+        <div className="flex max-w-5xl flex-col items-center gap-2 self-center	">
+          <div className=" flex items-center justify-center gap-2 text-2xl font-semibold">
             <span>
               {isShowCurrentMonthBalance
                 ? "Current month balance:"
@@ -173,6 +177,13 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
             </span>
             <BalanceAmount balance={showBalanceForPeriod} />
           </div>
+
+          {homePageCategory ? (
+            <div className=" text-l flex items-center justify-center gap-2 font-semibold">
+              <span>Total amount: {homePageCategory}</span>
+              <BalanceAmount balance={homePageCategoryBalance} />
+            </div>
+          ) : null}
         </div>
       </div>
 
