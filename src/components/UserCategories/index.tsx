@@ -11,6 +11,7 @@ import * as Switch from "@radix-ui/react-switch";
 
 interface IComp {
   categories: string[];
+  homePageCategory: string;
   userId: string;
   refetchGetUser: () => Promise<void>;
   addQueryParamToRefetchDataOnHomePage: () => void;
@@ -18,6 +19,7 @@ interface IComp {
 
 export const Comp: React.FC<IComp> = ({
   categories,
+  homePageCategory,
   userId,
   refetchGetUser,
   addQueryParamToRefetchDataOnHomePage,
@@ -71,6 +73,7 @@ export const Comp: React.FC<IComp> = ({
       homePageCategory: chekbox ? categories[index] || "" : "",
     });
     setSelectedCategoryToShowOnHomePage(chekbox ? index : -1);
+    addQueryParamToRefetchDataOnHomePage();
   };
 
   const saveNewCategory = async () => {
@@ -162,7 +165,7 @@ export const Comp: React.FC<IComp> = ({
             </h5>
             <h5 className="text-sm leading-tight opacity-50 md:text-lg">
               {capitalizeString(
-                "Select checkbox at category to show it on home page."
+                "Select checkbox at category to show it balance on home page"
               )}
             </h5>
             <h5 className="text-sm leading-tight md:text-lg">
@@ -248,7 +251,11 @@ export const Comp: React.FC<IComp> = ({
                         onCheckedChange={(chekbox) =>
                           handleSelectCategoryToShowOnHomePage(chekbox, index)
                         }
-                        checked={index === selectedCategoryToShowOnHomePage}
+                        checked={
+                          index === selectedCategoryToShowOnHomePage ||
+                          (homePageCategory === name &&
+                            selectedCategoryToShowOnHomePage === -1)
+                        }
                         disabled={isLoading}
                       >
                         <Switch.Thumb className="shadow-blackA4 block h-[21px] w-[21px] translate-x-0.5 rounded-full bg-white shadow-[0_2px_2px] transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[19px]" />
