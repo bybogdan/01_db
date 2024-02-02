@@ -75,6 +75,9 @@ const UserPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
   const [isHighlitedTags, setIsHighlitedTags] = useState(false);
   const [isShowCurrentMonthBalanceClient, setIsShowCurrentMonthBalanceClient] =
     useState(false);
+  const [isShowFullBalanceClient, setIsShowFullBalanceClient] = useState(false);
+  const [isShowLast30DaysBalanceClient, setIsShowLast30DaysBalanceClient] =
+    useState(false);
   const [isAddTypeToHomeCategoryClient, setAddTypeToHomeCategoryClient] =
     useState(false);
 
@@ -120,6 +123,24 @@ const UserPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
   });
 
   const {
+    mutate: setIsShowFullBalance,
+    isLoading: isLoadingIsShowFullBalance,
+  } = trpc.user.setIsShowFullBalance.useMutation({
+    onSuccess: async () => {
+      await refetchGetUser();
+    },
+  });
+
+  const {
+    mutate: setIsShowLast30DaysBalance,
+    isLoading: isLoadingIsShowLast30DaysBalanceClient,
+  } = trpc.user.setIsShowLast30DaysBalance.useMutation({
+    onSuccess: async () => {
+      await refetchGetUser();
+    },
+  });
+
+  const {
     mutate: setAddTypeToHomeCategory,
     isLoading: isLoadingAddTypeToHomeCategory,
   } = trpc.user.setAddTypeToHomeCategory.useMutation({
@@ -144,7 +165,17 @@ const UserPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
     if (userData?.isShowCurrentMonthBalance) {
       setIsShowCurrentMonthBalanceClient(true);
     }
-  }, [userData?.isShowCurrentMonthBalance]);
+    if (userData?.isShowFullBalance) {
+      setIsShowFullBalanceClient(true);
+    }
+    if (userData?.isShowLast30DaysBalance) {
+      setIsShowLast30DaysBalanceClient(true);
+    }
+  }, [
+    userData?.isShowCurrentMonthBalance,
+    userData?.isShowFullBalance,
+    userData?.isShowLast30DaysBalance,
+  ]);
 
   useEffect(() => {
     if (userData?.isAddTypeToHomeCategory) {
@@ -243,11 +274,41 @@ const UserPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
             }
           />
 
+          <hr />
+
+          <h5 className="text-center text-xl font-semibold leading-tight text-gray-900 dark:text-white">
+            Home page balance settings
+          </h5>
+
           <div className="flex items-center gap-6">
             <Switch.Root
               className="relative h-[30px] w-[46px] cursor-pointer rounded-full border-2 border-solid border-blue-600 outline-none data-[state=checked]:bg-blue-600"
               id="balance-type-switch"
-              onCheckedChange={handleSwitchChange}
+              onCheckedChange={(checked) => {
+                setIsShowCurrentMonthBalanceClient(checked);
+
+                setIsShowCurrentMonthBalance({
+                  id: userId,
+                  isShowCurrentMonthBalance: checked,
+                });
+
+                if (checked) {
+                  setIsShowFullBalanceClient(false);
+
+                  setIsShowFullBalance({
+                    id: userId,
+                    isShowFullBalance: false,
+                  });
+
+                  setIsShowLast30DaysBalanceClient(false);
+
+                  setIsShowLast30DaysBalance({
+                    id: userId,
+                    isShowLast30DaysBalance: false,
+                  });
+                }
+                addQueryParamToRefetchDataOnHomePage();
+              }}
               checked={isShowCurrentMonthBalanceClient}
             >
               <Switch.Thumb className="shadow-blackA4 block h-[21px] w-[21px] translate-x-0.5 rounded-full bg-white shadow-[0_2px_2px] transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[19px]" />
@@ -256,12 +317,94 @@ const UserPage = (props: InferGetStaticPropsType<typeof getStaticProps>) => {
               className="max-w-[50%] cursor-pointer break-words text-xl font-medium leading-tight text-gray-900 dark:text-white"
               htmlFor="balance-type-switch"
             >
-              {isShowCurrentMonthBalanceClient
-                ? "Show current month balance on home page"
-                : "Show last 30 days balance on home page"}
+              Show current month balance
             </label>
             {isLoadingShowCurrentMonthBalance ? <Loader /> : null}
           </div>
+          <div className="flex items-center gap-6">
+            <Switch.Root
+              className="relative h-[30px] w-[46px] cursor-pointer rounded-full border-2 border-solid border-blue-600 outline-none data-[state=checked]:bg-blue-600"
+              id="balance-type-switch"
+              onCheckedChange={(checked) => {
+                setIsShowLast30DaysBalanceClient(checked);
+
+                setIsShowLast30DaysBalance({
+                  id: userId,
+                  isShowLast30DaysBalance: checked,
+                });
+
+                if (checked) {
+                  setIsShowFullBalanceClient(false);
+
+                  setIsShowFullBalance({
+                    id: userId,
+                    isShowFullBalance: false,
+                  });
+
+                  setIsShowCurrentMonthBalanceClient(false);
+
+                  setIsShowCurrentMonthBalance({
+                    id: userId,
+                    isShowCurrentMonthBalance: false,
+                  });
+                }
+                addQueryParamToRefetchDataOnHomePage();
+              }}
+              checked={isShowLast30DaysBalanceClient}
+            >
+              <Switch.Thumb className="shadow-blackA4 block h-[21px] w-[21px] translate-x-0.5 rounded-full bg-white shadow-[0_2px_2px] transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[19px]" />
+            </Switch.Root>
+            <label
+              className="max-w-[50%] cursor-pointer break-words text-xl font-medium leading-tight text-gray-900 dark:text-white"
+              htmlFor="balance-type-switch"
+            >
+              Show last 30 days balance
+            </label>
+            {isLoadingShowCurrentMonthBalance ? <Loader /> : null}
+          </div>
+          <div className="flex items-center gap-6">
+            <Switch.Root
+              className="relative h-[30px] w-[46px] cursor-pointer rounded-full border-2 border-solid border-blue-600 outline-none data-[state=checked]:bg-blue-600"
+              id="balance-type-switch"
+              onCheckedChange={(checked) => {
+                setIsShowFullBalanceClient(checked);
+
+                setIsShowFullBalance({
+                  id: userId,
+                  isShowFullBalance: checked,
+                });
+
+                if (checked) {
+                  setIsShowLast30DaysBalanceClient(false);
+
+                  setIsShowLast30DaysBalance({
+                    id: userId,
+                    isShowLast30DaysBalance: false,
+                  });
+
+                  setIsShowCurrentMonthBalanceClient(false);
+
+                  setIsShowCurrentMonthBalance({
+                    id: userId,
+                    isShowCurrentMonthBalance: false,
+                  });
+                }
+                addQueryParamToRefetchDataOnHomePage();
+              }}
+              checked={isShowFullBalanceClient}
+            >
+              <Switch.Thumb className="shadow-blackA4 block h-[21px] w-[21px] translate-x-0.5 rounded-full bg-white shadow-[0_2px_2px] transition-transform duration-100 will-change-transform data-[state=checked]:translate-x-[19px]" />
+            </Switch.Root>
+            <label
+              className="max-w-[50%] cursor-pointer break-words text-xl font-medium leading-tight text-gray-900 dark:text-white"
+              htmlFor="balance-type-switch"
+            >
+              Show all time balance
+            </label>
+            {isLoadingShowCurrentMonthBalance ? <Loader /> : null}
+          </div>
+
+          <hr />
 
           <div className="flex items-center gap-6">
             <Switch.Root

@@ -92,6 +92,44 @@ export const userRouter = router({
       });
       return { isShowCurrentMonthBalance };
     }),
+  setIsShowFullBalance: publicProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        isShowFullBalance: z.boolean(),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const { id, isShowFullBalance } = input;
+      await ctx.prisma.user.update({
+        where: {
+          id,
+        },
+        data: {
+          isShowFullBalance,
+        },
+      });
+      return { isShowFullBalance };
+    }),
+  setIsShowLast30DaysBalance: publicProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        isShowLast30DaysBalance: z.boolean(),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const { id, isShowLast30DaysBalance } = input;
+      await ctx.prisma.user.update({
+        where: {
+          id,
+        },
+        data: {
+          isShowLast30DaysBalance,
+        },
+      });
+      return { isShowLast30DaysBalance };
+    }),
   setHomePageCategory: publicProcedure
     .input(
       z.object({

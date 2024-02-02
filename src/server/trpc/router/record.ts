@@ -226,6 +226,17 @@ export const recordRouter = router({
 
       const balance = +numToFloat(+income - +expense);
 
+      const allTimeBalance = +(records.length
+        ? numToFloat(
+            records
+              .filter((record) => record.type === "INCOME")
+              .reduce((acc, record) => (acc += +record.amountUSD), 0) -
+              records
+                .filter((record) => record.type === "EXPENSE")
+                .reduce((acc, record) => (acc += +record.amountUSD), 0)
+          )
+        : "0.00");
+
       const currentMonthRecords = records.filter(
         (record) =>
           record.timestamp.getMonth() === new Date().getMonth() &&
@@ -283,12 +294,17 @@ export const recordRouter = router({
       const homePageCategoryBalance =
         homePageCategoryIncome - homePageCategoryExpense;
 
+      console.log("totalRecordsAmount", totalRecordsAmount);
+
       return {
         records: records.slice(0, lastIndex),
         totalRecordsAmount,
         balance,
         currentMonthBalance,
+        allTimeBalance,
         isShowCurrentMonthBalance: userData?.isShowCurrentMonthBalance || false,
+        isShowFullBalance: userData?.isShowFullBalance || false,
+        isShowLast30DaysBalance: userData?.isShowLast30DaysBalance || false,
         categories: userData?.categories || null,
         tags: userData?.tags || null,
         currencies: userData?.currencies || INCLUDED_CURRENCIES,

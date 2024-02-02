@@ -72,6 +72,8 @@ model User {
   isShowCurrentMonthBalance Boolean?  @default(false)
   homePageCategory          String?   @default("")
   isAddTypeToHomeCategory   Boolean?  @default(true)
+  isShowFullBalance         Boolean?  @default(false)
+  isShowLast30DaysBalance   Boolean?  @default(false)
 }
 
 model VerificationToken {

@@ -28,7 +28,10 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
     totalRecordsAmount: number;
     balance: number;
     currentMonthBalance: number;
+    allTimeBalance: number;
     isShowCurrentMonthBalance: boolean;
+    isShowFullBalance: boolean;
+    isShowLast30DaysBalance: boolean;
     categories: string[];
     tags: string[] | null;
     currencies: string[];
@@ -149,7 +152,10 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
     totalRecordsAmount,
     balance,
     currentMonthBalance,
+    allTimeBalance,
     isShowCurrentMonthBalance,
+    isShowFullBalance,
+    isShowLast30DaysBalance,
     categories,
     tags,
     currencies,
@@ -157,10 +163,6 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
     homePageCategoryBalance,
     isAddTypeToHomeCategory,
   } = stateData;
-
-  const showBalanceForPeriod = isShowCurrentMonthBalance
-    ? currentMonthBalance
-    : balance;
 
   return (
     <div className="align-between relative flex min-h-screen flex-col text-slate-900 dark:text-white">
@@ -174,12 +176,24 @@ export const Comp: React.FC<IComp> = ({ sessionUserId, sessionUserName }) => {
           <div
             className={`flex flex-col items-center justify-center gap-2 text-2xl  font-semibold`}
           >
-            <span>
-              {isShowCurrentMonthBalance
-                ? "Current month balance:"
-                : "Balance from last 30 days:"}
-            </span>
-            <BalanceAmount balance={showBalanceForPeriod} />
+            {isShowCurrentMonthBalance ? (
+              <>
+                <span>Current month balance:</span>
+                <BalanceAmount balance={currentMonthBalance} />
+              </>
+            ) : null}
+            {isShowLast30DaysBalance ? (
+              <>
+                <span>Current month balancelance from last 30 days:</span>
+                <BalanceAmount balance={currentMonthBalance} />
+              </>
+            ) : null}
+            {isShowFullBalance ? (
+              <>
+                <span>Total balance:</span>
+                <BalanceAmount balance={allTimeBalance} />
+              </>
+            ) : null}
           </div>
 
           {homePageCategory ? (
